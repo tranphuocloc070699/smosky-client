@@ -7,7 +7,7 @@
 
       <template #posts="{ item }"> </template>
 
-      <template #question="{ item }"> </template>
+      <template #questions="{ item }"> </template>
 
       <template #reviews="{ item }"> </template>
     </UTabs>
