@@ -1,5 +1,5 @@
 <template>
-   <div class="border border-gray-200 rounded-md overflow-hidden cursor-pointer">
+   <NuxtLink to="/blogs/Spring Boot Folder Structure (Best Practices)" class="border border-gray-200 rounded-md overflow-hidden cursor-pointer">
             <img src="@/assets/images/RiotX_ChampionList_ashe.jpg" width="auto" height="auto" alt="Image Thumbnail" class="h-48 w-full object-cover" /> 
             <div class="px-4 pt-4">
                 <h3 class="text-base font-medium flex-grow">
@@ -18,7 +18,7 @@
             <CardIconItem name="i-heroicons-chat-bubble-bottom-center" :counting="4" />
             <CardIconItem name="i-heroicons-bookmark" />
             </div>
-        </div>
+        </NuxtLink>
 </template>
 
 <script setup lang="ts">
