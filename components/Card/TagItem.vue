@@ -1,13 +1,17 @@
 <template>
-    <div class="px-2 py-1 border border-slate-300 rounded-md inline-block text-sm text-slate-700 hover:bg-slate-100 cursor-pointer">
-        Tag Item
-    </div>
+  <div
+    :class="`px-2 py-1 rounded-md inline-block text-sm font-medium ${data?.background} ${data?.textColor} cursor-pointer transition duration-300 ease-in-out hover:brightness-95`"
+  >
+    {{ data.title }}
+  </div>
 </template>
 
 <script setup lang="ts">
+import type { ITagItem } from "~/types/model";
 
+defineProps<{
+  data?: ITagItem;
+}>();
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

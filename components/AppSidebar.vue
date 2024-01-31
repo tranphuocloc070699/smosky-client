@@ -1,10 +1,11 @@
 <template>
-    <div class="max-w-60 w-full top-[65px] border border-gray-100 h-screen fixed">
+    <div :class="['max-w-60 w-full top-[65px] border border-gray-100 h-screen',isFixed && 'fixed']">
         <div class="border-b border-slate-100 pb-4">
             <h3 class=" flex items-center m-4 rounded-md font-medium ">
             
                 Navigation
                 <UIcon name="i-heroicons-chevron-right" />
+                
             </h3>
                 
         <NuxtLink to="/" :class="['flex items-center p-2 mx-2 mt-2 rounded-md hover:bg-gray-100 font-light',route.name==='index' && 'bg-slate-100']">
@@ -69,6 +70,10 @@
 
 <script setup lang="ts">
 const route = useRoute()
+
+defineProps<{
+  isFixed?:boolean
+}>()
 
 // onMounted(() =>{
 //     console.log('mounted')

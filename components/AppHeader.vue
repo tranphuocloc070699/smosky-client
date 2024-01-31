@@ -1,24 +1,38 @@
 <template>
-    <ClientOnly>
-        <div class="border-b border-gray-100 p-4 fixed top-0 left-0 right-0 bg-white z-10">
-        <div class="max-w-7xl w-full mx-auto grid grid-cols-6">
-            <div class="flex items-end col-span-2 h-8">
-                <img src="/assets/images/logo.jpg" width="auto" heigth="32" class="w-10 h-10"/>
-                <h1 class="font-medium text-xl">
-                    Smosky
-                </h1>
-            </div>
-            <AppSearch class="col-span-2 h-8"/>
-            <AppUserControls class="col-span-2"/>
+  <ClientOnly>
+    <div
+      class="border-b border-gray-100 py-4 fixed top-0 left-0 right-0 bg-white z-10"
+    >
+      <div class="max-w-7xl w-full mx-auto grid grid-cols-6">
+        <div class="flex items-center gap-4 col-span-2 h-8">
+          <!-- <img src="/assets/images/logo.jpg" width="auto" heigth="32" class="w-10 h-10"/> -->
+          <UIcon name="i-heroicons-bars-3-16-solid" class="w-8 h-8 cursor-pointer"  @click="isOpen = true"/>
+          <NuxtLink class="font-medium text-xl cursor-pointer" to="/">Logo</NuxtLink>
         </div>
+        <AppSearch class="col-span-2 h-8" />
+        <AppUserControls class="col-span-2" />
+      </div>
     </div>
-    </ClientOnly>
+    <USlideover v-model="isOpen" side="left" class="w-[260px]">
+      <UCard class="flex flex-col flex-1" :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100' }">
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold leading-6 text-gray-900 ">
+              Menu
+            </h3>
+            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="isOpen = false" />
+          </div>
+        </template>
+
+            <AppSidebar :is-fixed="false"/>
+      </UCard>
+    </USlideover>
+
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
+const isOpen = ref(false)
 
 </script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

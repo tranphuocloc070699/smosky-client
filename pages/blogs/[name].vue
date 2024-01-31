@@ -56,8 +56,8 @@
     <div class="p-4">
       <!-- Questions -->
       <h3 class="text font-semibold text-lg py-4 flex items-center">
-        <UIcon name="i-heroicons-question-mark-circle" class="w-6 h-6 mr-2" />
         Questions
+        <UIcon name="i-heroicons-question-mark-circle" class="w-6 h-6 mr-2" />
       </h3>
       <div class="grid grid-cols-12">
         <div class="col-span-5">
