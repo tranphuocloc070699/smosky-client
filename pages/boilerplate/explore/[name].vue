@@ -2,7 +2,7 @@
   <div>
     <AppNavigation :data="navigationData" />
     <BoilerplateInfo type="explore" />
-    <AppTitle :data="{ title: 'Features', iconName: 'list-bullet' }">
+    <AppTitle :data="{ title: 'Features', iconName: 'adjustments-vertical-solid' }">
       <div class="flex items-center gap-16">
         <UCheckbox
         v-for="item in featuresCheckBox"
@@ -14,7 +14,7 @@
       </div>
     </AppTitle>
 
-    <AppTitle :data="{ title: 'Configuration', iconName: 'key' }">
+    <AppTitle :data="{ title: 'Configuration', iconName: 'wrench' }">
       <UTabs :items="items">
         <template #item="{ item }">
           <div v-if="item.key === 'starter'" class="space-y-3">

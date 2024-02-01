@@ -43,7 +43,6 @@ const embedUrl = `https://www.youtube.com/embed/j4zP5saRZqg`;
 const emit = defineEmits(["update:isOpen"]);
 
 const toggleModal = () => {
-  console.log({ props });
   emit("update:isOpen", !props.isOpen);
 };
 </script>
