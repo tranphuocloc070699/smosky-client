@@ -13,7 +13,6 @@ export default defineNuxtConfig({
       apiBase: "/api",
     },
   },
-
   /***
   Modules 
   ***/

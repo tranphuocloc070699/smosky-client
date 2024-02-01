@@ -4,5 +4,10 @@ export interface INavigation{
     isActive:boolean;
 }
 
+export interface IAppTitle{
+    title:string;
+    iconName:string;
+}
+
 
 

@@ -1,27 +1,51 @@
 <template>
-    <div>
-      <UButton color="blue" label="Open" @click="toggleModal"
-        >Download</UButton
-      >
-  
-      <UModal v-model="isOpen" prevent-close >
-       
-      </UModal>
-    </div>
-  </template>
-  
-  <script setup lang="ts">
-   const props = defineProps<{
-    isOpen:boolean
-  }>();
+ 
+    <UModal
+      :model-value="isOpen"
+      @update:model-value="toggleModal"
+      :ui="{
+        width: 'w-full sm:max-w-2xl',
+      }"
+      prevent-close
+    >
+      <div>
+        <div class="flex justify-end px-4 py-4">
+          <UButton
+            color="gray"
+            variant="ghost"
+            icon="i-heroicons-x-mark-20-solid"
+            class="-my-1"
+            @click="toggleModal"
+            
+          />
+        </div>
+        <div class="flex items-center py-4 pb-20">
+          <iframe
+          width="560"
+          height="315"
+          class="mx-auto"
+          :src="embedUrl"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+        </div>
+      </div>
+    </UModal>
+</template>
+w
+<script setup lang="ts">
+const props = defineProps<{
+  isOpen: boolean;
+}>();
 
-  const emit = defineEmits(["update:isOpen"]);
+const embedUrl = `https://www.youtube.com/embed/j4zP5saRZqg`;
 
-  const toggleModal = () =>{
-    emit("update:isOpen",!props.isOpen);
-  }
+const emit = defineEmits(["update:isOpen"]);
 
-  </script>
-  
-  <style scoped></style>
-  
+const toggleModal = () => {
+  console.log({ props });
+  emit("update:isOpen", !props.isOpen);
+};
+</script>
+
+<style scoped></style>
