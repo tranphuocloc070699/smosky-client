@@ -63,7 +63,7 @@
         <template #type-data="{ row }">
           <div class="relative py-2">
             <USelect
-              :model-value="row.type"
+            v-model="row.type"
               :options="originalTypes"
               option-attribute="type"
               @change="e => onTypeSelectChanging(e,row)"
@@ -151,13 +151,17 @@ const waitForCreateSpringRelationModalCallbackValue = ref<CallbackTemp>({
 });
 
 const toggleCreateSpringRelationModalOpen = (value: boolean) => {
+  console.log({value})
   if(value===false && waitForCreateSpringRelationModalCallbackValue.value.value.length>0){
-    springEntitiesData.value = springEntitiesData.value.map(item  => {
+    console.log('value false')
+    const temp = springEntitiesData.value.map(item  => {
     if(waitForCreateSpringRelationModalCallbackValue.value.row && item.id===waitForCreateSpringRelationModalCallbackValue.value.row.id){
       item.type=waitForCreateSpringRelationModalCallbackValue.value.row.type;
     }
     return item;
   })
+  console.log({temp})
+    springEntitiesData.value = temp;
   }
   createSpringRelationModalOpen.value = value;
 };
