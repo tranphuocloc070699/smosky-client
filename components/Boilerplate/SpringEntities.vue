@@ -35,7 +35,6 @@
         class="px-4 py-2 flex items-center gap-2 font-semibold text-lg border-b border-slate-200 bg-slate-100"
       >
         User
-        {{ springEntitiesData }}
         <UIcon
           name="i-heroicons-plus-circle-20-solid"
           class="w-6 h-6 text-emerald-700 cursor-pointer"
@@ -63,10 +62,10 @@
         <template #type-data="{ row }">
           <div class="relative py-2">
             <USelect
-            v-model="row.type"
+            :model-value="row.type"
               :options="originalTypes"
               option-attribute="type"
-              @change="e => onTypeSelectChanging(e,row)"
+              @input="(e : any) => onTypeSelectChanging(e,row)"
             />
             <div
               v-show="checkIsRelation(row.type)"
@@ -113,6 +112,7 @@
             <UIcon
               name="i-heroicons-x-circle"
               class="w-5 h-5 text-white bg-red-600 cursor-pointer"
+              @Click="onDeleteRow"
             />
           </div>
         </template>
@@ -150,23 +150,35 @@ const waitForCreateSpringRelationModalCallbackValue = ref<CallbackTemp>({
   value:''
 });
 
+const onDeleteRow = () =>{
+  const isAccept = window.confirm("Do you really want to delete this row?")
+  if(!isAccept) return;
+   alert('deleted')
+
+}
+
 const toggleCreateSpringRelationModalOpen = (value: boolean) => {
-  console.log({value})
+
   if(value===false && waitForCreateSpringRelationModalCallbackValue.value.value.length>0){
-    console.log('value false')
+   
     const temp = springEntitiesData.value.map(item  => {
     if(waitForCreateSpringRelationModalCallbackValue.value.row && item.id===waitForCreateSpringRelationModalCallbackValue.value.row.id){
       item.type=waitForCreateSpringRelationModalCallbackValue.value.row.type;
     }
     return item;
   })
-  console.log({temp})
+  
     springEntitiesData.value = temp;
   }
   createSpringRelationModalOpen.value = value;
 };
 
+
+
+
 const onTypeSelectChanging = (e: any,row : RowTemp) => {
+  
+  
   if(checkIsRelation(e.target.value)){
     createSpringRelationModalOpen.value = true;
     waitForCreateSpringRelationModalCallbackValue.value ={
