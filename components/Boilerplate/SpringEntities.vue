@@ -65,7 +65,7 @@
             :model-value="row.type"
               :options="originalTypes"
               option-attribute="type"
-              @input="(e : any) => onTypeSelectChanging(e,row)"
+              @input="(e : Event) => onTypeSelectChanging(e,row)"
             />
             <div
               v-show="checkIsRelation(row.type)"
@@ -174,22 +174,20 @@ const toggleCreateSpringRelationModalOpen = (value: boolean) => {
 };
 
 
-
-
-const onTypeSelectChanging = (e: any,row : RowTemp) => {
+const onTypeSelectChanging = (e: Event,row : RowTemp) => {
+  const selectedValue = (e.target as HTMLSelectElement).value;
   
-  
-  if(checkIsRelation(e.target.value)){
+  if(checkIsRelation(selectedValue)){
     createSpringRelationModalOpen.value = true;
     waitForCreateSpringRelationModalCallbackValue.value ={
-      value:e.target.value,
+      value:selectedValue,
       row
     }
     return;
   }
   const temp = JSON.parse(JSON.stringify(springEntitiesData.value)).map((item : RowTemp)  => {
     if(item.id===row.id){
-      item.type=e.target.value;
+      item.type=selectedValue;
     }
     return item;
   })
@@ -209,8 +207,6 @@ const onCreateRelationModalSubmit = () =>{
 const checkIsRelation = (value: string) => {
   return relationType.includes(value) ? true : false;
 };
-
-
 
 const addRow = () => {
   springEntitiesData.value.push({

@@ -5,7 +5,6 @@
     >
       <div class="max-w-7xl w-full mx-auto grid grid-cols-6">
         <div class="flex items-center gap-4 col-span-2 h-8">
-          <!-- <img src="/assets/images/logo.jpg" width="auto" heigth="32" class="w-10 h-10"/> -->
           <UIcon name="i-heroicons-bars-3-16-solid" class="w-8 h-8 cursor-pointer"  @click="isOpen = true"/>
           <NuxtLink class="font-medium text-xl cursor-pointer" to="/">Logo</NuxtLink>
         </div>

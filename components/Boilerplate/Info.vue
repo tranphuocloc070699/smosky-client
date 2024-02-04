@@ -1,29 +1,28 @@
 <template>
-  <div class="bg-slate-50">
-    <div class="max-w-7xl w-full mx-auto py-8 grid grid-cols-2">
+  <div  class="bg-slate-50">
+    <div v-if="boilerplateItemState" class="max-w-7xl w-full mx-auto py-8 grid grid-cols-2">
       <div class="flex flex-col justify-between">
         <!-- Title -->
         <div class="flex flex-col gap-2">
           <div>
             <h2 class="text-xl text-slate-800 font-semibold">
-              Spring Boot Folder Structure (Best Practices)
+              {{ boilerplateItemState.name }}
             </h2>
             <!-- Description -->
             <h3 class="font-normal text-slate-600 text-base">
-              A practical programming course for office workers, academics, and
-              administrators who want to improve their productivity.
+              {{ boilerplateItemState.description }}
             </h3>
           </div>
           <!-- Rating -->
           <div class="flex items-center gap-1" v-if="type === 'boilerplate'">
             <NuxtRating
               :read-only="true"
-              :ratingValue="5"
+              :ratingValue="boilerplateItemState.starAvg"
               :rating-size="'20px'"
               class="mb-1"
             />
             <h5 class="text-slate-500 font-light text-sm ml-[86px]">
-              (1.200 voting)
+              ({{ boilerplateItemState.totalReview }} voting)
             </h5>
             <div
               class="ml-4 font-semibold text-sm flex items-center gap-2 cursor-pointer hover:underline"
@@ -70,6 +69,8 @@
 </template>
 
 <script setup lang="ts">
+import { useBoilerplateItem } from "~/composables/useState";
+
 /* 
   Input:
     - type:boilerplate || explore 
@@ -77,6 +78,8 @@
 defineProps<{
   type: string;
 }>();
+const boilerplateItemState = useBoilerplateItem();
+
 </script>
 
 <style scoped></style>

@@ -1,6 +1,7 @@
 <template>
   <NuxtLink
-    :to="`/boilerplate/Today's Cryptocurrency Prices by Market Cap`"
+  v-if="data"
+    :to="`/boilerplate/${data.name}`"
     class="p-4 border border-slate-200 rounded-md overflow-hidden cursor-pointer bg-gradient-to-b from-slate-50 flex items-start gap-4"
   >
     <img
@@ -12,15 +13,15 @@
     />
     <div>
       <h3 class="text-base font-medium flex-grow">
-        Today's Cryptocurrency Prices by Market Cap
+        {{ data.name }}
       </h3>
       <h4 class="text-slate-400 font-light text-base">
-        Build something simple.
+        {{ data.description }}
       </h4>
       <div class="flex items-center gap-2">
-        <NuxtRating :read-only="true" :ratingValue="5" :rating-size="'20px'" class="mb-1" />
+        <NuxtRating :read-only="true" :ratingValue="data.starAvg" :rating-size="'20px'" class="mb-1" />
         <h5 class="text-slate-400 font-light text-sm ml-[86px]">
-          (1.200 voting)
+          ({{data.totalReview}} voting)
         </h5>
       </div>
     </div>
@@ -35,6 +36,14 @@
   </NuxtLink>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { IBoilerplate } from '~/types/model';
+
+defineProps<
+{
+  data:IBoilerplate
+}
+>()
+</script>
 
 <style scoped></style>

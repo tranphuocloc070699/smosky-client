@@ -33,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import type { INavigation } from "~/types/components";
 definePageMeta({
   layout: "detail",
@@ -70,6 +71,7 @@ const items = [
     label: "3. Entities",
   },
 ];
+
 
 const featuresCheckBox = [
   {

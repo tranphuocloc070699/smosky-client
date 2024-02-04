@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-[20px] border border-slate-200 bg-slate-100 py-4 flex items-center shadow-sm overflow-hidden"
+    class="rounded-[20px] border  bg-slate-100 py-4 flex items-center  overflow-hidden"
   >
     <input
       class="outline-none border-none flex-grow px-4  text-sm bg-slate-100"

@@ -11,11 +11,18 @@
       Boilerplate
     </h2>
     <div class="grid grid-cols-1 gap-4">
-      <CardImageItem v-for="item in 10" :key="item" />
+      <CardImageItem v-for="item of boilerplateState" :key="item.id" :data="item" />
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useBoilerplateList } from '~/composables/useState';
+
+const boilerplateState = useBoilerplateList();
+
+
+</script>
+
 
 <style scoped></style>

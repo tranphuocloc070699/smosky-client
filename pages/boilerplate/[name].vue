@@ -5,7 +5,6 @@
     <AppNavigation :data="navigationData" />
     <!-- Header -->
     <BoilerplateInfo type="boilerplate"/>
-
     <!-- Body -->
     <!-- Project -->
     <!-- <div class="p-4">
@@ -55,12 +54,30 @@
 
 <script setup lang="ts">
 import type { INavigation } from "~/types/components";
-
+import { useBoilerplateItem } from "~/composables/useState";
+import useApi from "~/composables/useApi";
+import type { IBoilerplateItem } from "~/types/model";
 const route = useRoute();
 definePageMeta({
   layout: "detail",
 });
+
 const name = route.params.name;
+
+const boilerplateApi = useApi();
+const boilerplateItemState = useBoilerplateItem();
+boilerplateApi.boilerplate.fetchDetail(name as string).then((data) =>{
+  
+  boilerplateItemState.value = data.data.value as IBoilerplateItem
+
+}).catch(error => {
+  
+  console.log({error})
+})
+
+
+
+
 
 const navigationData: INavigation[] = [
   {
@@ -79,4 +96,3 @@ onMounted(() => {});
 </script>
 
 <style scoped></style>
-~/types/components

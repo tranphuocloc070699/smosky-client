@@ -10,6 +10,23 @@
 </template>
 
 <script setup lang="ts">
+import type { IBoilerplate } from '~/types/model';
+import useApi from '~/composables/useApi';
+import {useBoilerplateList} from '~/composables/useState'
+const boilerplateApi = useApi();
+const boilerplateState = useBoilerplateList();
+
+boilerplateApi.boilerplate.fetchAll().then((data) =>{
+  boilerplateState.value = data.data.value as IBoilerplate[];
+
+}).catch(error => {
+  console.log({error})
+})
+
+
+
+
+
 
 </script>
 
