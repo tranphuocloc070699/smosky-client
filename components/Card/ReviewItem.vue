@@ -32,6 +32,13 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { IReview } from '~/types/model';
+
+defineProps<{
+  data:IReview
+}>();
+
+</script>
 
 <style scoped></style>

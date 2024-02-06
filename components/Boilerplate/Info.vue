@@ -70,6 +70,7 @@
 
 <script setup lang="ts">
 import { useBoilerplateItem } from "~/composables/useState";
+const boilerplateItemState = useBoilerplateItem();
 
 /* 
   Input:
@@ -78,7 +79,6 @@ import { useBoilerplateItem } from "~/composables/useState";
 defineProps<{
   type: string;
 }>();
-const boilerplateItemState = useBoilerplateItem();
 
 </script>
 
