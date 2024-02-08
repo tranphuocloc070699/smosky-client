@@ -1,3 +1,6 @@
+import type { IBoilerplateItem } from "~/types/model";
+
+
 export default function () {
 
     return {
@@ -8,9 +11,18 @@ export default function () {
         });
       },
       fetchDetail(name : string){
-        return useFetch(`http://localhost:8080/spring/${name}`,{
-          key:'boilerplate-list',
+        return useFetch<IBoilerplateItem>(`http://localhost:8080/spring/${name}`,{
+          key:"boilerplate-detail",
           method:'get',
+        });
+      },
+      createBoilerplate(dto : any){
+        return useFetch<Blob>(`http://localhost:8080/spring`,{
+          key:"create-boilerplate",
+          method:'post',
+          body:dto,
+          responseType:'blob',
+          immediate:false
         });
       }
 

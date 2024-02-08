@@ -74,14 +74,6 @@ const route = useRoute()
 defineProps<{
   isFixed?:boolean
 }>()
-
-// onMounted(() =>{
-//     console.log('mounted')
-// })
-
-// watch(() => route.name,(routeName) =>{
-    
-// },{immediate:true})
 </script>
 
 <style scoped>

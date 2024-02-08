@@ -5,7 +5,7 @@
     class="p-4 border border-slate-200 rounded-md overflow-hidden cursor-pointer bg-gradient-to-b from-slate-50 flex items-start gap-4"
   >
     <img
-      src="@/assets/images/bg-placeholder.png"
+      :src="data.thumbnail"
       width="auto"
       height="auto"
       alt="Image Thumbnail"

@@ -14,8 +14,8 @@
           class="mx-auto"
         />
       </div>
-      <p class="text-sm font-medium text-[#173952]">
-        ({{ boilerplateItemState.totalReview }} Review)
+      <p class="text-sm font-light text-[#173952]">
+      {{ boilerplateItemState.totalReview }} Reviews
       </p>
     </div>
     <div class="flex flex-col gap-2">

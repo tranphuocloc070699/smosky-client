@@ -20,7 +20,7 @@
 
       <URadioGroup
         v-model="selected" 
-        :options="table"
+        :options="table.map(item => ({label:item.name,value:item.name}))"
       />
       <UAlert
         icon="i-heroicons-command-line"
@@ -31,8 +31,8 @@
         class="my-4"
       />
       <div class="flex items-center gap-6">
-        <UInput placeholder="Enter table name" class="flex-1" />
-        <UButton color="green">Create</UButton>
+        <UInput placeholder="Enter table name" class="flex-1" :model-value="createTableInput" @input="onCreateTableInputChange"  @change="emit('createTable')"  />
+        <UButton  @click="emit('createTable')">Create</UButton>
       </div>
       <div class="mt-8 text-center">
         <UButton @click="onSubmit" color="blue" class="mt-4">Make Relationship</UButton>
@@ -42,21 +42,29 @@
 </template>
 
 <script setup lang="ts">
-
-const selected = ref("user");
+import type { ICreateBoilerplateEntity } from '~/types/request';
 
 const props = defineProps<{
   isOpen: boolean;
-  table:Array<{value:string,label:string}>
+  // table:Array<{value:string,label:string}>;
+  table:Array<ICreateBoilerplateEntity>;
+  createTableInput:string;
 }>();
-const emit = defineEmits(["update:isOpen","submit"]);
+const selected = ref(props?.table[0]?.name);
+
+
+const emit = defineEmits(["update:isOpen","submit","createTable","update:createTableInput"]);
 const toggleModal = () => {
 
   emit("update:isOpen", !props.isOpen);
 };
 
+const onCreateTableInputChange = (e : any) =>{
+  emit("update:createTableInput",e.target.value);
+}
+
 const onSubmit= () =>{
-    emit('submit')
+    emit('submit',selected)
 }
 
 </script>

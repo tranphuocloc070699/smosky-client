@@ -2,7 +2,7 @@
   <div>
     <div class="flex justify-between">
       <InteractiveReviewInfo />
-      <ModalCreateReview />
+      <ModalCreateReview v-if="boilerplateItemState?.id" :id="boilerplateItemState?.id" />
     </div>
     <div v-if="boilerplateItemState" class="max-w-[708px] py-4 mt-10">
       <div class="py-4" v-for="item of boilerplateItemState.reviews" :key="item.id" >

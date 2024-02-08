@@ -27,24 +27,28 @@
               />
             </div>
           </template>
+          <div class="p-4 flex items-start gap-1 flex-col">
+            <p class="text-sm font-medium">Your name</p>
+          <UInput v-model="data.name" class="w-full h-auto" placeholder="Enter your name..."/>
+          </div>
 
           <div class="p-4 flex items-start gap-1 flex-col">
             <p class="text-sm font-medium">Give a star</p>
           <NuxtRating
               :read-only="false"
-              :ratingValue="0"
+              v-model="data.star"
               :rating-size="'32px'"
             />
           </div>
 
           <div class="p-4 flex items-start gap-1 flex-col">
-            <p class="text-sm font-medium">Leave a comment</p>
-          <UTextarea v-model="value" />
+            <p class="text-sm font-medium">Your comment</p>
+          <UTextarea v-model="data.content" class="w-full h-auto"/>
           </div>
 
           <div class="flex justify-end mt-10">
     
-          <UButton class="py-2 px-8">Submit</UButton>
+          <UButton class="py-2 px-8" @click="onSubmit">Submit</UButton>
           </div>
         </UCard>
       </UModal>
@@ -52,8 +56,21 @@
 </template>
 
 <script setup lang="ts">
-const value = ref('')
+const props = defineProps<{
+  id:number;
+}>()
+const data = ref({
+  id:props.id,
+  name:'',
+  email:'',
+  content:'',
+  star:0
+})
 const isOpen = ref(false);
+
+const onSubmit = () =>{
+  console.log({data})
+}
 </script>
 
 <style scoped></style>

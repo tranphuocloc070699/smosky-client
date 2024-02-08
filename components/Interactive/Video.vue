@@ -1,7 +1,8 @@
 <template>
   <div class="relative h-[220px] w-[440px]">
     <img
-      src="@/assets/images/images.jpeg"
+    v-if="thumbnail"
+      :src="thumbnail"
       with="auto"
       height="auto"
       class="h-[220px] w-[440px] object-cover rounded-md"
@@ -12,11 +13,17 @@
     <UIcon name="i-heroicons-play-circle" class="w-12 h-12 bg-white text-white cursor-pointer" @click="showDemoOpen = true"/>
       <p class="text-white font-semibold text-2xl">Show demo</p>
     </div>
-    <ModalShowVideo :is-open="showDemoOpen" @update:is-open="toggleShowDemo" />
+    <ModalShowVideo :is-open="showDemoOpen" @update:is-open="toggleShowDemo" :preview-link="previewLink" />
   </div>
 </template>
 
 <script setup lang="ts">
+
+defineProps<{
+  previewLink:string;
+  thumbnail:string;
+}>()
+
 const showDemoOpen = ref(false);
 
 const toggleShowDemo = (value : boolean) =>{

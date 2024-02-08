@@ -1,7 +1,7 @@
 /* SpringStarter */ export
 const projectOptions = [
     {
-      value: "maven",
+      value: "maven-project",
       label: "Maven",
     },
     {
@@ -35,15 +35,15 @@ const projectOptions = [
   
   export const springBootVersionOptions = [
     {
-      value: "322",
+      value: "3.2.2",
       label: "3.2.2",
     },
     {
-      value: "330",
+      value: "3.3.0",
       label: "3.3.0",
     },
     {
-      value: "318",
+      value: "3.1.8",
       label: "3.1.8",
     },
   ];
@@ -222,4 +222,36 @@ const projectOptions = [
             },
         ]
     }
+    ];
+
+
+    export const originalTypes = [
+      {
+        name: "String",
+        value: "String",
+      },
+      {
+        name: "Integer",
+        value: "Integer",
+      },
+      {
+        name: "Boolean",
+        value: "Boolean",
+      },
+      {
+        name: "OneToMany",
+        value: "OneToMany",
+      },
+      {
+        name: "ManyToOne",
+        value: "ManyToOne",
+      },
+      {
+        name: "OneToOne",
+        value: "OneToOne",
+      },
+      {
+        name: "ManyToMany",
+        value: "ManyToMany",
+      },
     ];

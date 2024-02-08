@@ -6,7 +6,7 @@
           <URadio
             v-for="option of projectOptions"
             :key="option.value"
-            v-model="projectSelected"
+            v-model="createBoilerplateData.type"
             v-bind="option"
           />
         </div>
@@ -30,7 +30,7 @@
           <URadio
             v-for="option of springBootVersionOptions"
             :key="option.value"
-            v-model="springBootVersionSelected"
+            v-model="createBoilerplateData.bootVersion"
             v-bind="option"
           />
         </div>
@@ -42,7 +42,7 @@
           <URadio
             v-for="option of packagingOptions"
             :key="option.value"
-            v-model="packagingSelected"
+            v-model="createBoilerplateData.metadata.packaging"
             v-bind="option"
           />
         </div>
@@ -54,7 +54,7 @@
           <URadio
             v-for="option of javaVersionOptions"
             :key="option.value"
-            v-model="javaVersionSelected"
+            v-model="createBoilerplateData.metadata.jvmVersion"
             v-bind="option"
           />
         </div>
@@ -63,12 +63,10 @@
 
 <script setup lang="ts">
 import {projectOptions,languageOptions,springBootVersionOptions,packagingOptions,javaVersionOptions} from '~/utils/data'
-
-const projectSelected = ref("maven");
+import { useCreateBoilerplateData } from '~/composables/useState';
 const languageSelected = ref("java");
-const springBootVersionSelected = ref("322");
-const packagingSelected = ref("jar");
-const javaVersionSelected = ref("17");
+const createBoilerplateData = useCreateBoilerplateData();
+
 </script>
 
 <style scoped>

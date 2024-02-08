@@ -19,12 +19,12 @@
             
           />
         </div>
-        <div class="flex items-center py-4 pb-20">
+        <div v-if="previewLink" class="flex items-center py-4 pb-20">
           <iframe
           width="560"
           height="315"
           class="mx-auto"
-          :src="embedUrl"
+          :src="previewLink"
           frameborder="0"
           allowfullscreen
         ></iframe>
@@ -36,9 +36,9 @@ w
 <script setup lang="ts">
 const props = defineProps<{
   isOpen: boolean;
+  previewLink:string;
 }>();
 
-const embedUrl = `https://www.youtube.com/embed/j4zP5saRZqg`;
 
 const emit = defineEmits(["update:isOpen"]);
 

@@ -15,7 +15,7 @@
         <UInput
           variant="outline"
           placeholder="Enter group..."
-          model-value="com.example"
+          v-model="createBoilerplateData.metadata.groupId"
           class="mt-1"
         />
       </div>
@@ -33,8 +33,8 @@
 
         <UInput
           variant="outline"
-          placeholder="Enter group..."
-          model-value="demo"
+          placeholder="Enter artifact..."
+          v-model="createBoilerplateData.metadata.artifactId"
           class="mt-1"
         />
       </div>
@@ -52,8 +52,8 @@
 
         <UInput
           variant="outline"
-          placeholder="Enter group..."
-          model-value="demo"
+          placeholder="Enter name..."
+          v-model="createBoilerplateData.metadata.name"
           class="mt-1"
         />
       </div>
@@ -71,8 +71,8 @@
 
         <UInput
           variant="outline"
-          placeholder="Enter group..."
-          model-value="Demo project for Spring boot"
+          placeholder="Enter description..."
+          v-model="createBoilerplateData.metadata.description"
           class="mt-1"
         />
       </div>
@@ -90,14 +90,27 @@
 
         <UInput
           variant="outline"
+          :disabled="true"
           placeholder="Enter group..."
-          model-value="com.example.demo"
+          :model-value="packageNameInput"
           class="mt-1"
         />
       </div>
 </template>
 
 <script setup lang="ts">
+import { useCreateBoilerplateData } from '~/composables/useState';
+
+const createBoilerplateData = useCreateBoilerplateData();
+
+const packageNameInput = ref(`${createBoilerplateData.value.metadata.groupId}.${createBoilerplateData.value.metadata.artifactId}`)
+
+watch(createBoilerplateData,(newValue) =>{
+    packageNameInput.value=`${newValue.metadata.groupId}.${newValue.metadata.artifactId}`;
+},{
+  deep:true
+})
+
 
 </script>
 

@@ -53,7 +53,7 @@ const selected = ref([tag[3]])
 const isOpen = ref(false)
 
 const handleSubmit = () =>{
-    console.log({selected:selected.value})
+   
 }
 </script>
 

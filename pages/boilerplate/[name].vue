@@ -4,7 +4,7 @@
     <!-- Navigation -->
     <AppNavigation :data="navigationData" />
     <!-- Header -->
-    <BoilerplateInfo type="boilerplate"/>
+    <BoilerplateInfo type="boilerplate" />
     <!-- Body -->
     <!-- Project -->
     <!-- <div class="p-4">
@@ -13,12 +13,12 @@
         Project
       </h3>
     </div> -->
-    <AppTitle :data="{title:'Project',iconName:'document'}">
-      PlaceHolder
+    <AppTitle :data="{title:'Example project',iconName:'document'}" v-if="boilerplateItemState && boilerplateItemState?.projectStructure">
+      <InteractiveProjectStructure :data="boilerplateItemState?.projectStructure"/>
     </AppTitle>
 
     <AppTitle :data="{title:'Features',iconName:'star'}" class="bg-slate-50">
-    <BoilerplateFeature/>
+    <BoilerplateFeature v-if="boilerplateItemState?.features" :data="boilerplateItemState.features"/>
     </AppTitle>
     <!-- <div class="p-4">
       <h3 class="text font-semibold text-lg py-4 flex items-center">
@@ -36,7 +36,7 @@
     </div> -->
 
     <AppTitle :data="{title:'Reviews',iconName:'sparkles'}">
-    <BoilerplateReview/>
+    <BoilerplateReview id="boilerplate-review"/>
     </AppTitle>
 <!--     <div class="p-4">
       <h3 class="text font-semibold text-lg py-4 flex items-center">
@@ -56,7 +56,6 @@
 import type { INavigation } from "~/types/components";
 import { useBoilerplateItem } from "~/composables/useState";
 import useApi from "~/composables/useApi";
-import type { IBoilerplateItem } from "~/types/model";
 const route = useRoute();
 definePageMeta({
   layout: "detail",
@@ -67,11 +66,11 @@ const name = route.params.name;
 const boilerplateApi = useApi();
 const boilerplateItemState = useBoilerplateItem();
 boilerplateApi.boilerplate.fetchDetail(name as string).then((data) =>{
-  
-  boilerplateItemState.value = data.data.value as IBoilerplateItem
+  if(!data.data.value) return;
+  console.log({data:data.data.value})
+  boilerplateItemState.value = data.data.value
 
 }).catch(error => {
-  
   console.log({error})
 })
 

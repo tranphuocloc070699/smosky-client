@@ -1,40 +1,221 @@
 <template>
-  <div>
-    <AppNavigation :data="navigationData" />
-    <BoilerplateInfo type="explore" />
-    <AppTitle :data="{ title: 'Features', iconName: 'adjustments-vertical-solid' }">
-      <div class="flex items-center gap-16">
-        <UCheckbox
-        v-for="item in featuresCheckBox"
-        :key="item.label"
-        :label="item.label"
-        :help="item.help"
-        :model-value="item.isChecked"
-      />
-      </div>
-    </AppTitle>
+  <ClientOnly>
+    <div>
+      <AppNavigation :data="navigationData" />
+      <BoilerplateInfo type="explore" />
+      <AppTitle :data="{ title: 'Mores', iconName: 'chevron-double-up-16-solid' }">
+        <div class="flex items-center gap-16">
+          <UCheckbox
+            v-for="item in featuresCheckBox"
+            :key="item.label"
+            :label="item.label"
+            :help="item.help"
+            :model-value="item.isChecked"
+          />
+        </div>
+      </AppTitle>
+      <AppTitle :data="{ title: 'Configuration', iconName: 'wrench' }">
+        <UTabs :items="items">
+          <template #item="{ item }">
+            <div v-if="item.key === 'starter'" class="space-y-3">
+              <BoilerplateSpringStarter
+                :data="boilerplateItemState?.dependencies"
+              />
+            </div>
+            <div v-if="item.key === 'enviroments'" class="space-y-3">
+              <BoilerplateSpringEnviroments />
+            </div>
+            <div v-if="item.key === 'entities'" class="space-y-3">
+              <BoilerplateSpringEntities />
+            </div>
+          </template>
+        </UTabs>
+      </AppTitle>
 
-    <AppTitle :data="{ title: 'Configuration', iconName: 'wrench' }">
-      <UTabs :items="items">
-        <template #item="{ item }">
-          <div v-if="item.key === 'starter'" class="space-y-3">
-            <BoilerplateSpringStarter />
-          </div>
-          <div v-if="item.key === 'enviroments'" class="space-y-3">
-            <BoilerplateSpringEnviroments />
-          </div>
-          <div v-if="item.key === 'entities'" class="space-y-3">
-            <BoilerplateSpringEntities />
-          </div>
-        </template>
-      </UTabs>
-    </AppTitle>
-  </div>
+      <!-- Submit -->
+      <div
+        class="flex items-center gap-8 mt-5 max-w-7xl w-full mx-auto justify-end"
+      >
+        <UButton
+          class="px-4 py-2 min-w-32 flex items-center justify-center"
+          color="white"
+          >Preview</UButton
+        >
+        <UButton
+          class="px-4 py-2 min-w-32 flex items-center justify-center"
+          @click="onSubmit"
+          >Download</UButton
+        >
+      </div>
+    </div>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import useApi from "~/composables/useApi";
+import {
+  useBoilerplateItem,
+  useCreateBoilerplateData,
+  useSpringDependenciesSelected,
+} from "~/composables/useState";
 import type { INavigation } from "~/types/components";
+import Axios from "axios";
+const route = useRoute();
+definePageMeta({
+  layout: "detail",
+});
+
+const name = route.params.name;
+
+const boilerplateApi = useApi();
+const boilerplateItemState = useBoilerplateItem();
+const createBoilerplateData = useCreateBoilerplateData();
+const springDependenciesSelectedState = useSpringDependenciesSelected();
+const requestData = ref({});
+boilerplateApi.boilerplate
+  .fetchDetail(name as string)
+  .then((data) => {
+    if (!data.data.value) return;
+    boilerplateItemState.value = data.data.value;
+    /* Check have dependenciesSelected => add to list dependenciesSelected */
+
+    const dependenciesSelected = data.data.value.dependenciesSelected;
+    if (dependenciesSelected) {
+      data.data.value.dependencies.forEach((dependencyGroup) => {
+        dependencyGroup.dependencies.forEach((dependency) => {
+          if (
+            dependenciesSelected.findIndex((item) => item === dependency.id) !==
+            -1
+          ) {
+            if (!isDependencyExistInArray(dependency.id)) {
+              springDependenciesSelectedState.value.push({
+                ...dependency,
+                required: true,
+              });
+            }
+          }
+        });
+      });
+    }
+  })
+  .catch((error) => {
+    console.error({ error });
+  });
+
+const isDependencyExistInArray = (value: string) => {
+  return (
+    springDependenciesSelectedState.value.findIndex(
+      (item) => item.id === value
+    ) !== -1
+  );
+};
+
+const {
+  data,
+  error,
+  execute: createBoilerplateExecute,
+} = boilerplateApi.boilerplate.createBoilerplate(requestData);
+
+const validationBeforeSubmit = () =>{
+  let validation = {
+    invalid:false,
+    message:''
+  };
+ createBoilerplateData.value.entities.forEach(entity =>{
+  entity.templates.forEach(item =>{
+    if(item.error.invalid || !item.name){
+      validation ={
+        invalid:true,
+        message:`Contain invalid field on table ${entity.name}`
+      };
+    }
+  })
+ })
+ return validation;
+}
+
+
+
+const onSubmit = async () => {
+  const validate = validationBeforeSubmit();
+  console.log({validate})
+  if(validate.invalid){
+    alert(validate.message)
+    return;
+  }
+
+
+  return;
+  const data = {
+    type: createBoilerplateData.value.type,
+    bootVersion: createBoilerplateData.value.bootVersion,
+    metadata: {
+      ...createBoilerplateData.value.metadata,
+    },
+    dependencies: springDependenciesSelectedState.value.map((item) => ({
+      id: item.id,
+      properties: item.properties.map((item) => ({
+        id: item.id,
+        value: item.value,
+      })),
+    })),
+    entities: createBoilerplateData.value.entities.map((item) => ({
+      name: item.name,
+      templates: item.templates.map((item) => ({
+        name: item.name,
+        type: item.type,
+        primary: item.primary,
+        mappedBy: item.mappedBy,
+        referencedColumnName: item.referencedColumnName,
+      })),
+    })),
+  };
+
+  Axios.post<Blob>("http://localhost:8080/spring", data, {
+    timeout: 0,
+    responseType: "blob",
+  })
+    .then((response: any) => {
+      console.log({ response });
+      const blob = new Blob([response.data as any], {
+        type: "application/zip",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${data.metadata.name}.zip`;
+      a.setAttribute("download", "file.zip");
+      a.style.display = "none";
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+    .catch((error: any) => {
+      console.error(error);
+    });
+
+  requestData.value = data;
+  /*   createBoilerplateExecute()
+    .then((response) => {
+      console.log({ response: response });
+      const blob = new Blob([response as any], { type: "application/zip" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${data.metadata.name}.zip`;
+      a.setAttribute("download", "file.zip");
+      a.style.display = "none";
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+    .catch((error: any) => {
+      console.error(error);
+    }); */
+};
+
 definePageMeta({
   layout: "detail",
 });
@@ -72,17 +253,16 @@ const items = [
   },
 ];
 
-
 const featuresCheckBox = [
   {
     label: "Test",
     help: "This is help",
-    isChecked:true,
+    isChecked: true,
   },
   {
     label: "Docs",
     help: "Open api",
-    isChecked:true
+    isChecked: true,
   },
 ];
 

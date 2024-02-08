@@ -1,5 +1,7 @@
 <template>
-  <div class="border border-slate-200 rounded-md grid grid-cols-3">
+  <div
+    class="border border-slate-200 rounded-md grid grid-cols-3 min-h-[439px]"
+  >
     <!-- Table List -->
     <div class="border-r border-slate-200 col-span-1">
       <h4
@@ -7,22 +9,53 @@
       >
         Table
       </h4>
-      <div class="p-4 flex items-center gap-6">
-        <UInput placeholder="Enter table name" class="flex-1" />
-        <UButton color="green">Create</UButton>
+      <div class="p-4 flex items-start gap-6">
+        <div class="flex gap-1 flex-1 flex-col">
+          <UInput
+            v-model="createTableInput"
+            @change="onCreateTable(true)"
+            placeholder="Enter table name"
+            class="flex-1"
+            :color="`${
+              errorScheme.createTableInput.invalid ? 'red' : 'white'
+            }`"
+            @input="onInput('CREATE-TABLE')"
+          />
+          <p
+            v-show="errorScheme.createTableInput.invalid"
+            class="text-xs text-red-700 flex items-center gap-1"
+          >
+            <UIcon name="i-heroicons-backspace" />
+            {{ errorScheme.createTableInput.message }}
+          </p>
+        </div>
+        <UButton @click="onCreateTable(true)" class="px-4">Create</UButton>
       </div>
       <div class="p-4 gap-4">
         <div
-          v-for="item in entitiesData"
+          v-for="item in createBoilerplateData.entities"
           :key="item.name"
           :class="[
             'py-2 text-center rounded-md mb-4 font-semibold flex items-center justify-between px-4 group',
-            item.isActive ? 'bg-[#EAB974] text-white' : 'bg-[#EAD7BB]',
+            item.name === tableSelected
+              ? 'bg-[#467190] text-white'
+              : 'bg-slate-200',
           ]"
+          @click="(e) => onTableSelect(item)"
         >
           <div></div>
-          {{ item.name }}
+          <div class="flex items-center gap-2">
+            {{ item.name }}
+            <UBadge
+              v-show="item.templates.length >= 2"
+              :ui="{ rounded: 'rounded-full' }"
+              color="blue"
+              >{{ item.templates.length }}</UBadge
+            >
+          </div>
+
           <UIcon
+            @click="onTableDelete(item)"
             name="i-heroicons-x-circle"
             class="w-5 h-5 text-white bg-red-600 cursor-pointer opacity-0 group-hover:opacity-100"
           />
@@ -32,16 +65,21 @@
     <!-- Current Table -->
     <div class="col-span-2">
       <h4
-        class="px-4 py-2 flex items-center gap-2 font-semibold text-lg border-b border-slate-200 bg-slate-100"
+        class="px-4 py-2 pb-[9px] flex items-center gap-2 font-semibold text-lg border-b border-slate-200 bg-slate-100"
       >
-        User
+        {{ tableSelected }}
         <UIcon
+          v-show="tableSelected !== 'Row'"
           name="i-heroicons-plus-circle-20-solid"
           class="w-6 h-6 text-emerald-700 cursor-pointer"
           @click="addRow()"
         />
       </h4>
-      <UTable :columns="springEntitiesColumns" :rows="springEntitiesData">
+      <UTable
+        :columns="springEntitiesColumns"
+        :rows="getTableSelectedRow"
+        class="max-h-[390px] overflow-y-scroll"
+      >
         <!-- Header -->
         <template #required-header="{ column }">
           <div class="flex justify-center">
@@ -62,9 +100,10 @@
         <template #type-data="{ row }">
           <div class="relative py-2">
             <USelect
-            :model-value="row.type"
+              :model-value="row.type"
               :options="originalTypes"
               option-attribute="type"
+              :disabled="row.disable || checkIsRelation(row.type)"
               @input="(e : Event) => onTypeSelectChanging(e,row)"
             />
             <div
@@ -73,18 +112,40 @@
             >
               Relation to
               <span
+                @click="tableSelected = row.name"
                 class="underline ml-1 font-medium text-green-800 cursor-pointer"
-                >Post</span
+                >{{ row.name }}</span
               >
             </div>
           </div>
         </template>
-        <template #fieldName-data="{ row }">
-          <UInput v-model="row.fieldName" />
+        <template #fieldName-data="{  row }">
+          <div  v-if="!row.mappedBy && !row.referencedColumnName" class="relative">
+            <UInput
+            v-model="row.name"
+            :disabled="row.disable"
+            :color="row.error.invalid ? 'red' : 'white'"
+            @input="onInput('CREATE-ROW',row)"
+            @blur="onInputBlur('CREATE-ROW',row)"
+          />
+          <p
+            v-show="row.error.invalid"
+            class="text-xs text-red-700 flex items-center gap-1 absolute top-[105%] left-0"
+          >
+            <UIcon name="i-heroicons-backspace" />
+            {{ row.error.message }}
+          </p>
+          </div>
+          <UInput v-else :model-value="makeNameBaseOnRelation(row)" disabled />
         </template>
         <template #required-data="{ row }">
           <div class="flex justify-center">
-            <UCheckbox v-model="row.required" name="required" class="mx-auto" />
+            <UCheckbox
+              v-model="row.required"
+              name="required"
+              class="mx-auto"
+              :disabled="row.disable"
+            />
           </div>
         </template>
 
@@ -103,119 +164,525 @@
         </template>
         <template #primary-data="{ row }">
           <div class="flex justify-center">
-            <UCheckbox v-model="row.primary" name="primary" />
+            <UCheckbox
+              v-model="row.primary"
+              name="primary"
+              :disabled="row.disable || row.alreadyHasPrimary"
+            />
           </div>
         </template>
 
         <template #actions-data="{ row }">
           <div class="flex justify-center">
             <UIcon
+              v-show="!row.disable"
               name="i-heroicons-x-circle"
               class="w-5 h-5 text-white bg-red-600 cursor-pointer"
-              @Click="onDeleteRow"
+              @Click="onDeleteRow(row)"
             />
           </div>
         </template>
       </UTable>
     </div>
     <ModalCreateSpringRelation
-      :table="entitiesOptions"
+      :table-selected="tableSelected"
+      :table="createBoilerplateData.entities"
       :is-open="createSpringRelationModalOpen"
+      :create-table-input="createTableInput"
       @submit="onCreateRelationModalSubmit"
       @update:is-open="toggleCreateSpringRelationModalOpen"
+      @update:create-table-input="(value) => (createTableInput = value)"
+      @create-table="onCreateTable"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-interface RowTemp {
-  id:number;
-  type: string;
-  fieldName: string;
-  required: boolean;
-  validation: number[];
-  primary: boolean;
+interface SelectRelationCallback {
+  value: string;
+  row?: ICreateBoilerplateEntityTemplate;
 }
 
-interface CallbackTemp{
-  value:string,
-  row?:RowTemp
-}
+import { originalTypes } from "~/utils/data";
+import { useCreateBoilerplateData } from "~/composables/useState";
+import type {
+  ICreateBoilerplateEntity,
+  ICreateBoilerplateEntityTemplate,
+} from "~/types/request";
+import { containsSpecialChars, followingCamelCase, followingPascalCase, hasNumber, isRequired } from "~/utils/validation";
 
-import { entitiesData, entitiesOptions } from "~/utils/data";
+const onInputBlur = (type: string,row? : ICreateBoilerplateEntityTemplate): boolean => {
+  let invalid = false;
+  switch (type) {
+    case "CREATE-TABLE": {
+      if (hasNumber(createTableInput.value)) {
+        errorScheme.value.createTableInput = {
+          invalid: true,
+          message: "Cannot contains number",
+        };
+        invalid = true;
+        break;
+      }
+
+      if (containsSpecialChars(createTableInput.value)) {
+        errorScheme.value.createTableInput = {
+          invalid: true,
+          message: "Cannot contains special characters",
+        };
+        invalid = true;
+        break;
+      }
+
+      if (!followingPascalCase(createTableInput.value)) {
+        errorScheme.value.createTableInput = {
+          invalid: true,
+          message: "Following Pascal case. Ex:User",
+        };
+        invalid = true;
+      }
+      break;
+    }
+    case "CREATE-ROW": {
+      if(!row) break;
+
+      if(!isRequired(row.name)){
+        row.error={
+          invalid:true,
+          message:`Field name is required`
+        }
+        invalid = true;
+        break;
+      }
+
+      if (hasNumber(row.name)) {
+        row.error={
+          invalid:true,
+          message:'Cannot contains number'
+        }
+        invalid = true;
+        break;
+      }
+
+      if (containsSpecialChars(row.name)) {
+        row.error={
+          invalid:true,
+          message:'Cannot contains special characters'
+        }
+        invalid = true;
+        break;
+      }
+
+      if (!followingCamelCase(row.name)) {
+        row.error={
+          invalid:true,
+          message:'Following Camel case. Ex:firstName'
+        }
+        invalid = true;
+      }
+      break;
+    }
+    default:
+      break;
+  }
+
+  return invalid;
+};
+
+const onInput = (type: string,row? : ICreateBoilerplateEntityTemplate) => {
+  switch (type) {
+    case "CREATE-TABLE":
+      {
+        if (errorScheme.value.createTableInput.invalid) {
+          errorScheme.value.createTableInput.invalid = false;
+        }
+      }
+      break;
+      case "CREATE-ROW":
+      {
+        if(!row) return;
+        if (row.error.invalid) {
+          row.error.invalid = false;
+        }
+      }
+      break;
+
+    default:
+      break;
+  }
+};
+
+
+
+const makeNameBaseOnRelation = (row: ICreateBoilerplateEntityTemplate) => {
+  if (row.type === "OneToOne" || row.type === "ManyToOne") {
+    return row.name.toLowerCase();
+  } else {
+    return `${row.name.toLowerCase()}s`;
+  }
+};
+
+const errorScheme = ref({
+  createTableInput: {
+    invalid: false,
+    message: "",
+  },
+});
 
 const relationType = ["OneToOne", "OneToMany", "ManyToOne", "ManyToMany"];
 const createSpringRelationModalOpen = ref(false);
-const waitForCreateSpringRelationModalCallbackValue = ref<CallbackTemp>({
-  value:''
+const waitForCreateSpringRelationModalCallbackValue =
+  ref<SelectRelationCallback>({
+    value: "",
+  });
+const createTableInput = ref("");
+const tableSelected = ref("Row");
+const createBoilerplateData = useCreateBoilerplateData();
+
+const onTableDelete = (data: ICreateBoilerplateEntity) => {
+  const isAccept = window.confirm("Do you really want to delete this table?");
+  if (!isAccept) return;
+  if (tableSelected.value === data.name) {
+    console.log("change tableSelected");
+    tableSelected.value = "Row";
+  }
+  createBoilerplateData.value.entities =
+    createBoilerplateData.value.entities.reduce<ICreateBoilerplateEntity[]>(
+      (accumulator, currentValue) => {
+        if (currentValue.name !== data.name) {
+          currentValue.templates = currentValue.templates.filter(
+            (item) => item.name !== data.name
+          );
+          accumulator.push(currentValue);
+        }
+        return accumulator;
+      },
+      []
+    );
+};
+
+const onDeleteRow = (row: ICreateBoilerplateEntityTemplate) => {
+  const isAccept = window.confirm("Do you really want to delete this row?");
+  if (!isAccept) return;
+
+  const index = createBoilerplateData.value.entities.findIndex(
+    (item) => item.name === tableSelected.value
+  );
+  if (index === -1 || !row.id) return;
+
+  /* Relation case */
+  if (checkIsRelation(row.type)) {
+    const targetIndex = createBoilerplateData.value.entities.findIndex(
+      (item) => item.name === row.name
+    );
+
+    if (targetIndex === -1) return;
+    createBoilerplateData.value.entities[targetIndex].templates =
+      createBoilerplateData.value.entities[targetIndex].templates.filter(
+        (item) => item.name !== tableSelected.value
+      );
+  }
+
+  createBoilerplateData.value.entities[index].templates =
+    createBoilerplateData.value.entities[index].templates.filter(
+      (item) => item.id !== row.id
+    );
+};
+
+const getTableSelectedRow = computed(() => {
+  if (tableSelected.value.length > 0) {
+    const index = createBoilerplateData.value.entities.findIndex(
+      (item) => item.name === tableSelected.value
+    );
+    if (index === -1) return;
+    return createBoilerplateData.value.entities[index].templates;
+  }
+
+  return [];
 });
 
-const onDeleteRow = () =>{
-  const isAccept = window.confirm("Do you really want to delete this row?")
-  if(!isAccept) return;
-   alert('deleted')
+const onTableSelect = (item: ICreateBoilerplateEntity) => {
+  tableSelected.value = item.name;
+};
 
-}
+const onCreateTable = (isChangeTableSelected: boolean) => {
+  if (!createTableInput.value) return;
+  if (onInputBlur("CREATE-TABLE")) return;
+
+  createBoilerplateData.value.entities.push({
+    name: createTableInput.value,
+    templates: [
+      {
+        id: 0,
+        name: "id",
+        type: "Integer",
+        primary: true,
+        validation: [],
+        disable: true,
+        mappedBy: "",
+        required: true,
+        referencedColumnName: "",
+        alreadyHasPrimary: false,
+        error: {
+          invalid: false,
+          message: "",
+        },
+      },
+    ],
+  });
+  if (isChangeTableSelected) {
+    tableSelected.value = createTableInput.value;
+  }
+
+  createTableInput.value = "";
+};
 
 const toggleCreateSpringRelationModalOpen = (value: boolean) => {
+  if (
+    value === false &&
+    waitForCreateSpringRelationModalCallbackValue.value.value.length > 0
+  ) {
+    const index = createBoilerplateData.value.entities.findIndex(
+      (item) => item.name === tableSelected.value
+    );
+    if (index === -1) return;
+    const temp = createBoilerplateData.value.entities[index].templates.map(
+      (item) => {
+        if (
+          waitForCreateSpringRelationModalCallbackValue.value.row &&
+          item?.id ===
+            waitForCreateSpringRelationModalCallbackValue.value.row?.id
+        ) {
+          item.type =
+            waitForCreateSpringRelationModalCallbackValue.value.row.type;
+        }
+        return item;
+      }
+    );
 
-  if(value===false && waitForCreateSpringRelationModalCallbackValue.value.value.length>0){
-   
-    const temp = springEntitiesData.value.map(item  => {
-    if(waitForCreateSpringRelationModalCallbackValue.value.row && item.id===waitForCreateSpringRelationModalCallbackValue.value.row.id){
-      item.type=waitForCreateSpringRelationModalCallbackValue.value.row.type;
-    }
-    return item;
-  })
-  
-    springEntitiesData.value = temp;
+    createBoilerplateData.value.entities[index].templates = temp;
   }
   createSpringRelationModalOpen.value = value;
 };
 
-
-const onTypeSelectChanging = (e: Event,row : RowTemp) => {
+const onTypeSelectChanging = (
+  e: Event,
+  row: ICreateBoilerplateEntityTemplate
+) => {
   const selectedValue = (e.target as HTMLSelectElement).value;
-  
-  if(checkIsRelation(selectedValue)){
+
+  if (checkIsRelation(selectedValue)) {
     createSpringRelationModalOpen.value = true;
-    waitForCreateSpringRelationModalCallbackValue.value ={
-      value:selectedValue,
-      row
-    }
+    waitForCreateSpringRelationModalCallbackValue.value = {
+      value: selectedValue,
+      row,
+    };
     return;
   }
-  const temp = JSON.parse(JSON.stringify(springEntitiesData.value)).map((item : RowTemp)  => {
-    if(item.id===row.id){
-      item.type=selectedValue;
+  const index = createBoilerplateData.value.entities.findIndex(
+    (item) => item.name === tableSelected.value
+  );
+  if (index === -1) return;
+  const temp = JSON.parse(
+    JSON.stringify(createBoilerplateData.value.entities[index].templates)
+  ).map((item: ICreateBoilerplateEntityTemplate) => {
+    if (item?.id === row?.id) {
+      item.type = selectedValue;
     }
     return item;
-  })
-  springEntitiesData.value = temp
-
+  });
+  createBoilerplateData.value.entities[index].templates = temp;
 };
 
-const onCreateRelationModalSubmit = () =>{
+const onCreateRelationModalSubmit = (tableChoosingRef: Ref<string>) => {
+  const tableChoosing = tableChoosingRef.value;
+  const type = waitForCreateSpringRelationModalCallbackValue.value.value;
+
   createSpringRelationModalOpen.value = false;
-  springEntitiesData.value = springEntitiesData.value.map(item  => {
-    if(waitForCreateSpringRelationModalCallbackValue.value.row && item.id===waitForCreateSpringRelationModalCallbackValue.value.row.id){
-      item.type=waitForCreateSpringRelationModalCallbackValue.value.value;
-    }
-    return item;
-  })
-}
+  const index = createBoilerplateData.value.entities.findIndex(
+    (item) => item.name === tableSelected.value
+  );
+  if (index === -1) return;
+  createBoilerplateData.value.entities[index].templates =
+    createBoilerplateData.value.entities[index].templates.map((item) => {
+      if (
+        waitForCreateSpringRelationModalCallbackValue.value.row &&
+        item?.id === waitForCreateSpringRelationModalCallbackValue.value.row?.id
+      ) {
+        item.type = waitForCreateSpringRelationModalCallbackValue.value.value;
+        item.name = tableChoosing;
+
+        switch (type) {
+          case "OneToOne":
+            {
+              item.referencedColumnName = "id";
+              const targetTableIndex =
+                createBoilerplateData.value.entities.findIndex(
+                  (item) => item.name === tableChoosing
+                );
+              if (targetTableIndex === -1) break;
+              const relationALreadyExist = createBoilerplateData.value.entities[
+                targetTableIndex
+              ].templates.findIndex(
+                (item) => item.name === tableSelected.value
+              );
+              if (relationALreadyExist !== -1) break;
+              createBoilerplateData.value.entities[
+                targetTableIndex
+              ].templates.push({
+                id: createBoilerplateData.value.entities[targetTableIndex]
+                  .templates.length,
+                name: tableSelected.value,
+                type: "OneToOne",
+                primary: false,
+                disable: false,
+                required: true,
+                validation: [],
+                alreadyHasPrimary: true,
+                mappedBy: tableChoosing.toLowerCase(),
+                referencedColumnName: "",
+                error: {
+                  invalid: false,
+                  message: "",
+                },
+              });
+            }
+            break;
+          case "OneToMany":
+            {
+              item.mappedBy = tableSelected.value.toLowerCase();
+              const targetTableIndex =
+                createBoilerplateData.value.entities.findIndex(
+                  (item) => item.name === tableChoosing
+                );
+              if (targetTableIndex === -1) break;
+              const relationALreadyExist = createBoilerplateData.value.entities[
+                targetTableIndex
+              ].templates.findIndex(
+                (item) => item.name === tableSelected.value
+              );
+              if (relationALreadyExist !== -1) break;
+              createBoilerplateData.value.entities[
+                targetTableIndex
+              ].templates.push({
+                id: createBoilerplateData.value.entities[targetTableIndex]
+                  .templates.length,
+                name: tableSelected.value,
+                type: "ManyToOne",
+                primary: false,
+                disable: false,
+                required: true,
+                validation: [],
+                alreadyHasPrimary: true,
+                mappedBy: "",
+                referencedColumnName: "id",
+                error: {
+                  invalid: false,
+                  message: "",
+                },
+              });
+            }
+            break;
+          case "ManyToOne":
+            {
+              item.referencedColumnName = "id";
+              const targetTableIndex =
+                createBoilerplateData.value.entities.findIndex(
+                  (item) => item.name === tableChoosing
+                );
+              if (targetTableIndex === -1) break;
+              const relationALreadyExist = createBoilerplateData.value.entities[
+                targetTableIndex
+              ].templates.findIndex(
+                (item) => item.name === tableSelected.value
+              );
+              if (relationALreadyExist !== -1) break;
+              createBoilerplateData.value.entities[
+                targetTableIndex
+              ].templates.push({
+                id: createBoilerplateData.value.entities[targetTableIndex]
+                  .templates.length,
+                name: tableSelected.value,
+                type: "OneToMany",
+                primary: false,
+                disable: false,
+                required: true,
+                validation: [],
+                alreadyHasPrimary: true,
+                mappedBy: tableChoosing.toLowerCase(),
+                referencedColumnName: "",
+                error: {
+                  invalid: false,
+                  message: "",
+                },
+              });
+            }
+            break;
+          case "ManyToMany":
+            {
+              item.mappedBy = `${tableSelected.value.toLocaleLowerCase()}s`;
+              const targetTableIndex =
+                createBoilerplateData.value.entities.findIndex(
+                  (item) => item.name === tableChoosing
+                );
+              if (targetTableIndex === -1) break;
+              const relationALreadyExist = createBoilerplateData.value.entities[
+                targetTableIndex
+              ].templates.findIndex(
+                (item) => item.name === tableSelected.value
+              );
+              if (relationALreadyExist !== -1) break;
+              createBoilerplateData.value.entities[
+                targetTableIndex
+              ].templates.push({
+                id: createBoilerplateData.value.entities[targetTableIndex]
+                  .templates.length,
+                name: tableSelected.value,
+                type: "ManyToMany",
+                primary: false,
+                disable: false,
+                required: true,
+                validation: [],
+                alreadyHasPrimary: true,
+                mappedBy: "",
+                referencedColumnName: "id",
+                error: {
+                  invalid: false,
+                  message: "",
+                },
+              });
+            }
+            break;
+          default:
+            break;
+        }
+      }
+      return item;
+    });
+};
 const checkIsRelation = (value: string) => {
   return relationType.includes(value) ? true : false;
 };
 
 const addRow = () => {
-  springEntitiesData.value.push({
-    id:springEntitiesData.value.length,
+  const index = createBoilerplateData.value.entities.findIndex(
+    (item) => item.name === tableSelected.value
+  );
+  if (index === -1) return;
+  createBoilerplateData.value.entities[index].templates.push({
+    id: createBoilerplateData.value.entities[index].templates.length,
+    name: "",
     type: "String",
-    fieldName: "firstName",
+    primary: false,
+    validation: [],
+    disable: false,
+    mappedBy: "",
     required: false,
-    validation: [1, 2],
-    primary: true,
+    referencedColumnName: "",
+    alreadyHasPrimary: true,
+    error: {
+      invalid: false,
+      message: "",
+    },
   });
 };
 
@@ -232,10 +699,10 @@ const springEntitiesColumns = [
     key: "required",
     label: "Required",
   },
-  {
+  /*   {
     key: "validation",
     label: "Validation",
-  },
+  }, */
   {
     key: "primary",
     label: "Primary",
@@ -245,7 +712,7 @@ const springEntitiesColumns = [
     label: "",
   },
 ];
-
+/* 
 const springEntitiesData = ref<RowTemp[]>([
   {
     id:0,
@@ -254,39 +721,9 @@ const springEntitiesData = ref<RowTemp[]>([
     required: true,
     validation: [],
     primary: true,
+    disable:false
   },
-]);
-
-const originalTypes = [
-  {
-    name: "String",
-    value: "String",
-  },
-  {
-    name: "Integer",
-    value: "Integer",
-  },
-  {
-    name: "Boolean",
-    value: "Boolean",
-  },
-  {
-    name: "OneToMany",
-    value: "OneToMany",
-  },
-  {
-    name: "ManyToOne",
-    value: "ManyToOne",
-  },
-  {
-    name: "OneToOne",
-    value: "OneToOne",
-  },
-  {
-    name: "ManyToMany",
-    value: "ManyToMany",
-  },
-];
+]); */
 </script>
 
 <style scoped></style>

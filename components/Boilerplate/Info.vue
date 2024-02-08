@@ -24,12 +24,13 @@
             <h5 class="text-slate-500 font-light text-sm ml-[86px]">
               ({{ boilerplateItemState.totalReview }} voting)
             </h5>
-            <div
-              class="ml-4 font-semibold text-sm flex items-center gap-2 cursor-pointer hover:underline"
+            <a
+              class="ml-4 font-semibold text-sm flex items-center gap-2 cursor-pointer hover:underline text-black"
+              href="#boilerplate-review"
             >
               Show reviews
               <UIcon name="i-heroicons-chevron-down" />
-            </div>
+            </a>
           </div>
           <!-- Created by -->
           <h3 class="font-normal" v-if="type === 'boilerplate'">
@@ -42,7 +43,7 @@
         </div>
 
         <div class="flex items-center gap-10" v-if="type === 'boilerplate'">
-          <NuxtLink to="/boilerplate/explore/something"
+          <NuxtLink :to="`/boilerplate/explore/${boilerplateItemState.name}`"
             ><UButton class="py-2 px-6">Let's explore</UButton></NuxtLink
           >
           <UButton color="red" variant="solid" class="py-2 px-6"
@@ -50,8 +51,8 @@
           >
         </div>
 
-        <div class="flex items-center gap-10" v-else>
-          <NuxtLink to="/boilerplate/explore/something"
+      <!--   <div class="flex items-center gap-10" v-else>
+          <NuxtLink :to="`/boilerplate/explore/${boilerplateItemState.name}`"
             ><UButton class="py-2 px-6" color="blue" variant="solid"
               >Download default template</UButton
             ></NuxtLink
@@ -59,10 +60,10 @@
           <UButton color="pink" variant="solid" class="py-2 px-6"
             >Custom template</UButton
           >
-        </div>
+        </div> -->
       </div>
       <div class="flex justify-end">
-        <InteractiveVideo />
+        <InteractiveVideo :preview-link="boilerplateItemState.previewLink" :thumbnail="boilerplateItemState.thumbnail" />
       </div>
     </div>
   </div>
@@ -79,6 +80,8 @@ const boilerplateItemState = useBoilerplateItem();
 defineProps<{
   type: string;
 }>();
+
+
 
 </script>
 

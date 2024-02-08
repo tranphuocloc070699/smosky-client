@@ -86,7 +86,7 @@ const isOpen = ref(false);
 const addNewFieldValue = ref("required");
 const validateList = ref<IValidateField[]>([]);
 const onAddNewField = () => {
-  console.log({ value: addNewFieldValue.value });
+ 
   switch (addNewFieldValue.value) {
     case "required":
       validateList.value.push({
