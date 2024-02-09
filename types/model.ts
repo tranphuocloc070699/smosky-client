@@ -21,6 +21,8 @@ export interface IReview{
   email:string;
   content:string;
   star:number;
+  createdAt:Date;
+  updatedAt:Date;
 }
 
 export interface IBoilerplateItem{
@@ -40,7 +42,7 @@ export interface IBoilerplateItem{
   reviews:IReview[];
   dependencies:ISpringDependencyGroup[];
   dependenciesSelected:String[];
-  features:String[]
+  features:String[];
 }
 
 export interface IProjectStructure{
@@ -93,6 +95,26 @@ export interface ISpringDependencyPropertyOption{
   id:number;
   label:string;
   value:string;
+}
+
+export interface ITag{
+  id:number;
+  name:string;
+}
+
+export interface ICreateBlogRequest {
+  title: string;
+  slug: string;
+  content: string;
+  pre_content:string;
+  toc: ITocItem[];
+  thumbnail: File | null;
+}
+
+export interface ITocItem {
+  link: string;
+  title: string;
+  type: string;
 }
 
 

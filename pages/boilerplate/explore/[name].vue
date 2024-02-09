@@ -3,15 +3,23 @@
     <div>
       <AppNavigation :data="navigationData" />
       <BoilerplateInfo type="explore" />
-      <AppTitle :data="{ title: 'Mores', iconName: 'chevron-double-up-16-solid' }">
+      <AppTitle
+        :data="{ title: 'Mores', iconName: 'chevron-double-up-16-solid' }"
+      >
         <div class="flex items-center gap-16">
-          <UCheckbox
+          <UTooltip
             v-for="item in featuresCheckBox"
             :key="item.label"
-            :label="item.label"
-            :help="item.help"
-            :model-value="item.isChecked"
-          />
+            text="Create at least one entity to enable this feature"
+            :popper="{ placement: 'top' }"
+          >
+            <UCheckbox
+              :label="item.label"
+              :help="item.help"
+              v-model="createBoilerplateData.crud"
+              :disabled="createBoilerplateData.entities.length === 0"
+            />
+          </UTooltip>
         </div>
       </AppTitle>
       <AppTitle :data="{ title: 'Configuration', iconName: 'wrench' }">
@@ -39,6 +47,7 @@
         <UButton
           class="px-4 py-2 min-w-32 flex items-center justify-center"
           color="white"
+          @click="executeBoilerplatePreview"
           >Preview</UButton
         >
         <UButton
@@ -47,6 +56,14 @@
           >Download</UButton
         >
       </div>
+    </div>
+    <div v-if="boilerplatePreviewResponseData?.projectStructure">
+      <ModalShowBoilerplatePreview
+        @on-btn-download-click="onBtnDownloadFromPreviewClick"
+        :is-open="showPreviewBoilerplate"
+        @update:is-open="toggleShowPreviewBoilerplate"
+        :project-structure="boilerplatePreviewResponseData.projectStructure"
+      />
     </div>
   </ClientOnly>
 </template>
@@ -59,7 +76,7 @@ import {
   useSpringDependenciesSelected,
 } from "~/composables/useState";
 import type { INavigation } from "~/types/components";
-import Axios from "axios";
+import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 const route = useRoute();
 definePageMeta({
   layout: "detail",
@@ -67,11 +84,99 @@ definePageMeta({
 
 const name = route.params.name;
 
+const showPreviewBoilerplate = ref(false);
+
+const executeBoilerplatePreview = async () => {
+  const entitiesValidation = validationEntitiesBeforeSubmit();
+  if (entitiesValidation.invalid) {
+    alert(entitiesValidation.message);
+    return;
+  }
+
+  const metadataValidation = validationMetadataBeforeSubmit();
+
+  if (metadataValidation.invalid) {
+    alert(metadataValidation.message);
+    return;
+  }
+
+  const data = {
+    type: createBoilerplateData.value.type,
+    bootVersion: createBoilerplateData.value.bootVersion,
+    metadata: {
+      groupId: createBoilerplateData.value.metadata.groupId.value,
+      artifactId: createBoilerplateData.value.metadata.artifactId.value,
+      name: createBoilerplateData.value.metadata.name.value,
+      description: createBoilerplateData.value.metadata.description,
+      packaging: createBoilerplateData.value.metadata.packaging,
+      jvmVersion: createBoilerplateData.value.metadata.jvmVersion,
+    },
+    dependencies: springDependenciesSelectedState.value.map((item) => ({
+      id: item.id,
+      properties: item.properties.map((item) => ({
+        id: item.id,
+        value: item.value,
+      })),
+    })),
+    crud:createBoilerplateData.value.crud,
+    entities: createBoilerplateData.value.entities.map((item) => ({
+      name: item.name,
+      templates: item.templates.map((item) => ({
+        name: item.name,
+        type: item.type,
+        primary: item.primary,
+        mappedBy: item.mappedBy,
+        referencedColumnName: item.referencedColumnName,
+      })),
+    })),
+  };
+
+  requestData.value = data;
+  await createBoilerplatePreviewExecute();
+  showPreviewBoilerplate.value = true;
+};
+
+const toggleShowPreviewBoilerplate = (value: boolean) => {
+  showPreviewBoilerplate.value = value;
+};
+
 const boilerplateApi = useApi();
 const boilerplateItemState = useBoilerplateItem();
 const createBoilerplateData = useCreateBoilerplateData();
 const springDependenciesSelectedState = useSpringDependenciesSelected();
+const downloadUrl = ref<IDownloadBoilerplateFromPreview>({
+  downloadUrl: "",
+});
 const requestData = ref({});
+
+const onBtnDownloadFromPreviewClick = async () => {
+  if (boilerplatePreviewResponseData.value?.downloadUrl) {
+    downloadUrl.value.downloadUrl =
+      boilerplatePreviewResponseData.value.downloadUrl;
+    await downloadBoilerplateFromUrlExecute();
+
+    console.log({ downloadUrl: downloadUrl.value.downloadUrl });
+    const blob = new Blob(
+      [boilerplateFromDownloadUrlResponseData.value as any],
+      {
+        type: "application/zip",
+      }
+    );
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${createBoilerplateData.value.metadata.name.value}.zip`;
+    a.setAttribute("download", "file.zip");
+    a.style.display = "none";
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+
+    toggleShowPreviewBoilerplate(false);
+  }
+};
+
 boilerplateApi.boilerplate
   .fetchDetail(name as string)
   .then((data) => {
@@ -102,6 +207,24 @@ boilerplateApi.boilerplate
     console.error({ error });
   });
 
+const {
+  execute: createBoilerplateExecute,
+  data: responseData,
+  error,
+} = boilerplateApi.boilerplate.createBoilerplate(requestData);
+
+const {
+  execute: createBoilerplatePreviewExecute,
+  data: boilerplatePreviewResponseData,
+} = boilerplateApi.boilerplate.createPreviewBoilerplate(requestData);
+
+const {
+  execute: downloadBoilerplateFromUrlExecute,
+  data: boilerplateFromDownloadUrlResponseData,
+} = boilerplateApi.boilerplate.downloadBoilerplateFromPreview(
+  downloadUrl.value
+);
+
 const isDependencyExistInArray = (value: string) => {
   return (
     springDependenciesSelectedState.value.findIndex(
@@ -110,48 +233,77 @@ const isDependencyExistInArray = (value: string) => {
   );
 };
 
-const {
-  data,
-  error,
-  execute: createBoilerplateExecute,
-} = boilerplateApi.boilerplate.createBoilerplate(requestData);
-
-const validationBeforeSubmit = () =>{
+const validationMetadataBeforeSubmit = () => {
   let validation = {
-    invalid:false,
-    message:''
+    invalid: false,
+    message: "",
   };
- createBoilerplateData.value.entities.forEach(entity =>{
-  entity.templates.forEach(item =>{
-    if(item.error.invalid || !item.name){
-      validation ={
-        invalid:true,
-        message:`Contain invalid field on table ${entity.name}`
-      };
-    }
-  })
- })
- return validation;
-}
+  if (createBoilerplateData.value.metadata.groupId.error.invalid) {
+    validation = {
+      invalid: true,
+      message: "Group value invalid",
+    };
+  }
+  if (createBoilerplateData.value.metadata.artifactId.error.invalid) {
+    validation = {
+      invalid: true,
+      message: "artifact value invalid",
+    };
+  }
+  if (createBoilerplateData.value.metadata.name.error.invalid) {
+    validation = {
+      invalid: true,
+      message: "name value invalid",
+    };
+  }
 
+  return validation;
+};
 
+const validationEntitiesBeforeSubmit = () => {
+  let validation = {
+    invalid: false,
+    message: "",
+  };
+  createBoilerplateData.value.entities.forEach((entity) => {
+    entity.templates.forEach((item) => {
+      if (item.error.invalid || !item.name) {
+        validation = {
+          invalid: true,
+          message: `Contain invalid field on table ${entity.name}`,
+        };
+      }
+    });
+  });
+  return validation;
+};
 
 const onSubmit = async () => {
-  const validate = validationBeforeSubmit();
-  console.log({validate})
-  if(validate.invalid){
-    alert(validate.message)
+  const entitiesValidation = validationEntitiesBeforeSubmit();
+  if (entitiesValidation.invalid) {
+    alert(entitiesValidation.message);
     return;
   }
 
+  const metadataValidation = validationMetadataBeforeSubmit();
 
-  return;
+  if (metadataValidation.invalid) {
+    alert(metadataValidation.message);
+    return;
+  }
+
   const data = {
     type: createBoilerplateData.value.type,
     bootVersion: createBoilerplateData.value.bootVersion,
     metadata: {
-      ...createBoilerplateData.value.metadata,
+      groupId: createBoilerplateData.value.metadata.groupId.value,
+      artifactId: createBoilerplateData.value.metadata.artifactId.value,
+      name: createBoilerplateData.value.metadata.name.value,
+      description: createBoilerplateData.value.metadata.description,
+      packaging: createBoilerplateData.value.metadata.packaging,
+      jvmVersion: createBoilerplateData.value.metadata.jvmVersion,
     },
+    crud:createBoilerplateData.value.crud,
     dependencies: springDependenciesSelectedState.value.map((item) => ({
       id: item.id,
       properties: item.properties.map((item) => ({
@@ -171,49 +323,22 @@ const onSubmit = async () => {
     })),
   };
 
-  Axios.post<Blob>("http://localhost:8080/spring", data, {
-    timeout: 0,
-    responseType: "blob",
-  })
-    .then((response: any) => {
-      console.log({ response });
-      const blob = new Blob([response.data as any], {
-        type: "application/zip",
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${data.metadata.name}.zip`;
-      a.setAttribute("download", "file.zip");
-      a.style.display = "none";
-      a.target = "_blank";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-    })
-    .catch((error: any) => {
-      console.error(error);
-    });
-
   requestData.value = data;
-  /*   createBoilerplateExecute()
-    .then((response) => {
-      console.log({ response: response });
-      const blob = new Blob([response as any], { type: "application/zip" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${data.metadata.name}.zip`;
-      a.setAttribute("download", "file.zip");
-      a.style.display = "none";
-      a.target = "_blank";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-    })
-    .catch((error: any) => {
-      console.error(error);
-    }); */
+  await createBoilerplateExecute();
+
+  const blob = new Blob([responseData.value as any], {
+    type: "application/zip",
+  });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${data.metadata.name}.zip`;
+  a.setAttribute("download", "file.zip");
+  a.style.display = "none";
+  a.target = "_blank";
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
 };
 
 definePageMeta({
@@ -253,20 +378,13 @@ const items = [
   },
 ];
 
-const featuresCheckBox = [
+const featuresCheckBox = ref([
   {
-    label: "Test",
-    help: "This is help",
+    label: "CRUD",
+    help: "Create simple CRUD template (Beta version)",
     isChecked: true,
   },
-  {
-    label: "Docs",
-    help: "Open api",
-    isChecked: true,
-  },
-];
-
-const isCustom = ref(false);
+]);
 </script>
 
 <style scoped></style>

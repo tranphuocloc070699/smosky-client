@@ -10,14 +10,16 @@
 </template>
 
 <script setup lang="ts">
-import type { IBoilerplate } from '~/types/model';
+import type { IBoilerplate, ITag } from '~/types/model';
 import useApi from '~/composables/useApi';
-import {useBoilerplateList} from '~/composables/useState'
+import {useBoilerplateList,useTagList} from '~/composables/useState'
 const boilerplateApi = useApi();
 const boilerplateState = useBoilerplateList();
+const tagListState = useTagList();
 
 boilerplateApi.boilerplate.fetchAll().then((data) =>{
-  boilerplateState.value = data.data.value as IBoilerplate[];
+  boilerplateState.value = data.data.value?.boilerplates as IBoilerplate[];
+  tagListState.value = data.data.value?.tags as ITag[]
 
 }).catch(error => {
   console.log({error})

@@ -10,6 +10,10 @@ export  const containsSpecialChars = (str: string) => {
     const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
     return specialChars.test(str);
   };
+  export  const containsSpecialCharsWithoutDot = (str: string) => {
+    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/;
+    return specialChars.test(str);
+  };
   
 export  const followingPascalCase = (str: string) => {
     const result = /^[A-Z][a-zA-Z]*$/.test(str);

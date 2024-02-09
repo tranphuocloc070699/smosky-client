@@ -17,8 +17,8 @@
 <script setup lang="ts">
 const items = [
   {
-    slot: "ci-cd",
-    label: "CI CD",
+    slot: "boilerplates",
+    label: "Boilerplate",
   },
   {
     slot: "posts",

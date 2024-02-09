@@ -16,9 +16,17 @@
         <UInput type="text" id="title" />
       </div>
       <div class="py-4">
+        <label for="title" class="text-sm font-medium">Thumbnail</label>
+        <UInput type="file" id="thumbnail" @handleChange="
+            (e : any) => {
+              thumbnailHandler(e);
+            }
+          " />
+      </div>
+      <div class="py-4">
         <label for="title" class="text-sm font-medium">Tag</label>
         <UButton class="ml-4" color="white" label="Open" @click="isOpen = true" />
-        <UModal v-model="isOpen">
+<!--         <UModal v-model="isOpen">
             <UCommandPalette
           v-model="selected"
           multiple
@@ -27,22 +35,69 @@
           :groups="[{ key: 'tag', commands: tag }]"
           :fuse="{ resultLimit: 6, fuseOptions: { threshold: 0.1 } }"
         />
-        </UModal>
+        </UModal> -->
        
       </div>
       <div class="py-4">
-        <label for="title" class="text-sm font-medium">Content</label>
+        <label for="title" class="text-sm font-medium">Pre content</label>
         <UTextarea type="text" id="title" />
       </div>
+
+      <div class="py-4">
+        <label for="title" class="text-sm font-medium">Content</label>
+       <ClientOnly>
+        <Editor
+        v-model="dto.content"
+      api-key="kdfp4jryhvd3ycflqhdz5vboj1qla6h9eteujcga5uj4nod3"
+      :init="{
+        menubar:false,
+        images_upload_handler: uploadImageHandle,
+        plugins: 'codesample anchor link help table image',
+
+        toolbar:
+              'undo redo | styles | \
+            alignleft aligncenter alignright alignjustify | \
+            outdent indent | codesample| link | table | image | \
+            help | custom-remove-image | customTOC',
+            setup: (editor : any) => {
+              editor.ui.registry.addButton('custom-remove-image', {
+                text: 'Remove Image',
+                onAction: (api : any) => {
+                  removeImageHandler(editor)
+                  api.isEnabled = () => false
+                }
+              });
+              editor.ui.registry.addButton('customTOC', {
+                text: 'TOC',
+                onAction: () => {
+                  customTOCHandler(editor)
+                },
+              });
+              
+            },
+      }"
+
+    />
+       </ClientOnly>
+
+      </div>
+     
       <div class="py-8 text-end">
         <UButton class="ml-4" color="emerald" label="Create New Post" @click="handleSubmit" />
       </div>
     </div>
     <div class="col-span-3"></div>
+
   </div>
+
 </template>
 
 <script setup lang="ts">
+import Editor from '@tinymce/tinymce-vue'
+// import { Editor as TinyMCEEditor } from "tinymce";
+import type { ICreateBlogRequest, ITocItem } from '~/types/model';
+import { convertedSentence } from '~/utils/converter';
+const toast = useToast()
 const tag = [
   { id: 1, label: "Frontend" },
   { id: 2, label: "Backend" },
@@ -51,9 +106,81 @@ const tag = [
 ];
 const selected = ref([tag[3]])
 const isOpen = ref(false)
+const thumbnailTemporaryUrl = ref<string>('');
+
+
+const dto = ref<ICreateBlogRequest>({
+  title: '',
+  slug: '',
+  content: '',
+  pre_content:'',
+  toc: [],
+  thumbnail:null
+})
+
+const thumbnailHandler = async (e: any) => {
+  const file = e.target["files"][0];
+  
+  if (file) {
+    dto.value.thumbnail = file;
+    thumbnailTemporaryUrl.value = window.URL.createObjectURL(file)
+    console.log(thumbnailTemporaryUrl.value)
+  }
+};
+
+const uploadImageHandle = async (blobInfo: any, _: any) => {
+  const formData = new FormData();
+  formData.append("file", blobInfo.blob(), blobInfo.filename());
+
+
+};
+
+const removeImageHandler = (editor: any) => {
+  if (editor.selection.getNode().nodeName === "IMG") {
+    const selectedNode = editor.selection.getNode();
+    const src = selectedNode.getAttribute("src") || "";
+ /*    adminStore
+      .deleteImage(src)
+      .then((data) => {
+        console.log("delete image", data);
+        editor.dom.remove(selectedNode);
+      })
+      .catch((error) => {
+        alert("[remove-image] error");
+        console.log({ error });
+      }); */
+  }
+};
+
+const customTOCHandler = (editor: any) => {
+  dto.value.toc = [];
+  let tocTemp: ITocItem[] = [];
+  const headings: HTMLElement[] = editor.dom.select("h1, h2, h3, h4, h5, h6");
+  headings.forEach((heading, index) => {
+    if (heading.id === "") {
+      const headingText: string = heading.innerText;
+      const headingId = convertedSentence(headingText);
+      heading.setAttribute("id", headingId);
+      tocTemp.push({
+        title: headingText,
+        link: headingId,
+        type: heading.nodeName,
+      });
+    }
+  });
+  console.log({ tocTemp });
+/*   notify({
+    type:'info',
+    text:'create toc successfully!,check console'
+  }) */
+
+  
+  
+  dto.value.toc = tocTemp;
+};
 
 const handleSubmit = () =>{
-   
+  toast.add({ title: 'Hello world!' })
 }
 </script>
 

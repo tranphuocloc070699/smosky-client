@@ -90,7 +90,7 @@ const ProjectStructureFromJson = ({ node }: IProps) => {
           else return ProjectStructureFromJson({ node: item });
         })
       ) : (
-        <div>Something wrong...</div>
+        <div></div>
       )}
     </div>
   );

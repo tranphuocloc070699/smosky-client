@@ -11,13 +11,15 @@
       Tags
     </h2>
     <div class="flex items-center flex-wrap gap-4">
-      <CardTagItem v-for="item in data" :key="item.title" :data="item" />
+      <CardTagItem v-if="tagListState" v-for="item in tagListState" :key="item.id" :data="item" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const data = [
+import {useTagList} from '~/composables/useState'
+const tagListState = useTagList();
+/* const data = [
   {
     title: "Postgresql",
     color: "blue",
@@ -49,7 +51,7 @@ const data = [
     textColor: "text-emerald-600",
     link: "/",
   },
-];
+]; */
 </script>
 
 <style scoped></style>

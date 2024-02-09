@@ -9,5 +9,9 @@ export interface IAppTitle{
     iconName:string;
 }
 
+export interface IValidationErrorItem {
+    invalid: boolean;
+    message: string;
+  }
 
 

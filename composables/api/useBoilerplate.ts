@@ -1,28 +1,55 @@
 import type { IBoilerplateItem } from "~/types/model";
+import type { IDownloadBoilerplateFromPreview } from "~/types/request";
+import type { IBoilerplatePreviewResponse, IFetchAllBoilerplate } from "~/types/response";
 
 
 export default function () {
-
+  const config = useRuntimeConfig()
+  const BASE_URL_BOILERPLATE_SERVER = config.public.NUXT_BASE_URL_BOILERPLATE_SERVER
     return {
       fetchAll(){
-        return useFetch(`http://localhost:8080/spring`,{
+        return useFetch<IFetchAllBoilerplate>(`${BASE_URL_BOILERPLATE_SERVER}/spring`,{
           key:'boilerplate-list',
           method:'get',
+          retry:3
         });
       },
       fetchDetail(name : string){
-        return useFetch<IBoilerplateItem>(`http://localhost:8080/spring/${name}`,{
+        return useFetch<IBoilerplateItem>(`${BASE_URL_BOILERPLATE_SERVER}/spring/${name}`,{
           key:"boilerplate-detail",
           method:'get',
+          retry:3
         });
       },
       createBoilerplate(dto : any){
-        return useFetch<Blob>(`http://localhost:8080/spring`,{
+        return useFetch<Blob>(`${BASE_URL_BOILERPLATE_SERVER}/spring`,{
           key:"create-boilerplate",
           method:'post',
           body:dto,
           responseType:'blob',
-          immediate:false
+          immediate:false,
+          watch:false,
+
+        });
+      },
+      createPreviewBoilerplate(dto : any){
+        return useFetch<IBoilerplatePreviewResponse>(`${BASE_URL_BOILERPLATE_SERVER}/spring/preview`,{
+          key:"create-preview-boilerplate",
+          method:'post',
+          body:dto,
+          immediate:false,
+          watch:false,
+    
+        });
+      },
+    downloadBoilerplateFromPreview(dto : IDownloadBoilerplateFromPreview){
+        return useFetch<Blob>(`${BASE_URL_BOILERPLATE_SERVER}/spring/preview/download`,{
+          key:"download-boilerplate-from-preview",
+          method:'post',
+          body:dto,
+          responseType:'blob',
+          immediate:false,
+          watch:false,
         });
       }
 

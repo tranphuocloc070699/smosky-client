@@ -1,16 +1,27 @@
+import type {IValidationErrorItem} from './components'
+
 export interface ICreateBoilerplate{
         type:string,
         bootVersion:string,
         metadata:ICreateBoilerplateSpringMetadata
         dependencies:ICreateBoilerplateDependency[],
-        entities:ICreateBoilerplateEntity[]
-    
+        entities:ICreateBoilerplateEntity[];
+        crud:boolean;
 }
 
 export interface ICreateBoilerplateSpringMetadata{
-    groupId:string,
-    artifactId:string,
-    name:string,
+    groupId:{
+        value:string,
+        error:IValidationErrorItem
+    },
+    artifactId:{
+        value:string,
+        error:IValidationErrorItem
+    },
+    name:{
+        value:string,
+        error:IValidationErrorItem
+    },
     description:string,
     packaging:'jar' | 'war'
     jvmVersion:number
@@ -52,4 +63,8 @@ export interface ICreateReview{
     email:string;
     content:string;
     star:number;
+}
+
+export interface IDownloadBoilerplateFromPreview{
+    downloadUrl:string
 }

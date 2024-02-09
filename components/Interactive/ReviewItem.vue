@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 rounded border border-slate-300">
+  <div v-if="data" class="p-4 rounded border border-slate-300">
     <div class="flex items-center gap-4">
       <UAvatar
         src="https://avatars.githubusercontent.com/u/739984?v=4"
@@ -15,7 +15,8 @@
           />
         </div>
       </div>
-      <p class="text-sm text-slate-500">2 day agos</p>
+
+      <p class="text-sm text-slate-500">{{convertDateTimeToYMD(data.createdAt.toString())  }}</p>
     </div>
     <p class="pt-4">{{ data.content }}</p>
   </div>
@@ -23,7 +24,7 @@
 
 <script setup lang="ts">
 import type { IReview } from '~/types/model';
-
+import {convertDateTimeToYMD} from '~/utils/timer'
 defineProps<{
   data:IReview
 }>();

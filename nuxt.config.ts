@@ -7,17 +7,20 @@ export default defineNuxtConfig({
   },
 
 
+
   /***
   Config
   ***/
   runtimeConfig: {
     // The private keys which are only available server-side
-    apiSecret: "123",
-
+   
     // Keys within public are also exposed client-side
     public: {
       apiBase: "/api",
+      NUXT_BASE_URL_BOILERPLATE_SERVER: process.env.NUXT_BASE_URL_BOILERPLATE_SERVER,
+
     },
+    
   },
   /***
   Modules 

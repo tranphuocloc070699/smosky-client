@@ -1,16 +1,20 @@
 <template>
   <div
-    :class="`px-2 py-1 rounded-md inline-block text-sm font-medium ${data?.background} ${data?.textColor} cursor-pointer transition duration-300 ease-in-out hover:brightness-95`"
+    v-if="data"
+    :class="` px-4 py-1 rounded-3xl flex items-center gap-2 text-sm font-normal border border-slate-400  cursor-pointer transition duration-300 ease-in-out hover:brightness-95`"
   >
-    {{ data.title }}
+    <div class="w-3 h-3 bg-blue-700 rounded-full opacity-80">
+      
+    </div>
+    {{ data.name }}
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ITagItem } from "~/types/model";
+import type { ITag } from "~/types/model";
 
 defineProps<{
-  data?: ITagItem;
+  data?: ITag;
 }>();
 </script>
 

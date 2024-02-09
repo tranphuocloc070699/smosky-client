@@ -1,6 +1,5 @@
 <template>
-  
-  <div >
+  <div>
     <!-- Navigation -->
     <AppNavigation :data="navigationData" />
     <!-- Header -->
@@ -13,12 +12,23 @@
         Project
       </h3>
     </div> -->
-    <AppTitle :data="{title:'Example project',iconName:'document'}" v-if="boilerplateItemState && boilerplateItemState?.projectStructure">
-      <InteractiveProjectStructure :data="boilerplateItemState?.projectStructure"/>
+    <AppTitle
+      :data="{ title: 'Example project', iconName: 'document' }"
+      v-if="boilerplateItemState && boilerplateItemState?.projectStructure"
+    >
+      <InteractiveProjectStructure
+        :data="boilerplateItemState?.projectStructure"
+      />
     </AppTitle>
 
-    <AppTitle :data="{title:'Features',iconName:'star'}" class="bg-slate-50">
-    <BoilerplateFeature v-if="boilerplateItemState?.features" :data="boilerplateItemState.features"/>
+    <AppTitle
+      :data="{ title: 'Features', iconName: 'star' }"
+      class="bg-slate-50"
+    >
+      <BoilerplateFeature
+        v-if="boilerplateItemState?.features"
+        :data="boilerplateItemState.features"
+      />
     </AppTitle>
     <!-- <div class="p-4">
       <h3 class="text font-semibold text-lg py-4 flex items-center">
@@ -35,10 +45,13 @@
       </div>
     </div> -->
 
-    <AppTitle :data="{title:'Reviews',iconName:'sparkles'}">
-    <BoilerplateReview id="boilerplate-review"/>
+    <AppTitle :data="{ title: 'Reviews', iconName: 'sparkles' }">
+      <BoilerplateReview
+        id="boilerplate-review"
+        @on-submit="onCreateReviewSubmit"
+      />
     </AppTitle>
-<!--     <div class="p-4">
+    <!--     <div class="p-4">
       <h3 class="text font-semibold text-lg py-4 flex items-center">
         <UIcon name="i-heroicons-star" class="w-6 h-6 mr-2" />
         Reviews
@@ -56,27 +69,61 @@
 import type { INavigation } from "~/types/components";
 import { useBoilerplateItem } from "~/composables/useState";
 import useApi from "~/composables/useApi";
+import type { ICreateReview } from "~/types/request";
+import type { IReview } from "~/types/model";
 const route = useRoute();
 definePageMeta({
   layout: "detail",
 });
-
 const name = route.params.name;
 
 const boilerplateApi = useApi();
 const boilerplateItemState = useBoilerplateItem();
-boilerplateApi.boilerplate.fetchDetail(name as string).then((data) =>{
-  if(!data.data.value) return;
-  console.log({data:data.data.value})
-  boilerplateItemState.value = data.data.value
 
-}).catch(error => {
-  console.log({error})
-})
+boilerplateApi.boilerplate
+  .fetchDetail(name as string)
+  .then((data) => {
+    if (!data.data.value) return;
+    boilerplateItemState.value = data.data.value;
+  })
+  .catch((error) => {
+    console.log({ error });
+  });
 
 
+const onCreateReviewSubmit = async (dto: IReview) => {
+const {
+  data,
+  error,
+} = await boilerplateApi.review.createReview({
+  boilerplateId:dto.id,
+  name:dto.name,
+  email:dto.email,
+  content:dto.content,
+  star:dto.star
+});
+
+  if(data.value && boilerplateItemState.value){
+    boilerplateItemState.value!.totalReview = data.value.totalReview;
+    boilerplateItemState.value!.starAvg = data.value.starAvg;
+    boilerplateItemState.value!.oneStar = data.value.oneStar;
+    boilerplateItemState.value!.twoStar = data.value.twoStar;
+    boilerplateItemState.value!.threeStar = data.value.threeStar;
+    boilerplateItemState.value!.fourStar = data.value.fourStar;
+    boilerplateItemState.value!.fiveStar = data.value.fiveStar;
 
 
+    boilerplateItemState.value?.reviews.unshift({
+      id:data.value.id,
+      name:data.value.name,
+      email:data.value.email,
+      star:data.value.star,
+      content:data.value.content,
+      createdAt:data.value.createdAt,
+      updatedAt:data.value.updatedAt
+    })
+  }
+};
 
 const navigationData: INavigation[] = [
   {
