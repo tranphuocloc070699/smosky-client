@@ -1,4 +1,4 @@
-import type { IBoilerplateItem } from "~/types/model";
+import type { IBoilerplate } from "~/types/model";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 import type { IBoilerplatePreviewResponse, IFetchAllBoilerplate } from "~/types/response";
 
@@ -15,7 +15,7 @@ export default function () {
         });
       },
       fetchDetail(name : string){
-        return useFetch<IBoilerplateItem>(`${BASE_URL_BOILERPLATE_SERVER}/spring/${name}`,{
+        return useFetch<IBoilerplate>(`${BASE_URL_BOILERPLATE_SERVER}/spring/${name}`,{
           key:"boilerplate-detail",
           method:'get',
           retry:3

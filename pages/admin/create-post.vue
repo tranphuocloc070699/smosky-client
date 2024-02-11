@@ -13,20 +13,30 @@
       <h2 class="text-2xl font-medium text-center">Create Post</h2>
       <div class="py-4">
         <label for="title" class="text-sm font-medium">Title</label>
-        <UInput type="text" id="title" />
+        <UInput
+          type="text"
+          id="title"
+          v-model="dto.title"
+          @input="onTitleChange"
+        />
+      </div>
+      <div class="py-4">
+        <label for="title" class="text-sm font-medium">Slug</label>
+        <UInput type="text" id="title" v-model="dto.slug" />
       </div>
       <div class="py-4">
         <label for="title" class="text-sm font-medium">Thumbnail</label>
-        <UInput type="file" id="thumbnail" @handleChange="
-            (e : any) => {
-              thumbnailHandler(e);
-            }
-          " />
+        <UInput
+          type="text"
+          id="thumbnail"
+          v-model="dto.thumbnail"
+        />
       </div>
-      <div class="py-4">
+      <!--       <div class="py-4">
         <label for="title" class="text-sm font-medium">Tag</label>
         <UButton class="ml-4" color="white" label="Open" @click="isOpen = true" />
-<!--         <UModal v-model="isOpen">
+
+        <UModal v-model="isOpen">
             <UCommandPalette
           v-model="selected"
           multiple
@@ -35,23 +45,23 @@
           :groups="[{ key: 'tag', commands: tag }]"
           :fuse="{ resultLimit: 6, fuseOptions: { threshold: 0.1 } }"
         />
-        </UModal> -->
+        </UModal>
        
-      </div>
+      </div> -->
       <div class="py-4">
         <label for="title" class="text-sm font-medium">Pre content</label>
-        <UTextarea type="text" id="title" />
+        <UTextarea type="text" id="title" v-model="dto.preContent" />
       </div>
 
       <div class="py-4">
         <label for="title" class="text-sm font-medium">Content</label>
-       <ClientOnly>
-        <Editor
-        v-model="dto.content"
-      api-key="kdfp4jryhvd3ycflqhdz5vboj1qla6h9eteujcga5uj4nod3"
-      :init="{
+        <ClientOnly>
+          <Editor
+            v-model="dto.content"
+            api-key="kdfp4jryhvd3ycflqhdz5vboj1qla6h9eteujcga5uj4nod3"
+            :init="{
         menubar:false,
-        images_upload_handler: uploadImageHandle,
+/*         images_upload_handler: uploadImageHandle, */
         plugins: 'codesample anchor link help table image',
 
         toolbar:
@@ -76,70 +86,84 @@
               
             },
       }"
-
-    />
-       </ClientOnly>
-
+          />
+        </ClientOnly>
       </div>
-     
+
       <div class="py-8 text-end">
-        <UButton class="ml-4" color="emerald" label="Create New Post" @click="handleSubmit" />
+        <UButton
+          class="ml-4"
+          color="emerald"
+          label="Create New Post"
+          @click="handleSubmit"
+        />
       </div>
     </div>
     <div class="col-span-3"></div>
-
   </div>
-
 </template>
 
 <script setup lang="ts">
-import Editor from '@tinymce/tinymce-vue'
-// import { Editor as TinyMCEEditor } from "tinymce";
-import type { ICreateBlogRequest, ITocItem } from '~/types/model';
-import { convertedSentence } from '~/utils/converter';
-const toast = useToast()
+import Editor from "@tinymce/tinymce-vue";
+
+import type { ICreateBlogRequest, ITocItem } from "~/types/model";
+import type { IUpSavePost } from "~/types/request";
+import { convertedSentence } from "~/utils/converter";
+import useApi from "~/composables/useApi";
+import type { IApiInstance } from "~/plugins/api";
+const toast = useToast();
 const tag = [
   { id: 1, label: "Frontend" },
   { id: 2, label: "Backend" },
   { id: 3, label: "Devops" },
   { id: 4, label: "Hacking" },
 ];
-const selected = ref([tag[3]])
-const isOpen = ref(false)
-const thumbnailTemporaryUrl = ref<string>('');
+const selected = ref([tag[3]]);
+const isOpen = ref(false);
+const thumbnailTemporaryUrl = ref<string>("");
 
+const blogApi = useApi().blog;
 
-const dto = ref<ICreateBlogRequest>({
-  title: '',
-  slug: '',
-  content: '',
-  pre_content:'',
+const nuxtApp = useNuxtApp();
+const api = nuxtApp.$api as IApiInstance
+
+const onTitleChange = () => {
+  dto.value.slug = convertedSentence(dto.value.title);
+};
+
+const dto = ref<IUpSavePost>({
+  title: "",
+  slug: "",
+  content: "",
+  preContent: "",
   toc: [],
-  thumbnail:null
-})
+  thumbnail: "",
+});
+
+const {data : createPostData,error: createPostError,execute: createPostExecute} =  await api.blogs.createBlog(dto.value,{
+  immediate:false
+});
 
 const thumbnailHandler = async (e: any) => {
   const file = e.target["files"][0];
-  
+
   if (file) {
     dto.value.thumbnail = file;
-    thumbnailTemporaryUrl.value = window.URL.createObjectURL(file)
-    console.log(thumbnailTemporaryUrl.value)
+    thumbnailTemporaryUrl.value = window.URL.createObjectURL(file);
+    console.log(thumbnailTemporaryUrl.value);
   }
 };
 
 const uploadImageHandle = async (blobInfo: any, _: any) => {
   const formData = new FormData();
   formData.append("file", blobInfo.blob(), blobInfo.filename());
-
-
 };
 
 const removeImageHandler = (editor: any) => {
   if (editor.selection.getNode().nodeName === "IMG") {
     const selectedNode = editor.selection.getNode();
     const src = selectedNode.getAttribute("src") || "";
- /*    adminStore
+    /*    adminStore
       .deleteImage(src)
       .then((data) => {
         console.log("delete image", data);
@@ -169,19 +193,24 @@ const customTOCHandler = (editor: any) => {
     }
   });
   console.log({ tocTemp });
-/*   notify({
+  /*   notify({
     type:'info',
     text:'create toc successfully!,check console'
   }) */
 
-  
-  
   dto.value.toc = tocTemp;
 };
 
-const handleSubmit = () =>{
-  toast.add({ title: 'Hello world!' })
-}
+const handleSubmit = async () => {
+  await createPostExecute();
+  console.log({createPostData:createPostData.value})
+  if(createPostData.value?.status==='OK'){
+    toast.add({
+      title:createPostData.value.message,
+      timeout:0
+    })
+  }
+};
 </script>
 
 <style scoped></style>

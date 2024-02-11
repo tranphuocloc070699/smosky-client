@@ -1,10 +1,25 @@
 import type {
   IBoilerplate,
-  IBoilerplateItem,
+  IPost,
   ISpringDependencyItem,
   ITag,
 } from "~/types/model";
 import type { ICreateBoilerplate } from "~/types/request";
+
+export const usePostList = () => useState<IPost[]>("post-list", () => []);
+
+export const usePost = () =>
+  useState<IPost>("post-item", () => ({
+    id: -1,
+    thumbnail: "",
+    title: "",
+    slug: "",
+    preContent: "",
+    content: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    toc: [],
+  }));
 
 export const useBoilerplateList = () =>
   useState<IBoilerplate[]>("boilerplate-list", () => []);
@@ -12,7 +27,8 @@ export const useBoilerplateList = () =>
 export const useTagList = () => useState<ITag[]>("tag-list", () => []);
 
 export const useBoilerplateItem = () =>
-  useState<IBoilerplateItem | null>("boilerplate-item", () => null);
+  useState<IBoilerplate | null>("boilerplate-item", () => null);
+
 export const useSpringDependenciesSelected = () =>
   useState<ISpringDependencyItem[]>(
     "boilerplate-spring-dependencies",

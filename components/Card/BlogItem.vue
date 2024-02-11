@@ -1,10 +1,11 @@
 <template>
   <NuxtLink
-    to="/blogs/Spring Boot Folder Structure (Best Practices)"
+   :to="`/blogs/${data.slug}`"
     class="border border-gray-200 rounded-md overflow-hidden cursor-pointer"
+    v-if="data"
   >
     <img
-      src="@/assets/images/bg-placeholder.png"
+      :src="data.thumbnail"
       width="auto"
       height="auto"
       alt="Image Thumbnail"
@@ -12,14 +13,12 @@
     />
     <div class="px-4 pt-4">
       <h3 class="text-base font-medium flex-grow">
-        Spring Boot Folder Structure (Best Practices)
+        {{ data.title }}
       </h3>
     </div>
     <div class="px-4 pt-4">
       <h4 class="text-gray-500 text-sm line-clamp-3">
-        What is Spring Boot — If you don’t know what spring boot is, I’m happy
-        to share my previous article which is related to spring boot setup.
-        https://medium.com/@malshani-wijekoon/setup-spring-boot-5-x-x-application-using-java-11-0-bb1ebc836996
+       {{ data.preContent }}
       </h4>
     </div>
     <div class="px-4 text-xs text-gray-400 font-normal py-2">
@@ -41,6 +40,12 @@
   </NuxtLink>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { IPost } from '~/types/model';
+
+defineProps<{
+  data:IPost
+}>()
+</script>
 
 <style scoped></style>

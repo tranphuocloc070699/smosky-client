@@ -68,3 +68,24 @@ export interface ICreateReview{
 export interface IDownloadBoilerplateFromPreview{
     downloadUrl:string
 }
+
+
+/* 
+   private String title;
+  private String link;
+  private String type;
+*/
+export interface IUpSavePost{
+    title:string;
+    slug:string;
+    content:string;
+    preContent:string;
+    thumbnail:string;
+    toc:ICreatePostToc[]
+}
+
+export interface ICreatePostToc{
+    title:string;
+    link:string;
+    type:string;
+}

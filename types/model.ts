@@ -5,16 +5,6 @@ export interface ITagItem {
   background: string;
   textColor: string;
 }
-
-export interface IBoilerplate{
-  id: number;
-  name:string;
-  thumbnail:string;
-  description:string;
-  totalReview:number;
-  starAvg:number;
-}
-
 export interface IReview{
   id:number;
   name:string;
@@ -25,7 +15,7 @@ export interface IReview{
   updatedAt:Date;
 }
 
-export interface IBoilerplateItem{
+export interface IBoilerplate{
   id: number;
   name:string;
   thumbnail:string;
@@ -115,6 +105,57 @@ export interface ITocItem {
   link: string;
   title: string;
   type: string;
+}
+
+export interface IPost{
+  id:number;
+  thumbnail:string;
+  title:string;
+  slug:string;
+  preContent:string;
+  content:String;
+  createdAt:Date;
+  updatedAt:Date;
+  toc:IPostToc[]
+  
+}
+
+/* 
+public class Toc {
+   private Integer id;
+
+  @Column(nullable = false)
+  private String thumbnail;
+
+  @Column(nullable = false)
+  private String title;
+
+  @Column(nullable = false)
+  private String slug;
+
+  @Column(nullable = false)
+  private String content;
+
+  @Column(name="pre_content")
+  private String preContent;
+
+  @OneToMany(mappedBy = "post")
+  private List<Toc> tocs;
+
+  @Column(name="created_at")
+  private Date createdAt;
+
+  @Column(name="updated_at")
+  private Date updatedAt;
+}
+
+*/
+
+export interface IPostToc{
+  id:number;
+  title:string;
+  link:string;
+  type:string;
 }
 
 

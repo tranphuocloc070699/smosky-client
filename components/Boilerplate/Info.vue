@@ -46,9 +46,9 @@
           <NuxtLink :to="`/boilerplate/explore/${boilerplateItemState.name}`"
             ><UButton class="py-2 px-6">Let's explore</UButton></NuxtLink
           >
-          <UButton color="red" variant="solid" class="py-2 px-6"
+        <!--   <UButton color="red" variant="solid" class="py-2 px-6"
             >Ask question</UButton
-          >
+          > -->
         </div>
 
       <!--   <div class="flex items-center gap-10" v-else>

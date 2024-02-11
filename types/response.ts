@@ -1,4 +1,4 @@
-import type { IBoilerplate, IBoilerplateItem, IProjectStructure, ITag } from "./model";
+import type { IBoilerplate, IProjectStructure, ITag } from "./model";
 
 /* export interface IBoilerplateDetailResponse{
     data: IBoilerplateItem;
@@ -32,3 +32,13 @@ export interface IFetchAllBoilerplate{
     boilerplates:IBoilerplate[];
     tags:ITag[]
 }
+
+export interface IResponse<T>{
+    status:string;
+    data:T;
+    errors:string[];
+    message:string;
+    path:string
+}
+
+

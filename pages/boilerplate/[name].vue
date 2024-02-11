@@ -45,7 +45,7 @@
       </div>
     </div> -->
 
-    <AppTitle :data="{ title: 'Reviews', iconName: 'sparkles' }">
+    <AppTitle :data="{ title: 'Reviews', iconName: 'chat-bubble-left-right' }">
       <BoilerplateReview
         id="boilerplate-review"
         @on-submit="onCreateReviewSubmit"

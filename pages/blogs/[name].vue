@@ -1,60 +1,18 @@
 <template>
   <div>
     <!-- Navigation -->
-    <div
-      class="bg-slate-100 flex items-center gap-2 py-2 px-4 text-sm font-normal"
-    >
-      <span class="cursor-pointer hover:underline">Blog</span>
-      <UIcon name="i-heroicons-chevron-right" />
-      <strong class="cursor-pointer hover:underline">Detail</strong>
-    </div>
+    <AppNavigation :data="navigationData" />
     <!-- Toc -->
-    <CardToc />
+    <!--     <CardToc /> -->
     <!-- Header -->
-    <div class="bg-gradient-to-b from-slate-50 p-4">
-      <h2 class="font-bold text-3xl max-w-6xl">
-        2023: A Review of the Year in Neuroscience
-      </h2>
-      <div class="flex items-center gap-4 mt-2 max-w-6xl">
-        <UAvatar
-          src="https://avatars.githubusercontent.com/u/739984?v=4"
-          alt="Avatar"
-        />
-        <h4 class="text-sm font-medium flex items-center gap-4">
-          GoodThingTakeTime
-          <div class="w-1 h-1 border border-gray-500 rounded-full"></div>
-          <p class="text-xs text-gray-500">3 days ago</p>
-        </h4>
-        <div class="flex items-center justify-end gap-2 p-4">
-          <CardIconItem name="i-heroicons-heart" :counting="1" />
-          <CardIconItem
-            name="i-heroicons-chat-bubble-bottom-center"
-            :counting="4"
-          />
-          <CardIconItem name="i-heroicons-bookmark" />
-        </div>
-      </div>
-      <!-- Tags -->
-      <div
-        class="flex items-center gap-4 py-4 mt-4 border-t border-b border-slate-100 max-w-6xl"
-      >
-        <CardTagItem v-for="item in 4" :key="item" />
-      </div>
-    </div>
+    <BlogInfo :data="postState" />
     <!-- Body -->
-    <div class="p-4 max-w-6xl">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam cum
-      architecto sed quaerat, iusto placeat autem in consequuntur incidunt et,
-      magnam nam laudantium, vero praesentium tempora ab quo facilis expedita.
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam cum
-      architecto sed quaerat, iusto placeat autem in consequuntur incidunt et,
-      magnam nam laudantium, vero praesentium tempora ab quo facilis expedita.
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam cum
-      architecto sed quaerat, iusto placeat autem in consequuntur incidunt et,
-      magnam nam laudantium, vero praesentium tempora ab quo facilis expedita.
+    <div v-if="postState.content" class="max-w-7xl w-full mx-auto py-5">
+      <div v-html="`${postState.content}`"></div>
     </div>
-    <div class="p-4">
-      <!-- Questions -->
+
+    <!-- Questions -->
+    <!--  <div class="p-4">
       <h3 class="text font-semibold text-lg py-4 flex items-center">
         Questions
         <UIcon name="i-heroicons-question-mark-circle" class="w-6 h-6 mr-2" />
@@ -67,9 +25,9 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="p-4">
-      <!-- Comments -->
+    </div> -->
+    <!-- Comments -->
+    <!--     <div class="p-4">
       <h3 class="text font-semibold text-lg py-4 flex items-center">
         <UIcon name="i-heroicons-star" class="w-6 h-6 mr-2" />
         Comments
@@ -79,14 +37,63 @@
           <CardReviewItem v-for="item in 3" :key="item" />
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
-const route = useRoute();
+import Prism from "prismjs";
+import "~/assets/css/one-dark.css";
+import type { INavigation } from "~/types/components";
+import { usePost } from "~/composables/useState";
 
+import type { IApiInstance } from "~/plugins/api";
+import type { IPost } from "~/types/model";
+const route = useRoute();
+definePageMeta({
+  layout: "detail",
+});
 const name = route.params.name;
+const postState = usePost();
+
+const nuxtApp = useNuxtApp();
+const api = nuxtApp.$api as IApiInstance;
+
+api.blogs
+  .fetchDetailBlog(name as string)
+  .then((data) => {
+    if (!data.data.value) return;
+    postState.value = data.data.value.data as IPost;
+  })
+  .catch((error) => {
+    console.log({ error });
+  });
+
+const navigationData: INavigation[] = [
+  {
+    title: "Home",
+    link: "/",
+    isActive: false,
+  },
+  {
+    title: "Detail",
+    link: "/",
+    isActive: true,
+  },
+];
+     
+watch(
+  postState.value,
+  (value) => {
+    if (document) {
+      Prism.highlightAll();
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
 </script>
 
 <style scoped></style>
