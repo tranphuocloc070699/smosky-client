@@ -34,7 +34,7 @@ class BlogsModule extends FetchFactory<IResponse<IPost | IPost[]>> {
       ) 
     }
 
-    async fetchDetailBlog(
+    async fetchBlogDetail(
       slug:string,
       asyncDataOptions?: AsyncDataOptions<IResponse<IPost | IPost[]>>
     ) {

@@ -1,8 +1,8 @@
-import type { IPost } from "~/types/model";
+import type { IBoilerplate, IPost } from "~/types/model";
 import FetchFactory from "../factory";
 import type {  NitroFetchOptions } from "nitropack";
 import type { AsyncDataOptions } from '#app';
-import type { IResponse } from "~/types/response";
+import type { IFetchAllBoilerplate, IResponse } from "~/types/response";
 class BlogsModule extends FetchFactory<IResponse<IBoilerplate | IFetchAllBoilerplate>> {
     private RESOURCE = '/blogs';
   
@@ -12,7 +12,7 @@ class BlogsModule extends FetchFactory<IResponse<IBoilerplate | IFetchAllBoilerp
      * @returns 
      */
     async fetchBoilerplates(
-      asyncDataOptions?: AsyncDataOptions<IResponse<IFetchAllBoilerplate>>
+      asyncDataOptions?: AsyncDataOptions<IResponse<IBoilerplate | IFetchAllBoilerplate>>
     ) {
   
       return useAsyncData(
@@ -33,9 +33,9 @@ class BlogsModule extends FetchFactory<IResponse<IBoilerplate | IFetchAllBoilerp
       ) 
     }
 
-    async fetchDetailBlog(
+    async fetchBoilerplateDetail(
       slug:string,
-      asyncDataOptions?: AsyncDataOptions<IResponse<IPost | IPost[]>>
+      asyncDataOptions?: AsyncDataOptions<IResponse<IBoilerplate | IFetchAllBoilerplate>>
     ) {
   
       return useAsyncData(
