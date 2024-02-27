@@ -1,6 +1,6 @@
 <template>
-    <div :class="['max-w-60 w-full top-[65px] border border-gray-100 h-screen',isFixed && 'fixed']">
-        <div class="border-b border-slate-100 pb-4">
+    <div :class="['max-w-60 w-full top-[65px]   h-screen',isFixed && 'fixed border border-gray-100 ']">
+        <div :class="[' pb-4 border-b  border-slate-100', isFixed && ' ']">
             <h3 class=" flex items-center m-4 rounded-md font-medium ">
             
                 Navigation

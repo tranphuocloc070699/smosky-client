@@ -84,7 +84,7 @@ boilerplateApi.boilerplate
   .fetchDetail(name as string)
   .then((data) => {
     if (!data.data.value) return;
-    boilerplateItemState.value = data.data.value;
+    boilerplateItemState.value = data.data.value.data;
   })
   .catch((error) => {
     console.log({ error });
@@ -133,7 +133,7 @@ const navigationData: INavigation[] = [
   },
   {
     title: "Detail",
-    link: "/",
+    link: `/boilerplate/${name}`,
     isActive: true,
   },
 ];

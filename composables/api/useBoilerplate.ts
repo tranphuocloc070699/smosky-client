@@ -1,6 +1,6 @@
 import type { IBoilerplate } from "~/types/model";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
-import type { IBoilerplatePreviewResponse, IFetchAllBoilerplate } from "~/types/response";
+import type { IBoilerplatePreviewResponse, IFetchAllBoilerplate, IResponse } from "~/types/response";
 
 
 export default function () {
@@ -8,14 +8,14 @@ export default function () {
   const BASE_URL_BOILERPLATE_SERVER = config.public.NUXT_BASE_URL_BOILERPLATE_SERVER
     return {
       fetchAll(){
-        return useFetch<IFetchAllBoilerplate>(`${BASE_URL_BOILERPLATE_SERVER}/spring`,{
+        return useFetch<IResponse<IFetchAllBoilerplate>>(`${BASE_URL_BOILERPLATE_SERVER}/spring`,{
           key:'boilerplate-list',
           method:'get',
           retry:3
         });
       },
       fetchDetail(name : string){
-        return useFetch<IBoilerplate>(`${BASE_URL_BOILERPLATE_SERVER}/spring/${name}`,{
+        return useFetch<IResponse<IBoilerplate>>(`${BASE_URL_BOILERPLATE_SERVER}/spring/${name}`,{
           key:"boilerplate-detail",
           method:'get',
           retry:3

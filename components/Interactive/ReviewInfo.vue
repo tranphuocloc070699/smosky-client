@@ -7,12 +7,13 @@
         {{ Math.round(boilerplateItemState.starAvg) }}
       </p>
       <div class="absolute left-[25%] top-[45%]">
-        <NuxtRating
+    <!--     <NuxtRating
           :read-only="true"
           :ratingValue="boilerplateItemState.starAvg"
           :rating-size="'20px'"
           class="mx-auto"
-        />
+        /> -->
+        <InteractiveVoting :read-only="true" :rating-value="boilerplateItemState.starAvg"/>
       </div>
       <p class="text-sm font-light text-[#173952]">
       {{ boilerplateItemState.totalReview }} Reviews

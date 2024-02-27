@@ -181,12 +181,12 @@ boilerplateApi.boilerplate
   .fetchDetail(name as string)
   .then((data) => {
     if (!data.data.value) return;
-    boilerplateItemState.value = data.data.value;
+    boilerplateItemState.value = data.data.value.data;
     /* Check have dependenciesSelected => add to list dependenciesSelected */
 
-    const dependenciesSelected = data.data.value.dependenciesSelected;
+    const dependenciesSelected = data.data.value.data.dependenciesSelected;
     if (dependenciesSelected) {
-      data.data.value.dependencies.forEach((dependencyGroup) => {
+      data.data.value.data.dependencies.forEach((dependencyGroup) => {
         dependencyGroup.dependencies.forEach((dependency) => {
           if (
             dependenciesSelected.findIndex((item) => item === dependency.id) !==

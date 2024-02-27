@@ -9,7 +9,7 @@
       class="border border-slate-200 shadow-sm rounded-md min-w-[424px] rounded-t-md"
     >
       <h4
-        class="text-center py-2 font-semibold border-b border-slate-[#467190] bg-[#467190] rounded-t-md text-white"
+        class="text-center py-2 font-semibold border-b border-slate-[#467190] bg-gray-100  rounded-t-md text-gray-900"
       >
         {{ item.name }}
       </h4>

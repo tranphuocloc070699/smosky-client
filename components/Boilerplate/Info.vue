@@ -15,13 +15,14 @@
           </div>
           <!-- Rating -->
           <div class="flex items-center gap-1" v-if="type === 'boilerplate'">
-            <NuxtRating
+            <!-- <NuxtRating
               :read-only="true"
               :ratingValue="boilerplateItemState.starAvg"
               :rating-size="'20px'"
               class="mb-1"
-            />
-            <h5 class="text-slate-500 font-light text-sm ml-[86px]">
+            /> -->
+            <InteractiveVoting :read-only="true" :rating-value="boilerplateItemState.starAvg"/>
+            <h5 class="text-slate-500 font-light text-sm">
               ({{ boilerplateItemState.totalReview }} voting)
             </h5>
             <a

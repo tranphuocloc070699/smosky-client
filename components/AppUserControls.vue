@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-end gap-4">
     <div class="flex items-center gap-5">
-      <UButton   class="bg-[#467190] w-18 flex justify-center">Log In</UButton>
+      <UButton   class=" w-18 flex justify-center">Log In</UButton>
                   <UButton color="white" class="w-18 flex justify-center" >Sign Up</UButton>
     </div>
 <!--    <div class="flex items-center gap-5">

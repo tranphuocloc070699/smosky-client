@@ -18,8 +18,10 @@ const boilerplateState = useBoilerplateList();
 const tagListState = useTagList();
 
 boilerplateApi.boilerplate.fetchAll().then((data) =>{
-  boilerplateState.value = data.data.value?.boilerplates as IBoilerplate[];
-  tagListState.value = data.data.value?.tags as ITag[]
+ 
+
+  boilerplateState.value = data.data.value?.data?.boilerplates as IBoilerplate[];
+  tagListState.value = data.data.value?.data?.tags as ITag[]
 
 }).catch(error => {
   console.log({error})

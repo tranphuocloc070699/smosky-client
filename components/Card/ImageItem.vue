@@ -19,11 +19,13 @@
         {{ data.description }}
       </h4>
       <div class="flex items-center gap-2">
-        <NuxtRating :read-only="true" :ratingValue="data.starAvg" :rating-size="'20px'" class="mb-1" />
-        <h5 class="text-slate-400 font-light text-sm ml-[86px]">
+        <!-- <NuxtRating :read-only="true" :ratingValue="data.starAvg" :rating-size="'20px'" class="mb-1" /> -->
+        <InteractiveVoting :read-only="true" :rating-value="data.starAvg"/>
+        <h5 class="text-slate-400 font-light text-sm">
           ({{data.totalReview}} voting)
         </h5>
       </div>
+      
     </div>
     <!--    <div class="flex items-center justify-end gap-2 p-4">
       <CardIconItem name="i-heroicons-heart" :counting="1" />

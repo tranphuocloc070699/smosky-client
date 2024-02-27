@@ -1,4 +1,4 @@
-import type { IBoilerplateItem, IPost } from "~/types/model";
+import type { IBoilerplate, IPost } from "~/types/model";
 import type {
   IDownloadBoilerplateFromPreview,
   IUpSavePost,

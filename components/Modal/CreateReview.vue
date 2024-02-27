@@ -47,12 +47,14 @@
         </div>
         <div class="p-4 flex items-start gap-1 flex-col">
           <p class="text-sm font-medium">Give a star</p>
-          <NuxtRating
+          <!-- <NuxtRating
             :read-only="false"
             :rating-value="data.star"
             @rating-selected="value =>  data.star=value"
             :rating-size="'32px'"
-          />
+          /> -->
+          <InteractiveVoting :read-only="false" :rating-value="data.star" @rating-selected="value => data.star=value" :size="8"/>
+
         </div>
 
        <div class="flex flex-col gap-1">
@@ -135,6 +137,9 @@ const onSubmit = () =>{
     alert('Name or content invalid');
     return;
   }
+console.log({data:data.value})
+
+  return;
   emit('onSubmit',{
     id:data.value.id,
     name:data.value.name.value,

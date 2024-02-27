@@ -8,11 +8,12 @@
       <div class="font-semibold relative text-sm">
        {{ data.name }}
         <div class="absolute left-0 top-5">
-          <NuxtRating
+         <!--  <NuxtRating
             :read-only="true"
             :ratingValue="data.star"
             :rating-size="'16px'"
-          />
+          /> -->
+          <InteractiveVoting :read-only="true" :rating-value="data.star"/>
         </div>
       </div>
 
