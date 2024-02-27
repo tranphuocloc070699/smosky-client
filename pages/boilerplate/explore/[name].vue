@@ -113,7 +113,7 @@ const executeBoilerplatePreview = async () => {
     },
     dependencies: springDependenciesSelectedState.value.map((item) => ({
       id: item.id,
-      properties: item.properties.map((item) => ({
+      properties: item.properties?.map((item) => ({
         id: item.id,
         value: item.value,
       })),
@@ -291,7 +291,8 @@ const onSubmit = async () => {
     alert(metadataValidation.message);
     return;
   }
-
+  console.log({springDependenciesSelectedState:springDependenciesSelectedState.value})
+  console.log({createBoilerplateData:createBoilerplateData.value})
   const data = {
     type: createBoilerplateData.value.type,
     bootVersion: createBoilerplateData.value.bootVersion,
@@ -306,7 +307,7 @@ const onSubmit = async () => {
     crud:createBoilerplateData.value.crud,
     dependencies: springDependenciesSelectedState.value.map((item) => ({
       id: item.id,
-      properties: item.properties.map((item) => ({
+      properties: item.properties?.map((item) => ({
         id: item.id,
         value: item.value,
       })),
@@ -321,9 +322,9 @@ const onSubmit = async () => {
         referencedColumnName: item.referencedColumnName,
       })),
     })),
-  };
+  }; 
 
-  requestData.value = data;
+   requestData.value = data;
   await createBoilerplateExecute();
 
   const blob = new Blob([responseData.value as any], {
