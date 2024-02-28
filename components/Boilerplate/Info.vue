@@ -34,13 +34,13 @@
             </a>
           </div>
           <!-- Created by -->
-          <h3 class="font-normal" v-if="type === 'boilerplate'">
+      <!--     <h3 class="font-normal" v-if="type === 'boilerplate'">
             Created by
             <span
               class="pl-2 underline font-medium text-green-700 cursor-pointer"
               >GoodThingTakeTime</span
             >
-          </h3>
+          </h3> -->
         </div>
 
         <div class="flex items-center gap-10" v-if="type === 'boilerplate'">

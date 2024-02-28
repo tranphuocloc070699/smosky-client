@@ -139,7 +139,6 @@ const onSubmit = () =>{
   }
 console.log({data:data.value})
 
-  return;
   emit('onSubmit',{
     id:data.value.id,
     name:data.value.name.value,

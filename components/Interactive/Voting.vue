@@ -3,7 +3,7 @@
     <UIcon
       name="i-heroicons-star-solid"
       :class="[
-        `w-${props.size} h-${props.size} text-gray-200 cursor-pointer `,
+        `w-${props.size || 4} h-${props.size || 4} text-gray-200 cursor-pointer `,
         (item.isHover || item.isActive) && 'text-yellow-500',
       ]"
       v-for="item in votings"
@@ -50,8 +50,12 @@ const votings = ref<IVoting[]>([
 ]);
 
 const emit = defineEmits(["ratingSelected"]);
-const props = defineProps({
-  ratingValue:{
+const props = defineProps<{
+  ratingValue:number;
+  readOnly:boolean;
+  size?:number;
+}>(
+  /* ratingValue:{
     type:Number,
     required:true
   },
@@ -62,20 +66,25 @@ const props = defineProps({
   size:{
     type:Number,
     default:4
-  }
-});
+  } */
+);
 
-/* watch(
+watch(
   props,
   (prop) => {
-    console.log({ prop:prop.ratingValue });
-
-  },
-  { deep: true }
-); */
+    if(prop.ratingValue){
+      votings.value = votings.value.map((item) => {
+        if (item.id <= prop.ratingValue) {
+          item.isActive = true;
+        }
+        return item;
+      });
+    }
+  }
+);
 
 onMounted(() =>{
-  if(props.ratingValue){
+
     if (props.ratingValue) {
       votings.value = votings.value.map((item) => {
         if (item.id <= props.ratingValue) {
@@ -84,7 +93,7 @@ onMounted(() =>{
         return item;
       });
     }
-  }
+  
 })
 
 const isValid = computed(() => {

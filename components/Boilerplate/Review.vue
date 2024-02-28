@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex justify-between">
-      <!-- <InteractiveReviewInfo /> -->
+      <InteractiveReviewInfo />
       <ModalCreateReview v-if="boilerplateItemState?.id" :id="boilerplateItemState?.id" @on-submit="onSubmit" />
     </div>
     <div v-if="boilerplateItemState" class="max-w-[708px] py-4 mt-10">

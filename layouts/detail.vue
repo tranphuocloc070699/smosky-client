@@ -1,6 +1,6 @@
 <template>
     <div>
-        <AppHeader />
+        <AppHeader :show-menu="true"/>
         <div class="mt-[65px]">
             <div>
                 <slot />

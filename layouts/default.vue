@@ -1,6 +1,6 @@
 <template>
     <div>
-        <AppHeader/>
+        <AppHeader />
         <div class="mt-[65px]">
             <AppSidebar :is-fixed="true"/>
             <div class="md:ml-60">

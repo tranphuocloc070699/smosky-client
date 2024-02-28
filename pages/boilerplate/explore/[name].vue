@@ -354,12 +354,12 @@ const navigationData: INavigation[] = [
   },
   {
     title: "Detail",
-    link: "/boilerplate/name",
+    link: `/boilerplate/${name}`,
     isActive: false,
   },
   {
     title: "Explore",
-    link: "/boilerplate/explore/name",
+    link: `/boilerplate/explore/${name}`,
     isActive: true,
   },
 ];

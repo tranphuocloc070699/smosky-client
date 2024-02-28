@@ -51,7 +51,7 @@ const props = defineProps<{
 
 const fileSelected = ref({
   id: "",
-  name: "Click to file to show",
+  name: "File name",
   content: "",
   language: "",
 });

@@ -4,7 +4,7 @@
       class="w-44 h-44 round shadow-lg flex flex-col gap-6 items-center justify-center relative"
     >
       <p class="text-2xl text-[#173952] font-semibold">
-        {{ Math.round(boilerplateItemState.starAvg) }}
+        {{ boilerplateItemState.starAvg}}
       </p>
       <div class="absolute left-[25%] top-[45%]">
     <!--     <NuxtRating

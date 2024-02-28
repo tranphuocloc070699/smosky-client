@@ -50,7 +50,7 @@
       <!-- Project Java Version -->
       <div class="p-4 flex-col gap-2">
         <p class="font-semibold">Java version</p>
-        <div class="grid grid-cols-3">
+        <div class="grid grid-cols-3 font-light">
           <URadio
             v-for="option of javaVersionOptions"
             :key="option.value"

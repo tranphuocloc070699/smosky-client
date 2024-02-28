@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div class="">
         <div v-for="item in data" :key="item.toString()" class="flex items-center gap-4">
                 <img src="@/assets/images/Star.svg" />
                 <p class="font-medium">{{ item }}</p>

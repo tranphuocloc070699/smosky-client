@@ -23,7 +23,7 @@
 
     <AppTitle
       :data="{ title: 'Features', iconName: 'star' }"
-      class="bg-slate-50"
+      class="bg-slate-50 py-5"
     >
       <BoilerplateFeature
         v-if="boilerplateItemState?.features"
@@ -84,7 +84,8 @@ boilerplateApi.boilerplate
   .fetchDetail(name as string)
   .then((data) => {
     if (!data.data.value) return;
-    boilerplateItemState.value = data.data.value.data;
+    boilerplateItemState.value = {...data.data.value.data,starAvg:Math.round(data.data.value.data.starAvg)};
+  
   })
   .catch((error) => {
     console.log({ error });
@@ -104,13 +105,13 @@ const {
 });
 
   if(data.value && boilerplateItemState.value){
-    boilerplateItemState.value!.totalReview = data.value.totalReview;
-    boilerplateItemState.value!.starAvg = data.value.starAvg;
-    boilerplateItemState.value!.oneStar = data.value.oneStar;
-    boilerplateItemState.value!.twoStar = data.value.twoStar;
-    boilerplateItemState.value!.threeStar = data.value.threeStar;
-    boilerplateItemState.value!.fourStar = data.value.fourStar;
-    boilerplateItemState.value!.fiveStar = data.value.fiveStar;
+    boilerplateItemState.value.totalReview = data.value.totalReview;
+    boilerplateItemState.value.starAvg = Math.round(data.value.starAvg);
+    boilerplateItemState.value.oneStar = data.value.oneStar;
+    boilerplateItemState.value.twoStar = data.value.twoStar;
+    boilerplateItemState.value.threeStar = data.value.threeStar;
+    boilerplateItemState.value.fourStar = data.value.fourStar;
+    boilerplateItemState.value.fiveStar = data.value.fiveStar;
 
 
     boilerplateItemState.value?.reviews.unshift({
