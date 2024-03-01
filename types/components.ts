@@ -7,6 +7,7 @@ export interface INavigation{
 export interface IAppTitle{
     title:string;
     iconName:string;
+
 }
 
 export interface IValidationErrorItem {

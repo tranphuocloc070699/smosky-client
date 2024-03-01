@@ -13,7 +13,7 @@
       </h3>
     </div> -->
     <AppTitle
-      :data="{ title: 'Example project', iconName: 'document' }"
+      :data="{ title: 'Example project', iconName: 'heroicons-document' }"
       v-if="boilerplateItemState && boilerplateItemState?.projectStructure"
     >
       <InteractiveProjectStructure
@@ -22,7 +22,7 @@
     </AppTitle>
 
     <AppTitle
-      :data="{ title: 'Features', iconName: 'star' }"
+      :data="{ title: 'Features', iconName: 'heroicons-sparkles' }"
       class="bg-slate-50 py-5"
     >
       <BoilerplateFeature
@@ -45,7 +45,7 @@
       </div>
     </div> -->
 
-    <AppTitle :data="{ title: 'Reviews', iconName: 'chat-bubble-left-right' }">
+    <AppTitle :data="{ title: 'Reviews', iconName: 'heroicons-chat-bubble-left' }">
       <BoilerplateReview
         id="boilerplate-review"
         @on-submit="onCreateReviewSubmit"
@@ -62,6 +62,7 @@
         </div>
       </div>
     </div> -->
+    <AppLoading v-show="loading"/>
   </div>
 </template>
 
@@ -79,7 +80,8 @@ const name = route.params.name;
 
 const boilerplateApi = useApi();
 const boilerplateItemState = useBoilerplateItem();
-
+const loading = ref(false)
+const notify = useNotification(useToast)
 boilerplateApi.boilerplate
   .fetchDetail(name as string)
   .then((data) => {
@@ -93,6 +95,7 @@ boilerplateApi.boilerplate
 
 
 const onCreateReviewSubmit = async (dto: IReview) => {
+  loading.value = true;
 const {
   data,
   error,
@@ -112,8 +115,6 @@ const {
     boilerplateItemState.value.threeStar = data.value.threeStar;
     boilerplateItemState.value.fourStar = data.value.fourStar;
     boilerplateItemState.value.fiveStar = data.value.fiveStar;
-
-
     boilerplateItemState.value?.reviews.unshift({
       id:data.value.id,
       name:data.value.name,
@@ -123,7 +124,12 @@ const {
       createdAt:data.value.createdAt,
       updatedAt:data.value.updatedAt
     })
+    notify.Success({title:'Create review successfully!'})
+  }else{
+    notify.Danger({title:'Oops! Something wrong.'})
+    console.error('[Create Review]',error)
   }
+  loading.value = false;
 };
 
 const navigationData: INavigation[] = [

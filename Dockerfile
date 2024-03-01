@@ -1,5 +1,5 @@
 # use node 18 alpine image
-FROM node:18-alpine
+FROM --platform=linux/amd64 node:18-alpine
 
 # create work directory in app folder
 WORKDIR /app

@@ -1,8 +1,8 @@
 <template>
     <div>
-        <AppHeader />
+        <AppHeader :show-menu="isMobile"/>
         <div class="mt-[65px]">
-            <AppSidebar :is-fixed="true"/>
+            <AppSidebar v-show="!isMobile" :is-fixed="!isMobile"/>
             <div class="md:ml-60">
                 <slot />
             </div>
@@ -12,6 +12,25 @@
 </template>
 
 <script setup lang="ts">
+import {useMobileDetector} from '@/composables/useState'
+const isMobile = useMobileDetector();
+
+onMounted( () =>{
+    handleResize();
+
+    window.addEventListener('resize',handleResize)
+}) 
+
+const handleResize = () =>{
+    console.log(window.innerWidth);
+    if(window.innerWidth<768){
+        isMobile.value=true
+    }
+}
+
+onUnmounted(() =>{
+    window.removeEventListener('resize',handleResize)
+})
 
 </script>
 

@@ -11,7 +11,7 @@
           <ProjectStructureFromJson :node="props.data"  />
         </div>
       </div>
-      <div class="flex-1 w-[500px] -my-2 h-[660px] overflow-y-scroll">
+      <div v-show="!isMobile" class="flex-1 w-[500px] -my-2 h-[660px] overflow-y-scroll">
         <h4
           class="border-b border-slate-200 p-4 my-2 text-center bg-slate-100 font-medium text-lg"
         >
@@ -42,12 +42,15 @@ import settingIcon from "~/assets/images/setting-icon.svg";
 import xmlIcon from "~/assets/images/xml-icon.svg";
 import Prism from "prismjs";
 import { sleep } from "~/utils/timer";
+import { useMobileDetector } from "@/composables/useState";
 // import "prismjs/themes/prism.min.css";
 import "~/assets/css/one-dark.css";
 
 const props = defineProps<{
   data: IProjectStructure;
 }>();
+
+const isMobile = useMobileDetector()
 
 const fileSelected = ref({
   id: "",
@@ -59,7 +62,7 @@ const fileSelected = ref({
 const ProjectStructureFromJson = ({ node }: IProps) => {
   const data = (
     <div
-      class={`font-semibold px-4 py-1 overflow-y-hidden  ${
+      class={`font-semibold py-1 px-4 overflow-y-hidden overflow-x-visible ${
         node.isExpanded ? "h-full" : "h-10"
       }`}
     >
@@ -67,7 +70,7 @@ const ProjectStructureFromJson = ({ node }: IProps) => {
         key={node.id}
         id={node.id}
         onClick={(e) => onFolderToggle(node)}
-        class={`cursor-pointer flex items-center py-1 gap-2 px-4  hover:bg-slate-100 rounded-md`}
+        class={`cursor-pointer flex items-center py-1 gap-2 px-4 w-full  hover:bg-slate-100 rounded-md`}
       >
         <img src={folderIcon} />
         {node.name}

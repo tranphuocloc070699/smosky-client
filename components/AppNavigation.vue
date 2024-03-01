@@ -1,7 +1,7 @@
 <template>
   <div class="bg-slate-100">
     <div
-      class="max-w-7xl w-full mx-auto flex items-center"
+      class="max-w-7xl w-full mx-auto flex items-center px-4 md:px-0"
     >
         <div v-for="(item,index) in data" :key="item.title" class="flex items-center py-2 text-sm font-normal">
             <NuxtLink  v-if="item.isActive" :to="item.link">

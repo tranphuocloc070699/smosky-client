@@ -4,7 +4,7 @@
       <AppNavigation :data="navigationData" />
       <BoilerplateInfo type="explore" />
       <AppTitle
-        :data="{ title: 'Mores', iconName: 'chevron-double-up-16-solid' }"
+        :data="{ title: 'Mores', iconName: 'heroicons-chevron-double-up-16-solid' }"
       >
         <div class="flex items-center gap-16">
           <UTooltip
@@ -22,7 +22,7 @@
           </UTooltip>
         </div>
       </AppTitle>
-      <AppTitle :data="{ title: 'Configuration', iconName: 'wrench' }">
+      <AppTitle :data="{ title: 'Configuration', iconName: 'heroicons-wrench' }">
         <UTabs :items="items">
           <template #item="{ item }">
             <div v-if="item.key === 'starter'" class="space-y-3">
@@ -42,7 +42,7 @@
 
       <!-- Submit -->
       <div
-        class="flex items-center gap-8 mt-5 max-w-7xl w-full mx-auto justify-end"
+        class="flex items-center gap-8 mt-5 max-w-7xl w-full mx-auto justify-end px-4 md:px-0"
       >
         <UButton
           class="px-4 py-2 min-w-32 flex items-center justify-center"
@@ -65,6 +65,7 @@
         :project-structure="boilerplatePreviewResponseData.projectStructure"
       />
     </div>
+    <AppLoading v-show="loading" />
   </ClientOnly>
 </template>
 
@@ -85,7 +86,7 @@ definePageMeta({
 const name = route.params.name;
 
 const showPreviewBoilerplate = ref(false);
-
+const loading = ref(false);
 const executeBoilerplatePreview = async () => {
   const entitiesValidation = validationEntitiesBeforeSubmit();
   if (entitiesValidation.invalid) {
@@ -118,7 +119,7 @@ const executeBoilerplatePreview = async () => {
         value: item.value,
       })),
     })),
-    crud:createBoilerplateData.value.crud,
+    crud: createBoilerplateData.value.crud,
     entities: createBoilerplateData.value.entities.map((item) => ({
       name: item.name,
       templates: item.templates.map((item) => ({
@@ -132,7 +133,9 @@ const executeBoilerplatePreview = async () => {
   };
 
   requestData.value = data;
+  loading.value = true;
   await createBoilerplatePreviewExecute();
+  loading.value = false;
   showPreviewBoilerplate.value = true;
 };
 
@@ -153,8 +156,9 @@ const onBtnDownloadFromPreviewClick = async () => {
   if (boilerplatePreviewResponseData.value?.downloadUrl) {
     downloadUrl.value.downloadUrl =
       boilerplatePreviewResponseData.value.downloadUrl;
+    loading.value = true;
     await downloadBoilerplateFromUrlExecute();
-
+    loading.value = false;
     console.log({ downloadUrl: downloadUrl.value.downloadUrl });
     const blob = new Blob(
       [boilerplateFromDownloadUrlResponseData.value as any],
@@ -291,8 +295,10 @@ const onSubmit = async () => {
     alert(metadataValidation.message);
     return;
   }
-  console.log({springDependenciesSelectedState:springDependenciesSelectedState.value})
-  console.log({createBoilerplateData:createBoilerplateData.value})
+  console.log({
+    springDependenciesSelectedState: springDependenciesSelectedState.value,
+  });
+  console.log({ createBoilerplateData: createBoilerplateData.value });
   const data = {
     type: createBoilerplateData.value.type,
     bootVersion: createBoilerplateData.value.bootVersion,
@@ -304,7 +310,7 @@ const onSubmit = async () => {
       packaging: createBoilerplateData.value.metadata.packaging,
       jvmVersion: createBoilerplateData.value.metadata.jvmVersion,
     },
-    crud:createBoilerplateData.value.crud,
+    crud: createBoilerplateData.value.crud,
     dependencies: springDependenciesSelectedState.value.map((item) => ({
       id: item.id,
       properties: item.properties?.map((item) => ({
@@ -322,11 +328,12 @@ const onSubmit = async () => {
         referencedColumnName: item.referencedColumnName,
       })),
     })),
-  }; 
+  };
 
-   requestData.value = data;
+  requestData.value = data;
+  loading.value = true;
   await createBoilerplateExecute();
-
+  loading.value = false;
   const blob = new Blob([responseData.value as any], {
     type: "application/zip",
   });

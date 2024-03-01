@@ -21,6 +21,10 @@ export const usePost = () =>
     toc: [],
   }));
 
+export const useMobileDetector = () =>
+  useState<boolean>('is-mobile',() => false)
+
+
 export const useBoilerplateList = () =>
   useState<IBoilerplate[]>("boilerplate-list", () => []);
 

@@ -36,7 +36,7 @@ w
 <script setup lang="ts">
 const props = defineProps<{
   isOpen: boolean;
-  previewLink:string;
+  previewLink?:string;
 }>();
 
 

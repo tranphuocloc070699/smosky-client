@@ -3,14 +3,14 @@
     <div
       class="border-b border-gray-100 py-4 fixed top-0 left-0 right-0 bg-white z-10"
     >
-      <div class="max-w-7xl w-full mx-auto grid grid-cols-6">
+      <div class="max-w-7xl w-full mx-auto grid grid-cols-6 px-4 md:px-0">
         <div class="flex items-center gap-4 col-span-2 h-8">
 
           <UIcon v-show="props.showMenu" name="i-heroicons-bars-3-16-solid" class="w-8 h-8 cursor-pointer"  @click="isOpen = true"/>
           <NuxtLink class="font-medium text-xl cursor-pointer" to="/">Logo</NuxtLink>
         </div>
-        <AppSearch class="col-span-2 h-8" />
-        <AppUserControls class="col-span-2" />
+        <!-- <AppSearch class="col-span-2 h-8" />
+        <AppUserControls class="col-span-2" /> -->
       </div>
     </div>
     <USlideover v-model="isOpen" side="left" class="w-[260px]">
@@ -38,6 +38,10 @@ const props = defineProps({
     type:Boolean,
     default:false
   },
+})
+
+onMounted(() =>{
+  console.log({showMenu:props.showMenu})
 })
 </script>
 <style scoped></style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="text font-semibold text-lg py-4 flex items-center text-tear-700">
+   <!--  <h2 class="text font-semibold text-lg py-4 flex items-center text-tear-700">
       <img
         src="@/assets/images/tag.svg"
         alt="Home"
@@ -9,10 +9,13 @@
         class="w-6 h-6 pr-2"
       />
       Tags
-    </h2>
-    <div class="flex items-center flex-wrap gap-4">
+    </h2> -->
+    <AppTitle :data="{title:'Tags',iconName:'heroicons-tag '}">
+      <div class="flex items-center flex-wrap gap-4">
       <CardTagItem v-if="tagListState" v-for="item in tagListState" :key="item.id" :data="item" />
     </div>
+    </AppTitle>
+  
   </div>
 </template>
 

@@ -7,19 +7,13 @@
         {{ boilerplateItemState.starAvg}}
       </p>
       <div class="absolute left-[25%] top-[45%]">
-    <!--     <NuxtRating
-          :read-only="true"
-          :ratingValue="boilerplateItemState.starAvg"
-          :rating-size="'20px'"
-          class="mx-auto"
-        /> -->
         <InteractiveVoting :read-only="true" :rating-value="boilerplateItemState.starAvg"/>
       </div>
       <p class="text-sm font-light text-[#173952]">
       {{ boilerplateItemState.totalReview }} Reviews
       </p>
     </div>
-    <div class="flex flex-col gap-2">
+    <div v-show="!isMobile" class="flex flex-col gap-2">
          <!-- Five Star -->
       <div class="flex items-center gap-2">
         <div class="flex items-center gap-1">
@@ -109,8 +103,10 @@
 
 <script setup lang="ts">
 import { useBoilerplateItem } from "~/composables/useState";
-const boilerplateItemState = useBoilerplateItem();
+import { useMobileDetector } from "~/composables/useState";
 
+const boilerplateItemState = useBoilerplateItem();
+const isMobile = useMobileDetector();
 const convertStarToPercent = (value: number) => {
   if (!value || !boilerplateItemState.value) return 0;
 

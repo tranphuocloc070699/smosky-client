@@ -1,6 +1,6 @@
 <template>
  <ClientOnly>
-  <div class="border border-slate-200 rounded-md grid grid-cols-3">
+  <div class="border border-slate-200 rounded-md grid grid-cols-1 md:grid-cols-3">
     <!-- Project -->
     <div class="border-r border-slate-200 flex flex-col gap-2">
       <BoilerplateSpringStarterProjectConfig />

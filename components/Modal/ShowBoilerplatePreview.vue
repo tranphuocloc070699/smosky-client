@@ -16,7 +16,7 @@
             @click="toggleModal"
           />
         </div>
-        <AppTitle :data="{ title: 'Preview project', iconName: 'chevron-double-up-16-solid' }">
+        <AppTitle :data="{ title: 'Preview project', iconName: 'heroicons-chevron-double-up-16-solid' }">
           <InteractiveProjectStructure :data="projectStructure"/>
 
           <div class="flex items-end mt-10">
