@@ -17,6 +17,8 @@ RUN npm install
 # copy over all files to the work directory
 ADD . /app
 
+ENV NUXT_BASE_URL_BOILERPLATE_SERVER='http://164.92.92.132:8080'
+
 # build the project
 RUN npm run build
 

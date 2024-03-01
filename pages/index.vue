@@ -1,4 +1,6 @@
 <template>
+
+  Config: {{ $config.public.NUXT_BASE_URL_BOILERPLATE_SERVER }}
     <div class="grid grid-cols-12">
   <div class="col-span-12 md:col-span-9 px-8">
     <TrendingImages />
