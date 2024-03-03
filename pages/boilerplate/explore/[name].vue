@@ -12,7 +12,7 @@
         alt="Home"
         width="24"
         height="24"
-        class="w-8 h-8 pr-2"
+        class="w-7 h-7 pr-2"
       />
     </template>
     <template #default>
