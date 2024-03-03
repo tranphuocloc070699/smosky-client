@@ -78,7 +78,7 @@
       <UTable
         :columns="springEntitiesColumns"
         :rows="getTableSelectedRow"
-        class="max-h-[390px] overflow-y-scroll"
+        class="max-h-[390px] overflow-y-scroll scrollbar"
       >
         <!-- Header -->
         <template #required-header="{ column }">

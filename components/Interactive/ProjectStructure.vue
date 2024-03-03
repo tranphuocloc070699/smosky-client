@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <div class="flex items-start border border-slate-200 rounded-md ">
-      <div class="border-r border-slate-200 br-8 flex-1 h-[660px] overflow-y-scroll">
+      <div class="border-r border-slate-200 br-8 flex-1 h-[660px] overflow-y-scroll scrollbar">
         <h4
           class="border-b border-slate-200 p-4 text-center bg-slate-100 font-medium text-lg"
         >
@@ -11,15 +11,15 @@
           <ProjectStructureFromJson :node="props.data"  />
         </div>
       </div>
-      <div v-show="!isMobile" class="flex-1 w-[500px] -my-2 h-[660px] overflow-y-scroll">
+      <div v-show="!isMobile" class="flex-1 w-[500px]  h-[660px] overflow-y-scroll scrollbar">
         <h4
-          class="border-b border-slate-200 p-4 my-2 text-center bg-slate-100 font-medium text-lg"
+          class="border-b border-slate-200 p-4  text-center bg-slate-100 font-medium text-lg"
         >
           {{ fileSelected.name }}
         </h4>
         <div class="-my-2">
           <pre
-            class="rounded-none"
+            class="rounded-none scrollbar"
           ><code :class="`lang-${fileSelected.language}`">{{ fileSelected.content }}</code></pre>
         </div>
       </div>

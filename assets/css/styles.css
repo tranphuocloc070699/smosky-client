@@ -13,24 +13,52 @@ html {
   line-height: 1.8rem;
   font-weight: 300;
   color: #333;
+
 }
 
+
+
 /* width */
-::-webkit-scrollbar {
-  width: 10px;
+html::-webkit-scrollbar {
+  width: 8px;
+
 }
 
 /* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+html::-webkit-scrollbar-track {
+  background: #F8FAFC;
 }
 
 /* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888;
+html::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 10px;
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+html::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
 }
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+
+/* Track */
+.scrollbar::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+/* Handle */
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
