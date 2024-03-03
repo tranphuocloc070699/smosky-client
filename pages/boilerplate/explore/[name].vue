@@ -4,9 +4,19 @@
       <AppNavigation :data="navigationData" />
       <BoilerplateInfo type="explore" />
       <AppTitle
-        :data="{ title: 'Mores', iconName: 'heroicons-chevron-double-up-16-solid' }"
+        :data="{ title: 'Mores', iconName: '' }"
       >
-        <div class="flex items-center gap-16">
+      <template #image>
+      <img
+        src="@/assets/images/squares-plus.svg"
+        alt="Home"
+        width="24"
+        height="24"
+        class="w-8 h-8 pr-2"
+      />
+    </template>
+    <template #default>
+      <div class="flex items-center gap-16">
           <UTooltip
             v-for="item in featuresCheckBox"
             :key="item.label"
@@ -21,6 +31,9 @@
             />
           </UTooltip>
         </div>
+
+    </template>
+       
       </AppTitle>
       <AppTitle :data="{ title: 'Configuration', iconName: 'heroicons-wrench' }">
         <UTabs :items="items">

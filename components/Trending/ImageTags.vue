@@ -10,10 +10,22 @@
       />
       Tags
     </h2> -->
-    <AppTitle :data="{title:'Tags',iconName:'heroicons-tag '}">
-      <div class="flex items-center flex-wrap gap-4">
+    <AppTitle :data="{title:'Tags',iconName:''}">
+      <template #image>
+        <img
+        src="@/assets/images/tag.svg"
+        alt="Home"
+        width="24"
+        height="24"
+        class="w-8 h-8 pr-2"
+      />
+      </template>
+      <template #default>
+        <div class="flex items-center flex-wrap gap-4">
       <CardTagItem v-if="tagListState" v-for="item in tagListState" :key="item.id" :data="item" />
     </div>
+      </template>
+    
     </AppTitle>
   
   </div>

@@ -22,13 +22,25 @@
     </AppTitle>
 
     <AppTitle
-      :data="{ title: 'Features', iconName: 'heroicons-sparkles' }"
+      :data="{ title: 'Features', iconName: '' }"
       class="bg-slate-50 py-5"
     >
+    <template #image>
+      <img
+        src="@/assets/images/sparkles.svg"
+        alt="Home"
+        width="24"
+        height="24"
+        class="w-8 h-8 pr-2"
+      />
+    </template>
+    <template #default>
       <BoilerplateFeature
         v-if="boilerplateItemState?.features"
         :data="boilerplateItemState.features"
       />
+
+    </template>
     </AppTitle>
     <!-- <div class="p-4">
       <h3 class="text font-semibold text-lg py-4 flex items-center">
@@ -45,11 +57,25 @@
       </div>
     </div> -->
 
-    <AppTitle :data="{ title: 'Reviews', iconName: 'heroicons-chat-bubble-left' }">
+    <AppTitle :data="{ title: 'Reviews', iconName: '' }">
+    
+
+      <template #image>
+      <img
+        src="@/assets/images/chat.svg"
+        alt="Home"
+        width="24"
+        height="24"
+        class="w-8 h-8 pr-2"
+      />
+    </template>
+    <template #default>
       <BoilerplateReview
         id="boilerplate-review"
         @on-submit="onCreateReviewSubmit"
       />
+
+    </template>
     </AppTitle>
     <!--     <div class="p-4">
       <h3 class="text font-semibold text-lg py-4 flex items-center">

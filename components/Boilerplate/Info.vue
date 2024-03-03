@@ -42,13 +42,13 @@
           <NuxtLink :to="`/boilerplate/explore/${boilerplateItemState.name}`"
             ><UButton class="py-2 px-6">Let's explore</UButton></NuxtLink
           >
-          <UButton color="white" class="py-2 px-6" v-show="isMobile" @click="showDemoOpen=true">Show demo</UButton>
+          <!-- <UButton color="white" class="py-2 px-6" v-show="isMobile" @click="showDemoOpen=true">Show demo</UButton> -->
         </div>
 
       </div>
-      <div v-show="!isMobile" class="flex justify-end">
+      <!-- <div v-show="!isMobile" class="flex justify-end">
         <InteractiveVideo :preview-link="boilerplateItemState.previewLink" :thumbnail="boilerplateItemState.thumbnail" />
-      </div>
+      </div> -->
     </div>
     <ModalShowVideo :is-open="showDemoOpen" @update:is-open="toggleShowDemo" :preview-link="boilerplateItemState?.previewLink" />
   </div>
