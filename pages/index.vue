@@ -13,15 +13,15 @@
 <script setup lang="ts">
 import type { IBoilerplate, ITag } from '~/types/model';
 import useApi from '~/composables/useApi';
+
 import {useBoilerplateList,useTagList} from '~/composables/useState'
 import {useNotification} from '~/composables/useNotification'
 const boilerplateApi = useApi();
 const boilerplateState = useBoilerplateList();
 const tagListState = useTagList();
-
+const { $api } = useNuxtApp()
 boilerplateApi.boilerplate.fetchAll().then((data) =>{
  
-
   boilerplateState.value = data.data.value?.data?.boilerplates as IBoilerplate[];
   tagListState.value = data.data.value?.data?.tags as ITag[]
 

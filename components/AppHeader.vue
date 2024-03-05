@@ -7,7 +7,9 @@
         <div class="flex items-center gap-4 col-span-2 h-8">
 
           <UIcon v-show="props.showMenu" name="i-heroicons-bars-3-16-solid" class="w-8 h-8 cursor-pointer"  @click="isOpen = true"/>
-          <NuxtLink class="font-medium text-xl cursor-pointer" to="/">SOFTDEV(BETA)</NuxtLink>
+          <NuxtLink class="font-medium text-xl cursor-pointer" to="/">
+            <img src="@/assets/images/logo.svg" />
+          </NuxtLink>
         </div>
         <!-- <AppSearch class="col-span-2 h-8" />
         <AppUserControls class="col-span-2" /> -->

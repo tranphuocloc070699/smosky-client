@@ -1,4 +1,4 @@
-import type { IBoilerplateItem, IReview } from "~/types/model";
+
 import type { ICreateReview } from "~/types/request";
 import type { ICreateReviewResponse } from "~/types/response";
 
