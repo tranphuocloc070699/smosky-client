@@ -1,5 +1,5 @@
 import type { NitroFetchRequest, $Fetch,NitroFetchOptions } from 'nitropack'
-   class FetchFactory<T> {
+   class FetchFactory {
     private $fetch: $Fetch;
   
     constructor(fetcher: $Fetch) {
@@ -18,8 +18,8 @@ import type { NitroFetchRequest, $Fetch,NitroFetchOptions } from 'nitropack'
       url: string,
       data?: object,
       fetchOptions?: NitroFetchOptions<'json'>
-    ): Promise<T> {
-      return this.$fetch<T>(
+    ) {
+      return this.$fetch(
         url, 
         { 
           method, 

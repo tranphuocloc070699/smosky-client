@@ -41,9 +41,5 @@ const props = defineProps({
     default:false
   },
 })
-
-onMounted(() =>{
-  console.log({showMenu:props.showMenu})
-})
 </script>
 <style scoped></style>

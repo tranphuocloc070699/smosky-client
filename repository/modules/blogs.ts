@@ -6,7 +6,7 @@ import type { IResponse } from "~/types/response";
 import type { IUpSavePost } from "~/types/request";
 class BlogsModule extends FetchFactory<IResponse<IPost | IPost[]>> {
     private RESOURCE = '/blogs';
-  
+    
     /**
      * Return the products as array 
      * @param asyncDataOptions options for `useAsyncData`

@@ -4,6 +4,7 @@ import type { IBoilerplatePreviewResponse, IFetchAllBoilerplate, IResponse } fro
 
 
 export default function () {
+  const {$api} = useNuxtApp();
   const config = useRuntimeConfig()
   const BASE_URL_BOILERPLATE_SERVER = config.public.NUXT_BASE_URL_BOILERPLATE_SERVER
     return {

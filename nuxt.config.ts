@@ -25,7 +25,7 @@ export default defineNuxtConfig({
   /***
   Modules 
   ***/
-  modules: ["@nuxt/ui", "@nuxtjs/google-fonts", "nuxt-rating"],
+  modules: ["@nuxt/ui", "@nuxtjs/google-fonts", "nuxt-rating","@pinia/nuxt"],
   /***
   Fonts 
   ***/
