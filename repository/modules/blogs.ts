@@ -4,7 +4,7 @@ import type { NitroFetchRequest, NitroFetchOptions } from "nitropack";
 import type { AsyncDataOptions } from '#app';
 import type { IResponse } from "~/types/response";
 import type { IUpSavePost } from "~/types/request";
-class BlogsModule extends FetchFactory<IResponse<IPost | IPost[]>> {
+class BlogsModule extends FetchFactory {
     private RESOURCE = '/blogs';
     
     /**
@@ -12,7 +12,7 @@ class BlogsModule extends FetchFactory<IResponse<IPost | IPost[]>> {
      * @param asyncDataOptions options for `useAsyncData`
      * @returns 
      */
-    async fetchBlogs(
+ /*    async fetchBlogs(
       asyncDataOptions?: AsyncDataOptions<IResponse<IPost | IPost[]>>
     ) {
   
@@ -78,7 +78,7 @@ class BlogsModule extends FetchFactory<IResponse<IPost | IPost[]>> {
         },
         asyncDataOptions
       ) 
-    }
+    } */
   }
   
   export default BlogsModule;

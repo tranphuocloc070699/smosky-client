@@ -1,9 +1,17 @@
 import type { NitroFetchRequest, $Fetch,NitroFetchOptions } from 'nitropack'
-   class FetchFactory {
+
+
+interface IHttpFactory{
+  method:'GET' | 'HEAD' | 'PATCH' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'get' | 'head' | 'patch' | 'post' | 'put' | 'delete' | 'connect' | 'options' | 'trace',
+  url: string,
+  fetchOptions?:NitroFetchOptions<'json'>,
+  body?: object,
+}
+   class HttpFactory {
     private $fetch: $Fetch;
   
-    constructor(fetcher: $Fetch) {
-      this.$fetch = fetcher;
+    constructor(fetch: $Fetch) {
+      this.$fetch = fetch;
     }
     /**
      * The HTTP client is utilized to control the process of making API requests.
@@ -13,23 +21,25 @@ import type { NitroFetchRequest, $Fetch,NitroFetchOptions } from 'nitropack'
      * @param fetchOptions fetch options
      * @returns 
      */
-    async call(
-      method:'GET' | 'HEAD' | 'PATCH' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'get' | 'head' | 'patch' | 'post' | 'put' | 'delete' | 'connect' | 'options' | 'trace',
-      url: string,
-      data?: object,
-      fetchOptions?: NitroFetchOptions<'json'>
-    ) {
-      return this.$fetch(
+    async call<T>({method,url,fetchOptions,body} : IHttpFactory) : Promise<T> {
+
+  /*     const fetchOptions: NitroFetchOptions<'json'> = {
+        headers: {
+          'Accept-Language': 'en-US'
+        }
+      }; */
+      return this.$fetch<T>(
         url, 
         { 
           method, 
-          body: data, 
+          body, 
           ...fetchOptions,
-          retry:3
+          retry:3,
+          
         }
       )
     }
   }
 
   
-  export default FetchFactory;
+  export default HttpFactory;

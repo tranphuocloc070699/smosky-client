@@ -108,11 +108,24 @@ const boilerplateApi = useApi();
 const boilerplateItemState = useBoilerplateItem();
 const loading = ref(false)
 const notify = useNotification(useToast)
-boilerplateApi.boilerplate
+
+const { $api } = useNuxtApp()
+/* boilerplateApi.boilerplate
   .fetchDetail(name as string)
   .then((data) => {
     if (!data.data.value) return;
     boilerplateItemState.value = {...data.data.value.data,starAvg:Math.round(data.data.value.data.starAvg)};
+  
+  })
+  .catch((error) => {
+    console.log({ error });
+  }); */
+
+
+  $api.boilerplates.fetchBoilerplate(name as string).then((response) => {
+ 
+    if (!response.data.value) return;
+    boilerplateItemState.value = {...response.data.value.data,starAvg:Math.round(response.data.value.data.starAvg)};
   
   })
   .catch((error) => {
@@ -171,7 +184,6 @@ const navigationData: INavigation[] = [
   },
 ];
 
-onMounted(() => {});
 </script>
 
 <style scoped></style>

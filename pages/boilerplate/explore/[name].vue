@@ -92,6 +92,7 @@ import {
 import type { INavigation } from "~/types/components";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 const route = useRoute();
+const {$api} = useNuxtApp();
 definePageMeta({
   layout: "detail",
 });

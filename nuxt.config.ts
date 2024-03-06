@@ -16,11 +16,10 @@ export default defineNuxtConfig({
    
     // Keys within public are also exposed client-side
     public: {
-      apiBase: "/api",
       NUXT_BASE_URL_BOILERPLATE_SERVER: process.env.NUXT_BASE_URL_BOILERPLATE_SERVER,
-
+      NUXT_BASE_URL_PROXY_SERVER: process.env.NUXT_BASE_URL_PROXY_SERVER,
     },
-    
+    boilerplateServer:process.env.NUXT_BASE_URL_BOILERPLATE_SERVER
   },
   /***
   Modules 

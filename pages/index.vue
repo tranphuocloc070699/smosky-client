@@ -20,14 +20,23 @@ const boilerplateApi = useApi();
 const boilerplateState = useBoilerplateList();
 const tagListState = useTagList();
 const { $api } = useNuxtApp()
-boilerplateApi.boilerplate.fetchAll().then((data) =>{
+
+$api.boilerplates.fetchBoilerplateList().then((response) =>{
+  boilerplateState.value = response.data.value?.data?.boilerplates as IBoilerplate[];
+  tagListState.value = response.data.value?.data?.tags as ITag[]
+}).catch((error : any) => {
+ console.log({error})
+})
+
+// const {data,error,pending,execute} = await $api.boilerplates.fetchBoilerplateList()
+/* boilerplateApi.boilerplate.fetchAll().then((data) =>{
  
   boilerplateState.value = data.data.value?.data?.boilerplates as IBoilerplate[];
   tagListState.value = data.data.value?.data?.tags as ITag[]
 
-}).catch(error => {
+}).catch((error : any) => {
   console.log({error})
-})
+}) */
 
 </script>
 

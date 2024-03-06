@@ -3,64 +3,65 @@ import FetchFactory from "../factory";
 import type {  NitroFetchOptions } from "nitropack";
 import type { AsyncDataOptions } from '#app';
 import type { IFetchAllBoilerplate, IResponse } from "~/types/response";
-class BlogsModule extends FetchFactory {
-    private RESOURCE = '/blogs';
-  
-    /**
-     * Return the products as array 
-     * @param asyncDataOptions options for `useAsyncData`
-     * @returns 
-     */
-    async fetchBoilerplates(
-      asyncDataOptions?: AsyncDataOptions<IResponse<IBoilerplate | IFetchAllBoilerplate>>
-    ) {
-      const fetchOptions: NitroFetchOptions<'json'> = {
-        headers: {
-          'Accept-Language': 'en-US'
-        }
-      };
-      return this.call(
-        'GET',
-        `${this.RESOURCE}`,
-        undefined,
-        fetchOptions
-      )
-  
-      /* return useAsyncData(
-        () => {
-          const fetchOptions: NitroFetchOptions<'json'> = {
-            headers: {
-              'Accept-Language': 'en-US'
-            }
-          };
-         
-        },
-        asyncDataOptions
-      )  */
-    }
-
-    async fetchBoilerplateDetail(
-      slug:string,
-      asyncDataOptions?: AsyncDataOptions<IResponse<IBoilerplate | IFetchAllBoilerplate>>
-    ) {
-  
+import type { IDownloadBoilerplateFromPreview } from "~/types/request";
+class BoilerplatesModule extends FetchFactory {
+    private RESOURCE = 'api/spring';
+    async fetchBoilerplateList() {
       return useAsyncData(
         () => {
-          const fetchOptions: NitroFetchOptions<'json'> = {
-            headers: {
-              'Accept-Language': 'en-US'
-            }
-          };
-          return this.call(
-            'GET',
-            `${this.RESOURCE}`,
-            undefined,
-            fetchOptions
+          return this.call<IResponse<IFetchAllBoilerplate>>(
+            {method:'GET',url:`${this.RESOURCE}`}
           )
         },
-        asyncDataOptions
       ) 
+
+   
+    }
+
+    async fetchBoilerplate(name:string) {
+      return useAsyncData(() => this.call<IResponse<IBoilerplate>>(
+        {method:'GET',url:`${this.RESOURCE}/${name}`}
+      ))
+    }
+
+    async downloadBoilerplate(dto : any) {
+
+      return useAsyncData(() => this.call<IFetchAllBoilerplate>(
+        {
+          method:'POST',
+          url:`${this.RESOURCE}`,
+          body:dto,
+          fetchOptions:{
+            responseType:'blob'
+          }
+        }
+      ))
+    }
+
+    async createBoilerplatePreview(dto : any) {
+
+      return useAsyncData(() => this.call<IFetchAllBoilerplate>(
+        {
+          method:'POST',
+          url:`${this.RESOURCE}/preview`,
+          body:dto
+        }
+      ))
+    }
+
+    async downloadBoilerplateFromPreviewUrl(dto : IDownloadBoilerplateFromPreview) {
+
+      return useAsyncData(() => this.call<IFetchAllBoilerplate>(
+        {
+          method:'POST',
+          url:`${this.RESOURCE}/preview/download`,
+          body:dto,
+          fetchOptions:{
+            responseType:'blob'
+          }
+        }
+      ))
     }
   }
   
-  export default BlogsModule;
+  export default BoilerplatesModule;
