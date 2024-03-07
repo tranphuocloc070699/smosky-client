@@ -14,11 +14,11 @@ import useApi from '~/composables/useApi'
 import { usePostList } from '~/composables/useState';
 import type { IApiInstance } from '~/plugins/api';
 import type { IPost } from '~/types/model';
-const nuxtApp = useNuxtApp();
-const api = nuxtApp.$api as IApiInstance
 const postListState = usePostList();
 
-api.blogs.fetchBlogs().then(data => {
+const {$api} = useNuxtApp()
+
+$api.posts.fetchPostList().then(data => {
   if(!data.data.value) return;
   postListState.value = data.data.value.data as IPost[]
 })

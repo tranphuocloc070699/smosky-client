@@ -14,8 +14,6 @@ class BoilerplatesModule extends FetchFactory {
           )
         },
       ) 
-
-   
     }
 
     async fetchBoilerplate(name:string) {

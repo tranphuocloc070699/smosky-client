@@ -1,9 +1,11 @@
 
-import BlogsModule from '~/repository/modules/blogs';
+import PostsModule from '~/repository/modules/posts';
 import BoilerplatesModule from '~/repository/modules/boilerplates';
+import ReviewsModule from '~/repository/modules/reviews';
 export interface IApiInstance {
-  blogs: BlogsModule;
-  boilerplates: BoilerplatesModule
+  posts: PostsModule;
+  boilerplates: BoilerplatesModule;
+  reviews:ReviewsModule;
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -14,14 +16,14 @@ export default defineNuxtPlugin((nuxtApp) => {
   const apiFetcher = $fetch.create({
     baseURL:NUXT_BASE_URL_PROXY_SERVER,
     onRequest({request,response}){
-      console.log({request})
-      console.log({response})
+   
     }
   });
 
   const modules: IApiInstance = {
-    blogs: new BlogsModule(apiFetcher),
-    boilerplates:new BoilerplatesModule(apiFetcher)
+    posts: new PostsModule(apiFetcher),
+    boilerplates:new BoilerplatesModule(apiFetcher),
+    reviews:new ReviewsModule(apiFetcher)
   };
 
   return {

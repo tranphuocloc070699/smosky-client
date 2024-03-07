@@ -173,7 +173,7 @@ const onBtnDownloadFromPreviewClick = async () => {
     loading.value = true;
     await downloadBoilerplateFromUrlExecute();
     loading.value = false;
-    console.log({ downloadUrl: downloadUrl.value.downloadUrl });
+
     const blob = new Blob(
       [boilerplateFromDownloadUrlResponseData.value as any],
       {
@@ -309,10 +309,7 @@ const onSubmit = async () => {
     alert(metadataValidation.message);
     return;
   }
-  console.log({
-    springDependenciesSelectedState: springDependenciesSelectedState.value,
-  });
-  console.log({ createBoilerplateData: createBoilerplateData.value });
+
   const data = {
     type: createBoilerplateData.value.type,
     bootVersion: createBoilerplateData.value.bootVersion,

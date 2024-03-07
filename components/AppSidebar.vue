@@ -12,10 +12,10 @@
             <img src="@/assets/images/home.svg" alt="Home" width="20" height="20" class="w-5 h-5"/>
             <p :class="['text-base px-4',route.name==='index' && 'font-medium']">Home</p>
         </NuxtLink>
-    <!--     <NuxtLink to="/blogs" :class="['flex items-center p-2 mx-2 mt-2  rounded-md hover:bg-gray-100 font-light',route.name==='blogs' && 'bg-slate-100']">
+        <NuxtLink to="/blogs" :class="['flex items-center p-2 mx-2 mt-2  rounded-md hover:bg-gray-100 font-light',route.name==='blogs' && 'bg-slate-100']">
             <img src="@/assets/images/blog.svg" alt="Home" width="20" height="20" class="w-5 h-5"/>
             <p :class="['text-base px-4',route.name==='blogs' && 'font-medium']">Blog</p>
-        </NuxtLink> -->
+        </NuxtLink>
         </div>
         <!-- User -->
       <!--   <div class="border-b border-slate-100 pb-4">
@@ -38,7 +38,7 @@
         </a>
         </div> -->
         <!-- Admin -->
-      <!--   <div class="border-b border-slate-100 pb-4">
+        <div class="border-b border-slate-100 pb-4">
             <h3 class=" flex items-center m-4 rounded-md font-medium ">
             
                 Admin
@@ -63,7 +63,7 @@
             <img src="@/assets/images/tag-plus.svg" alt="Home" width="20" height="20" class="w-5 h-5"/>
             <p :class="['text-base px-4',route.name==='admin-create-tag' && 'font-medium']">Create Tag</p>
         </NuxtLink>
-        </div> -->
+        </div>
         
     </div>
 </template>

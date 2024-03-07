@@ -137,7 +137,7 @@ const onSubmit = () =>{
     alert('Name or content invalid');
     return;
   }
-console.log({data:data.value})
+
 
   emit('onSubmit',{
     id:data.value.id,

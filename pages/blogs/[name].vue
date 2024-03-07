@@ -56,11 +56,10 @@ definePageMeta({
 const name = route.params.name;
 const postState = usePost();
 
-const nuxtApp = useNuxtApp();
-const api = nuxtApp.$api as IApiInstance;
+const {$api} = useNuxtApp();
 
-api.blogs
-  .fetchDetailBlog(name as string)
+$api.posts
+  .fetchPost(name as string)
   .then((data) => {
     if (!data.data.value) return;
     postState.value = data.data.value.data as IPost;

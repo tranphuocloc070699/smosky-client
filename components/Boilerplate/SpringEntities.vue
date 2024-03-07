@@ -342,7 +342,6 @@ const onTableDelete = (data: ICreateBoilerplateEntity) => {
   const isAccept = window.confirm("Do you really want to delete this table?");
   if (!isAccept) return;
   if (tableSelected.value === data.name) {
-    console.log("change tableSelected");
     tableSelected.value = "Row";
   }
   createBoilerplateData.value.entities =

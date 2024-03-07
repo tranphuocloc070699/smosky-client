@@ -117,15 +117,14 @@ const tag = [
   { id: 2, label: "Backend" },
   { id: 3, label: "Devops" },
   { id: 4, label: "Hacking" },
-];
+ ];
 const selected = ref([tag[3]]);
 const isOpen = ref(false);
 const thumbnailTemporaryUrl = ref<string>("");
 
 const blogApi = useApi().blog;
 
-const nuxtApp = useNuxtApp();
-const api = nuxtApp.$api as IApiInstance
+const {$api} = useNuxtApp();
 
 const onTitleChange = () => {
   dto.value.slug = convertedSentence(dto.value.title);
@@ -140,9 +139,7 @@ const dto = ref<IUpSavePost>({
   thumbnail: "",
 });
 
-const {data : createPostData,error: createPostError,execute: createPostExecute} =  await api.blogs.createBlog(dto.value,{
-  immediate:false
-});
+
 
 const thumbnailHandler = async (e: any) => {
   const file = e.target["files"][0];
@@ -150,7 +147,6 @@ const thumbnailHandler = async (e: any) => {
   if (file) {
     dto.value.thumbnail = file;
     thumbnailTemporaryUrl.value = window.URL.createObjectURL(file);
-    console.log(thumbnailTemporaryUrl.value);
   }
 };
 
@@ -192,7 +188,6 @@ const customTOCHandler = (editor: any) => {
       });
     }
   });
-  console.log({ tocTemp });
   /*   notify({
     type:'info',
     text:'create toc successfully!,check console'
@@ -202,8 +197,7 @@ const customTOCHandler = (editor: any) => {
 };
 
 const handleSubmit = async () => {
-  await createPostExecute();
-  console.log({createPostData:createPostData.value})
+  const {data : createPostData,error: createPostError,execute: createPostExecute} =  await $api.posts.createPost(dto.value);
   if(createPostData.value?.status==='OK'){
     toast.add({
       title:createPostData.value.message,

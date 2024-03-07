@@ -101,7 +101,6 @@ const ProjectStructureFromJson = ({ node }: IProps) => {
 };
 
 const onFileSelected = async (node: IProjectStructure) => {
-  console.log({ language: node.name.split(".").pop() || "" });
   if (node.content) {
     fileSelected.value = {
       id: node.id,
@@ -148,7 +147,6 @@ const getIconFromExtension = (filename: string) => {
 };
 
 const onFolderToggle = (node: IProjectStructure) => {
-  console.log("toggle with id: " + node.id);
   node.isExpanded = !node.isExpanded;
 };
 </script>
