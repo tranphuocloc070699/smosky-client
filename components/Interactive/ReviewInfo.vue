@@ -7,7 +7,7 @@
         {{ boilerplateItemState.starAvg}}
       </p>
       <div class="absolute left-[25%] top-[45%]">
-        <InteractiveVoting :read-only="true" :rating-value="boilerplateItemState.starAvg"/>
+        <AppVoting :read-only="true" :rating-value="boilerplateItemState.starAvg"/>
       </div>
       <p class="text-sm font-light text-[#173952]">
       {{ boilerplateItemState.totalReview }} Reviews

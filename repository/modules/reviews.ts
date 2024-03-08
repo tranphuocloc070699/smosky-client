@@ -4,8 +4,9 @@ import type { IResponse } from "~/types/response";
 import type { IUpSavePost } from "~/types/request";
 import type { ICreateReview } from "~/types/request";
 import type { ICreateReviewResponse } from "~/types/response";
+import Routes from "../routes";
 class ReviewsModule extends FetchFactory {
-    private RESOURCE = '/api/reviews';
+    private RESOURCE = Routes.REVIEW;
     
     async createReview(dto : ICreateReview) {
       return useAsyncData(

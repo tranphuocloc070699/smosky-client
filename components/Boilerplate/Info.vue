@@ -15,7 +15,7 @@
           </div>
           <!-- Rating -->
           <div class="flex items-center gap-1" v-if="type === 'boilerplate'">
-            <InteractiveVoting :read-only="true" :rating-value="boilerplateItemState.starAvg"/>
+            <AppVoting :read-only="true" :rating-value="boilerplateItemState.starAvg"/>
             <h5 class="text-slate-500 font-light text-sm">
               ({{ boilerplateItemState.totalReview }} voting)
             </h5>

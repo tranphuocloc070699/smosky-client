@@ -1,7 +1,12 @@
 const prefix = '/api'
 
 const Routes = {
-    BOILERPLATES: `${prefix}/boilerplates`
+    BOILERPLATE: {
+        SPRING:`${prefix}/spring`
+    },
+    POST:`${prefix}/posts`,
+    REVIEW:`${prefix}/reviews`,
+    ADMIN:`${prefix}/admin`
 }
 
 export default Routes 

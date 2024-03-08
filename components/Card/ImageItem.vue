@@ -19,7 +19,7 @@
         {{ data.description }}
       </h4>
       <div class="flex items-center gap-2">
-        <InteractiveVoting :read-only="true" :rating-value="data.starAvg"/>
+        <AppVoting :read-only="true" :rating-value="data.starAvg"/>
         <h5 class="text-slate-400 font-light text-sm">
           ({{data.totalReview}} voting)
         </h5>

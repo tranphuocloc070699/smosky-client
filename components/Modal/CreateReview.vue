@@ -53,7 +53,7 @@
             @rating-selected="value =>  data.star=value"
             :rating-size="'32px'"
           /> -->
-          <InteractiveVoting :read-only="false" :rating-value="data.star" @rating-selected="value => data.star=value" :size="8"/>
+          <AppVoting :read-only="false" :rating-value="data.star" @rating-selected="value => data.star=value" :size="8"/>
 
         </div>
 

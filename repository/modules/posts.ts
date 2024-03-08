@@ -2,8 +2,9 @@ import type { IPost } from "~/types/model";
 import FetchFactory from "../factory";
 import type { IResponse } from "~/types/response";
 import type { IUpSavePost } from "~/types/request";
+import Routes from "../routes";
 class PostsModule extends FetchFactory {
-    private RESOURCE = '/api/posts';
+    private RESOURCE = Routes.POST;
     
     async fetchPostList() {
       return useAsyncData(

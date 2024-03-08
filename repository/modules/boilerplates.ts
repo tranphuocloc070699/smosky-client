@@ -4,8 +4,9 @@ import type {  NitroFetchOptions } from "nitropack";
 import type { AsyncDataOptions } from '#app';
 import type { IFetchAllBoilerplate, IResponse } from "~/types/response";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
+import Routes from "../routes";
 class BoilerplatesModule extends FetchFactory {
-    private RESOURCE = 'api/spring';
+    private RESOURCE = Routes.BOILERPLATE;
     async fetchBoilerplateList() {
       return useAsyncData(
         () => {

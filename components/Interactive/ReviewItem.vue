@@ -10,7 +10,7 @@
         <p class="text-base font-medium"> {{ data.name }}</p>
         <p class="text-sm text-slate-500">{{convertDateTimeToYMD(data.createdAt.toString())  }}</p>
        </div>
-          <InteractiveVoting :read-only="true" :rating-value="data.star"/>
+          <AppVoting :read-only="true" :rating-value="data.star"/>
        </div>
 
         

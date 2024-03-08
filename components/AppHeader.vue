@@ -11,8 +11,8 @@
             <img src="@/assets/images/logo.svg" />
           </NuxtLink>
         </div>
-        <!-- <AppSearch class="col-span-2 h-8" />
-        <AppUserControls class="col-span-2" /> -->
+        <!-- <HeaderAppSearch class="col-span-2 h-8" />
+        <HeaderAppUserControls class="col-span-2" /> -->
       </div>
     </div>
     <USlideover v-model="isOpen" side="left" class="w-[260px]">
