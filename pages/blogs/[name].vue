@@ -7,6 +7,10 @@
     <!-- Header -->
     <BlogInfo :data="postState" />
     <!-- Body -->
+    <BlogTableOfContent :is-mobile="false" :data="postState.tocs"/>
+
+    <div class="h-[800px] w-full"></div>
+
     <div v-if="postState.content" class="max-w-7xl w-full mx-auto py-5">
       <div v-html="`${postState.content}`"></div>
     </div>
@@ -33,6 +37,8 @@ $api.posts
   .fetchPost(name as string)
   .then((data) => {
     if (!data.data.value) return;
+
+    console.log({data:data.data.value.data})
     postState.value = data.data.value.data as IPost;
   })
   .catch((error) => {

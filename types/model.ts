@@ -116,7 +116,7 @@ export interface IPost{
   content:String;
   createdAt:Date;
   updatedAt:Date;
-  toc:IPostToc[]
+  tocs:IPostToc[]
   
 }
 
