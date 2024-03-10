@@ -34,7 +34,7 @@ export interface IFetchAllBoilerplate{
 }
 
 export interface IResponse<T>{
-    status:string;
+    status:number;
     data:T;
     errors:string[];
     message:string;

@@ -42,20 +42,7 @@
 
     </template>
     </AppTitle>
-    <!-- <div class="p-4">
-      <h3 class="text font-semibold text-lg py-4 flex items-center">
-        <UIcon name="i-heroicons-question-mark-circle" class="w-6 h-6 mr-2" />
-        Questions
-      </h3>
-      <div class="grid grid-cols-12">
-        <div class="col-span-5">
-          <QuestionCreator />
-          <div class="pt-8">
-            <CardQuestionItem v-for="item in 3" :key="item" />
-          </div>
-        </div>
-      </div>
-    </div> -->
+
 
     <AppTitle :data="{ title: 'Reviews', iconName: '' }">
     
@@ -77,17 +64,7 @@
 
     </template>
     </AppTitle>
-    <!--     <div class="p-4">
-      <h3 class="text font-semibold text-lg py-4 flex items-center">
-        <UIcon name="i-heroicons-star" class="w-6 h-6 mr-2" />
-        Reviews
-      </h3>
-      <div class="grid grid-cols-12">
-        <div class="col-span-5">
-          <CardReviewItem v-for="item in 3" :key="item" />
-        </div>
-      </div>
-    </div> -->
+
     <AppLoading v-show="loading"/>
   </div>
 </template>
@@ -98,6 +75,7 @@ import { useBoilerplateItem } from "~/composables/useState";
 import useApi from "~/composables/useApi";
 import type { ICreateReview } from "~/types/request";
 import type { IReview } from "~/types/model";
+import NotifyData from "~/utils/notify-data";
 const route = useRoute();
 definePageMeta({
   layout: "detail",
@@ -138,7 +116,7 @@ const onCreateReviewSubmit = async (dto: IReview) => {
 const {
   data,
   error,
-} = await boilerplateApi.review.createReview({
+} = await $api.reviews.createReview({
   boilerplateId:dto.id,
   name:dto.name,
   email:dto.email,
@@ -146,26 +124,27 @@ const {
   star:dto.star
 });
 
-  if(data.value && boilerplateItemState.value){
-    boilerplateItemState.value.totalReview = data.value.totalReview;
-    boilerplateItemState.value.starAvg = Math.round(data.value.starAvg);
-    boilerplateItemState.value.oneStar = data.value.oneStar;
-    boilerplateItemState.value.twoStar = data.value.twoStar;
-    boilerplateItemState.value.threeStar = data.value.threeStar;
-    boilerplateItemState.value.fourStar = data.value.fourStar;
-    boilerplateItemState.value.fiveStar = data.value.fiveStar;
+  
+  if(data.value?.data && boilerplateItemState.value){
+    boilerplateItemState.value.totalReview = data.value?.data.totalReview;
+    boilerplateItemState.value.starAvg = Math.round(data.value?.data.starAvg);
+    boilerplateItemState.value.oneStar = data.value?.data.oneStar;
+    boilerplateItemState.value.twoStar = data.value?.data.twoStar;
+    boilerplateItemState.value.threeStar = data.value?.data.threeStar;
+    boilerplateItemState.value.fourStar = data.value?.data.fourStar;
+    boilerplateItemState.value.fiveStar = data.value?.data.fiveStar;
     boilerplateItemState.value?.reviews.unshift({
-      id:data.value.id,
-      name:data.value.name,
-      email:data.value.email,
-      star:data.value.star,
-      content:data.value.content,
-      createdAt:data.value.createdAt,
-      updatedAt:data.value.updatedAt
+      id:data.value?.data.id,
+      name:data.value?.data.name,
+      email:data.value?.data.email,
+      star:data.value?.data.star,
+      content:data.value?.data.content,
+      createdAt:data.value?.data.createdAt,
+      updatedAt:data.value?.data.updatedAt
     })
-    notify.Success({title:'Create review successfully!'})
+    notify.Success({title:NotifyData.REVIEW.SUCCESS})
   }else{
-    notify.Danger({title:'Oops! Something wrong.'})
+    notify.Danger({title:NotifyData.INTERNAL_SERVER_ERROR})
     console.error('[Create Review]',error)
   }
   loading.value = false;

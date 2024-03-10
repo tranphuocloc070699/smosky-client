@@ -26,14 +26,7 @@
       </div>
       
     </div>
-    <!--    <div class="flex items-center justify-end gap-2 p-4">
-      <CardIconItem name="i-heroicons-heart" :counting="1" />
-      <CardIconItem
-        name="i-heroicons-chat-bubble-bottom-center"
-        :counting="4"
-      />
-      <CardIconItem name="i-heroicons-bookmark" />
-    </div>-->
+
   </NuxtLink>
 </template>
 

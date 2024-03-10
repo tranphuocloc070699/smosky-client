@@ -22,7 +22,7 @@
       </template>
       <template #default>
         <div class="flex items-center flex-wrap gap-4">
-      <CardTagItem v-if="tagListState" v-for="item in tagListState" :key="item.id" :data="item" />
+      <InteractiveTagItem v-if="tagListState" v-for="item in tagListState" :key="item.id" :data="item" />
     </div>
       </template>
     

@@ -6,7 +6,7 @@ import type { IFetchAllBoilerplate, IResponse } from "~/types/response";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 import Routes from "../routes";
 class BoilerplatesModule extends FetchFactory {
-    private RESOURCE = Routes.BOILERPLATE;
+    private RESOURCE = Routes.BOILERPLATE.SPRING;
     async fetchBoilerplateList() {
       return useAsyncData(
         () => {

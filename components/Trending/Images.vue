@@ -17,7 +17,7 @@
       <template #default>
         <div class="pb-4">
         <div class="grid grid-cols-1 gap-4">
-      <CardImageItem v-for="item of boilerplateState" :key="item.id" :data="item" />
+      <InteractiveImageItem v-for="item of boilerplateState" :key="item.id" :data="item" />
     </div>
       </div>
       </template>

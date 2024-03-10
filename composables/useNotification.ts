@@ -1,42 +1,50 @@
-
-
 interface IToast {
   title: string;
   description?: string;
 }
 
-const TIMEOUT= 0;
+const TIMEOUT = 0;
 
-export const useNotification = (useToast : any) => {
-    const toast = useToast();
+const toastInfo = (prop: IToast) => {
   return {
-    Success:(prop: IToast) => toast.add({
-        title: prop.title,
-        timeout: TIMEOUT,
+    title: prop.title,
+    timeout: TIMEOUT,
+    ...(prop.description && { description: prop.description }),
+  };
+};
+
+
+
+export const useNotification = (useToast: any) => {
+  const toast = useToast();
+
+  return {
+    Success: (prop: IToast) =>
+      toast.add({
+        ...toastInfo(prop),
         icon: "i-heroicons-check-circle",
         color: "emerald",
-        ...(prop.description && { description: prop.description }),
       }),
-      Info:(prop: IToast) => toast.add({
-        title: prop.title,
-        timeout: TIMEOUT,
+
+    Info: (prop: IToast) =>
+      toast.add({
+        ...toastInfo(prop),
         icon: "i-heroicons-information-circle",
         color: "blue",
-        ...(prop.description && { description: prop.description }),
       }),
-      Warning:(prop: IToast) => toast.add({
-        title: prop.title,
-        timeout: TIMEOUT,
+    Warning: (prop: IToast) =>
+      toast.add({
+        ...toastInfo(prop),
         icon: "i-heroicons-exclamation-triangle",
         color: "yellow",
-        ...(prop.description && { description: prop.description }),
       }),
-      Danger:(prop: IToast) => toast.add({
-        title: prop.title,
-        timeout: TIMEOUT,
+    Danger: (prop: IToast) =>
+      toast.add({
+        ...toastInfo(prop),
         icon: "i-heroicons-face-frown",
         color: "red",
-        ...(prop.description && { description: prop.description }),
       }),
-  }
+  };
 };
+
+

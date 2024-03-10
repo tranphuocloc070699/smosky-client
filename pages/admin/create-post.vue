@@ -65,10 +65,10 @@
         plugins: 'codesample anchor link help table image',
 
         toolbar:
-              'undo redo | styles | \
+              'customTOC | undo redo | styles | \
             alignleft aligncenter alignright alignjustify | \
             outdent indent | codesample| link | table | image | \
-            help | custom-remove-image | customTOC',
+            help | custom-remove-image',
             setup: (editor : any) => {
               editor.ui.registry.addButton('custom-remove-image', {
                 text: 'Remove Image',
@@ -79,7 +79,8 @@
               });
               editor.ui.registry.addButton('customTOC', {
                 text: 'TOC',
-                onAction: () => {
+                onAction: (test : any) => {
+                  console.log({test})
                   customTOCHandler(editor)
                 },
               });
@@ -111,7 +112,8 @@ import type { IUpSavePost } from "~/types/request";
 import { convertedSentence } from "~/utils/converter";
 import useApi from "~/composables/useApi";
 import type { IApiInstance } from "~/plugins/api";
-const toast = useToast();
+import NotifyData from "~/utils/notify-data";
+const notify = useNotification(useToast)
 const tag = [
   { id: 1, label: "Frontend" },
   { id: 2, label: "Backend" },
@@ -175,11 +177,14 @@ const removeImageHandler = (editor: any) => {
 const customTOCHandler = (editor: any) => {
   dto.value.toc = [];
   let tocTemp: ITocItem[] = [];
+
+  
   const headings: HTMLElement[] = editor.dom.select("h1, h2, h3, h4, h5, h6");
   headings.forEach((heading, index) => {
     if (heading.id === "") {
       const headingText: string = heading.innerText;
       const headingId = convertedSentence(headingText);
+  
       heading.setAttribute("id", headingId);
       tocTemp.push({
         title: headingText,
@@ -188,21 +193,33 @@ const customTOCHandler = (editor: any) => {
       });
     }
   });
+
+
   /*   notify({
     type:'info',
     text:'create toc successfully!,check console'
   }) */
-
+  dto.value.content = dto.value.content;
   dto.value.toc = tocTemp;
+
+  console.log({tocTemp})
 };
 
 const handleSubmit = async () => {
+
+
+
+
+
   const {data : createPostData,error: createPostError,execute: createPostExecute} =  await $api.posts.createPost(dto.value);
-  if(createPostData.value?.status==='OK'){
-    toast.add({
-      title:createPostData.value.message,
-      timeout:0
+  if(createPostData.value?.status==200){
+
+
+    notify.Success({
+      title:createPostData.value?.message || ''
     })
+
+    // navigateTo({path:'/blogs'})
   }
 };
 </script>

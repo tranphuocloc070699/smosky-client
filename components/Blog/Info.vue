@@ -16,21 +16,7 @@
             {{ convertDateTimeToYMD(data.createdAt.toString()) }}
           </p>
         </h4>
-        <!--    <div class="flex items-center justify-end gap-2 p-4">
-        <CardIconItem name="i-heroicons-heart" :counting="1" />
-        <CardIconItem
-          name="i-heroicons-chat-bubble-bottom-center"
-          :counting="4"
-        />
-        <CardIconItem name="i-heroicons-bookmark" />
-      </div> -->
       </div>
-      <!-- Tags -->
-      <!--   <div
-      class="flex items-center gap-4 py-4 mt-4 border-t border-b border-slate-100 max-w-6xl"
-    >
-      <CardTagItem v-for="item in 4" :key="item" />
-    </div> -->
     </div>
   </div>
 </template>

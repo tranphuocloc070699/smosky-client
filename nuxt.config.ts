@@ -5,18 +5,11 @@ export default defineNuxtConfig({
   ui: {
     icons: ['clarity','uil']
   },
-
-
-
   /***
   Config
   ***/
   runtimeConfig: {
-    // The private keys which are only available server-side
-   
-    // Keys within public are also exposed client-side
     public: {
-      NUXT_BASE_URL_BOILERPLATE_SERVER: process.env.NUXT_BASE_URL_BOILERPLATE_SERVER,
       NUXT_BASE_URL_PROXY_SERVER: process.env.NUXT_BASE_URL_PROXY_SERVER,
     },
     boilerplateServer:process.env.NUXT_BASE_URL_BOILERPLATE_SERVER

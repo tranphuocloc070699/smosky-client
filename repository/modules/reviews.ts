@@ -12,7 +12,7 @@ class ReviewsModule extends FetchFactory {
       return useAsyncData(
         () => {
           return this.call<IResponse<ICreateReviewResponse>>(
-            {method:'POST',url:`${this.RESOURCE}`}
+            {method:'POST',url:`${this.RESOURCE}`,body:dto}
           )
         },
       ) 

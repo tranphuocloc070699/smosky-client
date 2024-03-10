@@ -55,22 +55,10 @@ const props = defineProps<{
   readOnly:boolean;
   size?:number;
 }>(
-  /* ratingValue:{
-    type:Number,
-    required:true
-  },
-  readOnly:{
-    type:Boolean,
-    required:true
-  },
-  size:{
-    type:Number,
-    default:4
-  } */
 );
 
 watch(
-  props,
+  () => props,
   (prop) => {
     if(prop.ratingValue){
       votings.value = votings.value.map((item) => {
@@ -84,7 +72,6 @@ watch(
 );
 
 onMounted(() =>{
-
     if (props.ratingValue) {
       votings.value = votings.value.map((item) => {
         if (item.id <= props.ratingValue) {

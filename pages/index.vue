@@ -16,16 +16,22 @@ import useApi from '~/composables/useApi';
 
 import {useBoilerplateList,useTagList} from '~/composables/useState'
 import {useNotification} from '~/composables/useNotification'
+import NotifyData from '~/utils/notify-data';
 const boilerplateApi = useApi();
 const boilerplateState = useBoilerplateList();
 const tagListState = useTagList();
 const { $api } = useNuxtApp()
-
+const notify = useNotification(useToast)
 $api.boilerplates.fetchBoilerplateList().then((response) =>{
+
   boilerplateState.value = response.data.value?.data?.boilerplates as IBoilerplate[];
   tagListState.value = response.data.value?.data?.tags as ITag[]
+
+  
 }).catch((error : any) => {
- console.log({error})
+  notify.Danger({title:NotifyData.INTERNAL_SERVER_ERROR})
+ console.error({error})
+
 })
 
 // const {data,error,pending,execute} = await $api.boilerplates.fetchBoilerplateList()
