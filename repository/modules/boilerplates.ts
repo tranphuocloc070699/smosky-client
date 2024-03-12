@@ -2,30 +2,26 @@ import type { IBoilerplate, IPost } from "~/types/model";
 import FetchFactory from "../factory";
 import type {  NitroFetchOptions } from "nitropack";
 import type { AsyncDataOptions } from '#app';
-import type { IFetchAllBoilerplate, IResponse } from "~/types/response";
+import type { IBoilerplatePreviewResponse, IFetchAllBoilerplate, IResponse } from "~/types/response";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 import Routes from "../routes";
 class BoilerplatesModule extends FetchFactory {
     private RESOURCE = Routes.BOILERPLATE.SPRING;
     async fetchBoilerplateList() {
-      return useAsyncData(
-        () => {
-          return this.call<IResponse<IFetchAllBoilerplate>>(
-            {method:'GET',url:`${this.RESOURCE}`}
-          )
-        },
-      ) 
+      return this.call<IResponse<IFetchAllBoilerplate>>(
+        {method:'GET',url:`${this.RESOURCE}`}
+      )
     }
 
     async fetchBoilerplate(name:string) {
-      return useAsyncData(() => this.call<IResponse<IBoilerplate>>(
+      return this.call<IResponse<IBoilerplate>>(
         {method:'GET',url:`${this.RESOURCE}/${name}`}
-      ))
+      )
     }
 
     async downloadBoilerplate(dto : any) {
 
-      return useAsyncData(() => this.call<IFetchAllBoilerplate>(
+      return this.call<Blob>(
         {
           method:'POST',
           url:`${this.RESOURCE}`,
@@ -34,23 +30,23 @@ class BoilerplatesModule extends FetchFactory {
             responseType:'blob'
           }
         }
-      ))
+      )
     }
 
-    async createBoilerplatePreview(dto : any) {
+    async previewBoilerplate(dto : any) {
 
-      return useAsyncData(() => this.call<IFetchAllBoilerplate>(
+      return this.call<IResponse<IBoilerplatePreviewResponse>>(
         {
           method:'POST',
           url:`${this.RESOURCE}/preview`,
           body:dto
         }
-      ))
+      )
     }
 
     async downloadBoilerplateFromPreviewUrl(dto : IDownloadBoilerplateFromPreview) {
 
-      return useAsyncData(() => this.call<IFetchAllBoilerplate>(
+      return useAsyncData(() => this.call<Blob>(
         {
           method:'POST',
           url:`${this.RESOURCE}/preview/download`,

@@ -12,7 +12,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
   const NUXT_BASE_URL_PROXY_SERVER =
     config.public.NUXT_BASE_URL_PROXY_SERVER;
-  console.log({NUXT_BASE_URL_PROXY_SERVER})
   const apiFetcher = $fetch.create({
     baseURL:NUXT_BASE_URL_PROXY_SERVER,
     onRequest({request,response}){

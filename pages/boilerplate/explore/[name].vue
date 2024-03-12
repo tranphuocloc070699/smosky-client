@@ -3,39 +3,37 @@
     <div>
       <AppNavigation :data="navigationData" />
       <BoilerplateInfo type="explore" />
-      <AppTitle
-        :data="{ title: 'Mores', iconName: '' }"
-      >
-      <template #image>
-      <img
-        src="@/assets/images/squares-plus.svg"
-        alt="Home"
-        width="24"
-        height="24"
-        class="w-7 h-7 pr-2"
-      />
-    </template>
-    <template #default>
-      <div class="flex items-center gap-16">
-          <UTooltip
-            v-for="item in featuresCheckBox"
-            :key="item.label"
-            text="Create at least one entity to enable this feature"
-            :popper="{ placement: 'top' }"
-          >
-            <UCheckbox
-              :label="item.label"
-              :help="item.help"
-              v-model="createBoilerplateData.crud"
-              :disabled="createBoilerplateData.entities.length === 0"
-            />
-          </UTooltip>
-        </div>
-
-    </template>
-       
+      <AppTitle :data="{ title: 'Mores', iconName: '' }">
+        <template #image>
+          <img
+            src="@/assets/images/squares-plus.svg"
+            alt="Home"
+            width="24"
+            height="24"
+            class="w-7 h-7 pr-2"
+          />
+        </template>
+        <template #default>
+          <div class="flex items-center gap-16">
+            <UTooltip
+              v-for="item in featuresCheckBox"
+              :key="item.label"
+              text="Create at least one entity to enable this feature"
+              :popper="{ placement: 'top' }"
+            >
+              <UCheckbox
+                :label="item.label"
+                :help="item.help"
+                v-model="createBoilerplateData.crud"
+                :disabled="createBoilerplateData.entities.length === 0"
+              />
+            </UTooltip>
+          </div>
+        </template>
       </AppTitle>
-      <AppTitle :data="{ title: 'Configuration', iconName: 'heroicons-wrench' }">
+      <AppTitle
+        :data="{ title: 'Configuration', iconName: 'heroicons-wrench' }"
+      >
         <UTabs :items="items">
           <template #item="{ item }">
             <div v-if="item.key === 'starter'" class="space-y-3">
@@ -91,8 +89,9 @@ import {
 } from "~/composables/useState";
 import type { INavigation } from "~/types/components";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
+import type { IBoilerplatePreviewResponse } from "~/types/response";
 const route = useRoute();
-const {$api} = useNuxtApp();
+const { $api } = useNuxtApp();
 definePageMeta({
   layout: "detail",
 });
@@ -148,7 +147,8 @@ const executeBoilerplatePreview = async () => {
 
   requestData.value = data;
   loading.value = true;
-  await createBoilerplatePreviewExecute();
+
+  await $api.boilerplates.createBoilerplatePreview(requestData)
   loading.value = false;
   showPreviewBoilerplate.value = true;
 };
@@ -157,7 +157,6 @@ const toggleShowPreviewBoilerplate = (value: boolean) => {
   showPreviewBoilerplate.value = value;
 };
 
-const boilerplateApi = useApi();
 const boilerplateItemState = useBoilerplateItem();
 const createBoilerplateData = useCreateBoilerplateData();
 const springDependenciesSelectedState = useSpringDependenciesSelected();
@@ -171,11 +170,13 @@ const onBtnDownloadFromPreviewClick = async () => {
     downloadUrl.value.downloadUrl =
       boilerplatePreviewResponseData.value.downloadUrl;
     loading.value = true;
-    await downloadBoilerplateFromUrlExecute();
+    const {data : downloadBoilerplateFromPreviewUrlData} = await $api.boilerplates.downloadBoilerplateFromPreviewUrl(
+  downloadUrl.value
+);
     loading.value = false;
 
     const blob = new Blob(
-      [boilerplateFromDownloadUrlResponseData.value as any],
+      [downloadBoilerplateFromPreviewUrlData.value as any],
       {
         type: "application/zip",
       }
@@ -195,13 +196,12 @@ const onBtnDownloadFromPreviewClick = async () => {
   }
 };
 
-boilerplateApi.boilerplate
-  .fetchDetail(name as string)
+$api.boilerplates
+  .fetchBoilerplate(name as string)
   .then((data) => {
     if (!data.data.value) return;
     boilerplateItemState.value = data.data.value.data;
     /* Check have dependenciesSelected => add to list dependenciesSelected */
-
     const dependenciesSelected = data.data.value.data.dependenciesSelected;
     if (dependenciesSelected) {
       data.data.value.data.dependencies.forEach((dependencyGroup) => {
@@ -222,26 +222,28 @@ boilerplateApi.boilerplate
     }
   })
   .catch((error) => {
-    console.error({ error });
+    console.error({ FetchDataError:error });
   });
 
-const {
+const boilerplatePreviewResponseData = ref<IBoilerplatePreviewResponse | null>(null)
+
+/* const {
   execute: createBoilerplateExecute,
   data: responseData,
   error,
-} = boilerplateApi.boilerplate.createBoilerplate(requestData);
+} = $api.boilerplates.downloadBoilerplate(requestData);
 
 const {
   execute: createBoilerplatePreviewExecute,
   data: boilerplatePreviewResponseData,
-} = boilerplateApi.boilerplate.createPreviewBoilerplate(requestData);
+} = $api.boilerplates.createBoilerplatePreview(requestData);
 
 const {
   execute: downloadBoilerplateFromUrlExecute,
   data: boilerplateFromDownloadUrlResponseData,
-} = boilerplateApi.boilerplate.downloadBoilerplateFromPreview(
+} = $api.boilerplates.downloadBoilerplateFromPreviewUrl(
   downloadUrl.value
-);
+); */
 
 const isDependencyExistInArray = (value: string) => {
   return (
@@ -343,9 +345,9 @@ const onSubmit = async () => {
 
   requestData.value = data;
   loading.value = true;
-  await createBoilerplateExecute();
+  const {data :createBoilerplatePreviewData } = await $api.boilerplates.createBoilerplatePreview(data);
   loading.value = false;
-  const blob = new Blob([responseData.value as any], {
+  const blob = new Blob([createBoilerplatePreviewData.value as any], {
     type: "application/zip",
   });
   const url = window.URL.createObjectURL(blob);

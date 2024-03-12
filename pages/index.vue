@@ -17,22 +17,23 @@ import useApi from '~/composables/useApi';
 import {useBoilerplateList,useTagList} from '~/composables/useState'
 import {useNotification} from '~/composables/useNotification'
 import NotifyData from '~/utils/notify-data';
-const boilerplateApi = useApi();
+import { useBoilerplateStore } from '~/stores/boilerplates.store';
 const boilerplateState = useBoilerplateList();
 const tagListState = useTagList();
 const { $api } = useNuxtApp()
 const notify = useNotification(useToast)
-$api.boilerplates.fetchBoilerplateList().then((response) =>{
+const {fetchBoilerplateList} = useBoilerplateStore();
 
-  boilerplateState.value = response.data.value?.data?.boilerplates as IBoilerplate[];
-  tagListState.value = response.data.value?.data?.tags as ITag[]
 
-  
-}).catch((error : any) => {
-  notify.Danger({title:NotifyData.INTERNAL_SERVER_ERROR})
- console.error({error})
+// $api.boilerplates.fetchBoilerplateList().then((response) =>{
+//   boilerplateState.value = response.data.value?.data?.boilerplates as IBoilerplate[];
+//   tagListState.value = response.data.value?.data?.tags as ITag[]
+// }).catch((error : any) => {
+//   notify.Danger({title:NotifyData.INTERNAL_SERVER_ERROR})
+//  console.error({error})
+// })
+await useAsyncData('boilerplateList', () => fetchBoilerplateList())
 
-})
 
 // const {data,error,pending,execute} = await $api.boilerplates.fetchBoilerplateList()
 /* boilerplateApi.boilerplate.fetchAll().then((data) =>{

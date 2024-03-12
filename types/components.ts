@@ -15,4 +15,9 @@ export interface IValidationErrorItem {
     message: string;
   }
 
+  export interface IConfirmModal{
+    open:boolean,
+    message:string,
+    notice?:string
+  }
 

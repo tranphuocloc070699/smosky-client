@@ -17,17 +17,19 @@
           type="text"
           id="title"
           v-model="dto.title"
+          size="md"
           @input="onTitleChange"
         />
       </div>
       <div class="py-4">
         <label for="title" class="text-sm font-medium">Slug</label>
-        <UInput type="text" id="title" v-model="dto.slug" />
+        <UInput type="text" id="title" v-model="dto.slug"  size="md" />
       </div>
       <div class="py-4">
         <label for="title" class="text-sm font-medium">Thumbnail</label>
         <UInput
           type="text"
+          size="md"
           id="thumbnail"
           v-model="dto.thumbnail"
         />
@@ -80,7 +82,6 @@
               editor.ui.registry.addButton('customTOC', {
                 text: 'TOC',
                 onAction: (test : any) => {
-                  console.log({test})
                   customTOCHandler(editor)
                 },
               });
@@ -101,18 +102,18 @@
       </div>
     </div>
     <div class="col-span-3"></div>
+    <ModalConfirm :data="confirmModal" @confirm="onSubmit" @close="confirmModal.open=false"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import Editor from "@tinymce/tinymce-vue";
 
-import type { ICreateBlogRequest, ITocItem } from "~/types/model";
+import type { IConfirmModal } from "~/types/components";
+import type { ITocItem } from "~/types/model";
 import type { IUpSavePost } from "~/types/request";
 import { convertedSentence } from "~/utils/converter";
-import useApi from "~/composables/useApi";
-import type { IApiInstance } from "~/plugins/api";
-import NotifyData from "~/utils/notify-data";
+import ModalData from "~/utils/modal-data";
 const notify = useNotification(useToast)
 const tag = [
   { id: 1, label: "Frontend" },
@@ -121,10 +122,13 @@ const tag = [
   { id: 4, label: "Hacking" },
  ];
 const selected = ref([tag[3]]);
-const isOpen = ref(false);
+const confirmModal = ref<IConfirmModal>({
+  open:false,
+  message:''
+});
 const thumbnailTemporaryUrl = ref<string>("");
 
-const blogApi = useApi().blog;
+
 
 const {$api} = useNuxtApp();
 
@@ -194,21 +198,20 @@ const customTOCHandler = (editor: any) => {
     }
   });
 
-
-  /*   notify({
-    type:'info',
-    text:'create toc successfully!,check console'
-  }) */
   dto.value.content = dto.value.content;
   dto.value.toc = tocTemp;
 
-  console.log({tocTemp})
 };
 
-const handleSubmit = async () => {
+const handleSubmit = () =>{
+  confirmModal.value={
+    open:true,
+    message:ModalData.CONFIRM,
+    ...(dto.value.toc.length==0 && {notice:ModalData.NO_TOC})
+  }
+}
 
-
-
+const onSubmit = async () => {
 
 
   const {data : createPostData,error: createPostError,execute: createPostExecute} =  await $api.posts.createPost(dto.value);

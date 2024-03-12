@@ -17,7 +17,7 @@
       <template #default>
         <div class="pb-4">
         <div class="grid grid-cols-1 gap-4">
-      <InteractiveImageItem v-for="item of boilerplateState" :key="item.id" :data="item" />
+      <InteractiveImageItem v-for="item of boilerplateList.boilerplates" :key="item.id" :data="item" />
     </div>
       </div>
       </template>
@@ -29,9 +29,10 @@
 
 <script setup lang="ts">
 import { useBoilerplateList } from '~/composables/useState';
+import { useBoilerplateStore } from '~/stores/boilerplates.store';
 
 const boilerplateState = useBoilerplateList();
-
+const {boilerplateList} = useBoilerplateStore();
 
 </script>
 

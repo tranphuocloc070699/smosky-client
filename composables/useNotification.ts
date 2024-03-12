@@ -1,7 +1,5 @@
-interface IToast {
-  title: string;
-  description?: string;
-}
+import type { IToast } from "~/types/composables";
+
 
 const TIMEOUT = 0;
 
@@ -12,12 +10,8 @@ const toastInfo = (prop: IToast) => {
     ...(prop.description && { description: prop.description }),
   };
 };
-
-
-
 export const useNotification = (useToast: any) => {
   const toast = useToast();
-
   return {
     Success: (prop: IToast) =>
       toast.add({

@@ -38,7 +38,6 @@ $api.posts
   .then((data) => {
     if (!data.data.value) return;
 
-    console.log({data:data.data.value.data})
     postState.value = data.data.value.data as IPost;
   })
   .catch((error) => {

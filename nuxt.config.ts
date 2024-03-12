@@ -1,6 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  
+  devServer: {
+    port: 8000
+  },
   /* Ui */
   ui: {
     icons: ['clarity','uil']
@@ -18,6 +22,7 @@ export default defineNuxtConfig({
   Modules 
   ***/
   modules: ["@nuxt/ui", "@nuxtjs/google-fonts", "nuxt-rating","@pinia/nuxt"],
+  
   /***
   Fonts 
   ***/
