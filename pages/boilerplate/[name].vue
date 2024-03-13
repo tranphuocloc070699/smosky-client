@@ -14,10 +14,10 @@
     </div> -->
     <AppTitle
       :data="{ title: 'Example project', iconName: 'heroicons-document' }"
-      v-if="boilerplateItemState && boilerplateItemState?.projectStructure"
+      v-if="boilerplate && boilerplate?.projectStructure"
     >
       <InteractiveProjectStructure
-        :data="boilerplateItemState?.projectStructure"
+        :data="boilerplate?.projectStructure"
       />
     </AppTitle>
 
@@ -35,10 +35,13 @@
       />
     </template>
     <template #default>
-      <BoilerplateFeature
-        v-if="boilerplateItemState?.features"
-        :data="boilerplateItemState.features"
-      />
+      <ClientOnly>
+
+        <BoilerplateFeature
+          v-show="boilerplate?.features"
+          :data="boilerplate.features"
+        />
+      </ClientOnly>
 
     </template>
     </AppTitle>
@@ -82,12 +85,12 @@ definePageMeta({
 });
 const name = route.params.name;
 
-const boilerplateApi = useApi();
-const boilerplateItemState = useBoilerplateItem();
 const loading = ref(false)
 const notify = useNotification(useToast)
+const {boilerplate,fetchBoilerplate} = useBoilerplateStore()
 
-const { $api } = useNuxtApp()
+await useAsyncData('boilerplateList', () => fetchBoilerplate(name as string))
+// const { $api } = useNuxtApp()
 /* boilerplateApi.boilerplate
   .fetchDetail(name as string)
   .then((data) => {
@@ -100,7 +103,7 @@ const { $api } = useNuxtApp()
   }); */
 
 
-  $api.boilerplates.fetchBoilerplate(name as string).then((response) => {
+  /* $api.boilerplates.fetchBoilerplate(name as string).then((response) => {
  
     if (!response.data.value) return;
     boilerplateItemState.value = {...response.data.value.data,starAvg:Math.round(response.data.value.data.starAvg)};
@@ -108,12 +111,12 @@ const { $api } = useNuxtApp()
   })
   .catch((error) => {
     console.log({ error });
-  });
+  }); */
 
 
 const onCreateReviewSubmit = async (dto: IReview) => {
   loading.value = true;
-const {
+/* const {
   data,
   error,
 } = await $api.reviews.createReview({
@@ -146,7 +149,7 @@ const {
   }else{
     notify.Danger({title:NotifyData.INTERNAL_SERVER_ERROR})
     console.error('[Create Review]',error)
-  }
+  } */
   loading.value = false;
 };
 

@@ -18,8 +18,10 @@ interface IHttpFactory{
         url, 
         { 
           method, 
-          body, 
+          body,
+          headers: { 'Content-Type': 'application/json' },
           ...fetchOptions,
+          
           retry:3,
           
         }

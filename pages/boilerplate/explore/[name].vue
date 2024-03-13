@@ -31,15 +31,14 @@
           </div>
         </template>
       </AppTitle>
-      <AppTitle
+      {{ boilerplate.dependenciesSelected }}
+  <AppTitle
         :data="{ title: 'Configuration', iconName: 'heroicons-wrench' }"
       >
         <UTabs :items="items">
           <template #item="{ item }">
             <div v-if="item.key === 'starter'" class="space-y-3">
-              <BoilerplateSpringStarter
-                :data="boilerplateItemState?.dependencies"
-              />
+              <BoilerplateSpringStarter :data="boilerplate?.dependencies" />
             </div>
             <div v-if="item.key === 'enviroments'" class="space-y-3">
               <BoilerplateSpringEnviroments />
@@ -68,12 +67,12 @@
         >
       </div>
     </div>
-    <div v-if="boilerplatePreviewResponseData?.projectStructure">
+    <div v-if="boilerplateReviewResponse?.projectStructure">
       <ModalShowBoilerplatePreview
         @on-btn-download-click="onBtnDownloadFromPreviewClick"
         :is-open="showPreviewBoilerplate"
         @update:is-open="toggleShowPreviewBoilerplate"
-        :project-structure="boilerplatePreviewResponseData.projectStructure"
+        :project-structure="boilerplateReviewResponse.projectStructure"
       />
     </div>
     <AppLoading v-show="loading" />
@@ -81,7 +80,6 @@
 </template>
 
 <script setup lang="ts">
-import useApi from "~/composables/useApi";
 import {
   useBoilerplateItem,
   useCreateBoilerplateData,
@@ -90,16 +88,27 @@ import {
 import type { INavigation } from "~/types/components";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 import type { IBoilerplatePreviewResponse } from "~/types/response";
-const route = useRoute();
-const { $api } = useNuxtApp();
+
 definePageMeta({
   layout: "detail",
 });
 
+const route = useRoute();
+const requestData = ref({});
 const name = route.params.name;
-
 const showPreviewBoilerplate = ref(false);
 const loading = ref(false);
+const {
+  fetchBoilerplate,
+  downloadBoilerplate,
+  downloadBoilerplateFromPreviewUrl,
+  previewBoilerplate,
+  boilerplate,
+  boilerplateReviewResponse,
+} = useBoilerplateStore();
+
+await useAsyncData("boilerplateList", () => fetchBoilerplate(name as string));
+
 const executeBoilerplatePreview = async () => {
   const entitiesValidation = validationEntitiesBeforeSubmit();
   if (entitiesValidation.invalid) {
@@ -148,33 +157,30 @@ const executeBoilerplatePreview = async () => {
   requestData.value = data;
   loading.value = true;
 
-  await $api.boilerplates.createBoilerplatePreview(requestData)
+  await previewBoilerplate(data);
   loading.value = false;
-  showPreviewBoilerplate.value = true;
+  toggleShowPreviewBoilerplate(true);
 };
 
 const toggleShowPreviewBoilerplate = (value: boolean) => {
   showPreviewBoilerplate.value = value;
 };
 
-const boilerplateItemState = useBoilerplateItem();
 const createBoilerplateData = useCreateBoilerplateData();
 const springDependenciesSelectedState = useSpringDependenciesSelected();
 const downloadUrl = ref<IDownloadBoilerplateFromPreview>({
   downloadUrl: "",
 });
-const requestData = ref({});
 
 const onBtnDownloadFromPreviewClick = async () => {
-  if (boilerplatePreviewResponseData.value?.downloadUrl) {
-    downloadUrl.value.downloadUrl =
-      boilerplatePreviewResponseData.value.downloadUrl;
+  if (boilerplateReviewResponse?.downloadUrl) {
+    downloadUrl.value.downloadUrl = boilerplateReviewResponse?.downloadUrl;
     loading.value = true;
-    const {data : downloadBoilerplateFromPreviewUrlData} = await $api.boilerplates.downloadBoilerplateFromPreviewUrl(
-  downloadUrl.value
-);
+    await downloadBoilerplateFromPreviewUrl(
+      boilerplateReviewResponse.downloadUrl
+    );
     loading.value = false;
-
+    /* 
     const blob = new Blob(
       [downloadBoilerplateFromPreviewUrlData.value as any],
       {
@@ -190,18 +196,18 @@ const onBtnDownloadFromPreviewClick = async () => {
     a.target = "_blank";
     document.body.appendChild(a);
     a.click();
-    window.URL.revokeObjectURL(url);
+    window.URL.revokeObjectURL(url); */
 
     toggleShowPreviewBoilerplate(false);
   }
 };
 
-$api.boilerplates
+/* $api.boilerplates
   .fetchBoilerplate(name as string)
   .then((data) => {
     if (!data.data.value) return;
     boilerplateItemState.value = data.data.value.data;
-    /* Check have dependenciesSelected => add to list dependenciesSelected */
+
     const dependenciesSelected = data.data.value.data.dependenciesSelected;
     if (dependenciesSelected) {
       data.data.value.data.dependencies.forEach((dependencyGroup) => {
@@ -224,8 +230,7 @@ $api.boilerplates
   .catch((error) => {
     console.error({ FetchDataError:error });
   });
-
-const boilerplatePreviewResponseData = ref<IBoilerplatePreviewResponse | null>(null)
+ */
 
 /* const {
   execute: createBoilerplateExecute,
@@ -239,19 +244,14 @@ const {
 } = $api.boilerplates.createBoilerplatePreview(requestData);
 
 const {
-  execute: downloadBoilerplateFromUrlExecute,
+  execute: downloadBoilerplateFromUrlExecute,1
   data: boilerplateFromDownloadUrlResponseData,
 } = $api.boilerplates.downloadBoilerplateFromPreviewUrl(
   downloadUrl.value
 ); */
 
-const isDependencyExistInArray = (value: string) => {
-  return (
-    springDependenciesSelectedState.value.findIndex(
-      (item) => item.id === value
-    ) !== -1
-  );
-};
+
+
 
 const validationMetadataBeforeSubmit = () => {
   let validation = {
@@ -345,21 +345,9 @@ const onSubmit = async () => {
 
   requestData.value = data;
   loading.value = true;
-  const {data :createBoilerplatePreviewData } = await $api.boilerplates.createBoilerplatePreview(data);
+  await downloadBoilerplate(data);
   loading.value = false;
-  const blob = new Blob([createBoilerplatePreviewData.value as any], {
-    type: "application/zip",
-  });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${data.metadata.name}.zip`;
-  a.setAttribute("download", "file.zip");
-  a.style.display = "none";
-  a.target = "_blank";
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
+  
 };
 
 definePageMeta({

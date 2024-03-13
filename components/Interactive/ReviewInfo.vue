@@ -1,16 +1,16 @@
 <template>
-  <div v-if="boilerplateItemState" class="flex items-center gap-10">
+  <div v-if="boilerplate" class="flex items-center gap-10">
     <div
       class="w-44 h-44 round shadow-lg flex flex-col gap-6 items-center justify-center relative"
     >
       <p class="text-2xl text-[#173952] font-semibold">
-        {{ boilerplateItemState.starAvg}}
+        {{ boilerplate.starAvg}}
       </p>
       <div class="absolute left-[25%] top-[45%]">
-        <AppVoting :read-only="true" :rating-value="boilerplateItemState.starAvg"/>
+        <AppVoting :read-only="true" :rating-value="boilerplate.starAvg"/>
       </div>
       <p class="text-sm font-light text-[#173952]">
-      {{ boilerplateItemState.totalReview }} Reviews
+      {{ boilerplate.totalReview }} Reviews
       </p>
     </div>
     <div v-show="!isMobile" class="flex flex-col gap-2">
@@ -24,11 +24,11 @@
           />
         </div>
         <UProgress
-          :value="convertStarToPercent(boilerplateItemState.fiveStar)"
+          :value="convertStarToPercent(boilerplate.fiveStar)"
           color="yellow"
           class="w-96"
         />
-        <p class="text-sm">{{ boilerplateItemState.fiveStar }}</p>
+        <p class="text-sm">{{ boilerplate.fiveStar }}</p>
       </div>
       <!-- Four Star -->
       <div class="flex items-center gap-2">
@@ -40,11 +40,11 @@
           />
         </div>
         <UProgress
-          :value="convertStarToPercent(boilerplateItemState.fourStar)"
+          :value="convertStarToPercent(boilerplate.fourStar)"
           color="yellow"
           class="w-96"
         />
-        <p class="text-sm">{{ boilerplateItemState.fourStar }}</p>
+        <p class="text-sm">{{ boilerplate.fourStar }}</p>
       </div>
      
 
@@ -58,11 +58,11 @@
           />
         </div>
         <UProgress
-          :value="convertStarToPercent(boilerplateItemState.threeStar)"
+          :value="convertStarToPercent(boilerplate.threeStar)"
           color="yellow"
           class="w-96"
         />
-        <p class="text-sm">{{ boilerplateItemState.threeStar }}</p>
+        <p class="text-sm">{{ boilerplate.threeStar }}</p>
       </div>
 
       <!-- Two Star -->
@@ -75,11 +75,11 @@
           />
         </div>
         <UProgress
-          :value="convertStarToPercent(boilerplateItemState.twoStar)"
+          :value="convertStarToPercent(boilerplate.twoStar)"
           color="yellow"
           class="w-96"
         />
-        <p class="text-sm">{{ boilerplateItemState.twoStar }}</p>
+        <p class="text-sm">{{ boilerplate.twoStar }}</p>
       </div>
       <!-- One Star -->
       <div class="flex items-center gap-2">
@@ -91,26 +91,26 @@
           />
         </div>
         <UProgress
-          :value="convertStarToPercent(boilerplateItemState.oneStar)"
+          :value="convertStarToPercent(boilerplate.oneStar)"
           color="yellow"
           class="w-96"
         />
-        <p class="text-sm">{{ boilerplateItemState.oneStar }}</p>
+        <p class="text-sm">{{ boilerplate.oneStar }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useBoilerplateItem } from "~/composables/useState";
+
 import { useMobileDetector } from "~/composables/useState";
 
-const boilerplateItemState = useBoilerplateItem();
+const {boilerplate} = useBoilerplateStore()
 const isMobile = useMobileDetector();
 const convertStarToPercent = (value: number) => {
-  if (!value || !boilerplateItemState.value) return 0;
+  if (!value || !boilerplate) return 0;
 
-  return (value / boilerplateItemState.value.totalReview) * 100;
+  return (value / boilerplate.totalReview) * 100;
 };
 </script>
 

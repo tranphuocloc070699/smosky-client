@@ -1,7 +1,5 @@
 import type { IBoilerplate, IPost } from "~/types/model";
 import FetchFactory from "../factory";
-import type {  NitroFetchOptions } from "nitropack";
-import type { AsyncDataOptions } from '#app';
 import type { IBoilerplatePreviewResponse, IFetchAllBoilerplate, IResponse } from "~/types/response";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 import Routes from "../routes";
@@ -12,7 +10,6 @@ class BoilerplatesModule extends FetchFactory {
         {method:'GET',url:`${this.RESOURCE}`}
       )
     }
-
     async fetchBoilerplate(name:string) {
       return this.call<IResponse<IBoilerplate>>(
         {method:'GET',url:`${this.RESOURCE}/${name}`}
@@ -32,9 +29,7 @@ class BoilerplatesModule extends FetchFactory {
         }
       )
     }
-
     async previewBoilerplate(dto : any) {
-
       return this.call<IResponse<IBoilerplatePreviewResponse>>(
         {
           method:'POST',
@@ -43,9 +38,7 @@ class BoilerplatesModule extends FetchFactory {
         }
       )
     }
-
     async downloadBoilerplateFromPreviewUrl(dto : IDownloadBoilerplateFromPreview) {
-
       return useAsyncData(() => this.call<Blob>(
         {
           method:'POST',
