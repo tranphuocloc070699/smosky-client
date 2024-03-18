@@ -17,11 +17,10 @@ import type { IPost } from '~/types/model';
 const postListState = usePostList();
 
 const {$api} = useNuxtApp()
+const postStore = usePostStore();
 
-$api.posts.fetchPostList().then(data => {
-  if(!data.data.value) return;
-  postListState.value = data.data.value.data as IPost[]
-})
+
+await useAsyncData('postList', () => postStore.fetchPostList())
 </script>
 
 <style scoped>

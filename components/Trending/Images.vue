@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { useBoilerplateList } from '~/composables/useState';
-import { useBoilerplateStore } from '~/stores/boilerplates.store';
+import { useBoilerplateStore } from '~/stores/boilerplate.store';
 
 const boilerplateState = useBoilerplateList();
 const {boilerplateList} = useBoilerplateStore();

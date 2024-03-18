@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import {projectOptions,languageOptions,springBootVersionOptions,packagingOptions,javaVersionOptions} from '~/utils/data'
+import {projectOptions,languageOptions,springBootVersionOptions,packagingOptions,javaVersionOptions} from '~/utils/springPostgres.data'
 import { useCreateBoilerplateData } from '~/composables/useState';
 const languageSelected = ref("java");
 const createBoilerplateData = useCreateBoilerplateData();
@@ -71,4 +71,4 @@ const createBoilerplateData = useCreateBoilerplateData();
 
 <style scoped>
 
-</style>
+</style>~/utils/springPostgres.data

@@ -23,16 +23,11 @@
       </div>
       <div class="py-4">
         <label for="title" class="text-sm font-medium">Slug</label>
-        <UInput type="text" id="title" v-model="dto.slug"  size="md" />
+        <UInput type="text" id="title" v-model="dto.slug" size="md" />
       </div>
       <div class="py-4">
         <label for="title" class="text-sm font-medium">Thumbnail</label>
-        <UInput
-          type="text"
-          size="md"
-          id="thumbnail"
-          v-model="dto.thumbnail"
-        />
+        <UInput type="text" size="md" id="thumbnail" v-model="dto.thumbnail" />
       </div>
       <!--       <div class="py-4">
         <label for="title" class="text-sm font-medium">Tag</label>
@@ -102,7 +97,11 @@
       </div>
     </div>
     <div class="col-span-3"></div>
-    <ModalConfirm :data="confirmModal" @confirm="onSubmit" @close="confirmModal.open=false"/>
+    <ModalConfirm
+      :data="confirmModal"
+      @confirm="onSubmit"
+      @close="confirmModal.open = false"
+    />
   </div>
 </template>
 
@@ -114,24 +113,22 @@ import type { ITocItem } from "~/types/model";
 import type { IUpSavePost } from "~/types/request";
 import { convertedSentence } from "~/utils/converter";
 import ModalData from "~/utils/modal-data";
-const notify = useNotification(useToast)
+const notify = useNotification(useToast);
 const tag = [
   { id: 1, label: "Frontend" },
   { id: 2, label: "Backend" },
   { id: 3, label: "Devops" },
   { id: 4, label: "Hacking" },
- ];
+];
 const selected = ref([tag[3]]);
 const confirmModal = ref<IConfirmModal>({
-  open:false,
-  message:''
+  open: false,
+  message: "",
 });
 const thumbnailTemporaryUrl = ref<string>("");
 
-
-
-const {$api} = useNuxtApp();
-
+const { $api } = useNuxtApp();
+const postStore = usePostStore();
 const onTitleChange = () => {
   dto.value.slug = convertedSentence(dto.value.title);
 };
@@ -144,8 +141,6 @@ const dto = ref<IUpSavePost>({
   toc: [],
   thumbnail: "",
 });
-
-
 
 const thumbnailHandler = async (e: any) => {
   const file = e.target["files"][0];
@@ -182,13 +177,12 @@ const customTOCHandler = (editor: any) => {
   dto.value.toc = [];
   let tocTemp: ITocItem[] = [];
 
-  
   const headings: HTMLElement[] = editor.dom.select("h1, h2, h3, h4, h5, h6");
   headings.forEach((heading, index) => {
     if (heading.id === "") {
       const headingText: string = heading.innerText;
       const headingId = convertedSentence(headingText);
-  
+
       heading.setAttribute("id", headingId);
       tocTemp.push({
         title: headingText,
@@ -200,30 +194,33 @@ const customTOCHandler = (editor: any) => {
 
   dto.value.content = dto.value.content;
   dto.value.toc = tocTemp;
-
 };
 
-const handleSubmit = () =>{
-  confirmModal.value={
-    open:true,
-    message:ModalData.CONFIRM,
-    ...(dto.value.toc.length==0 && {notice:ModalData.NO_TOC})
-  }
+const handleSubmit = () => {
+  confirmModal.value = {
+    open: true,
+    message: ModalData.CONFIRM,
+    ...(dto.value.toc.length == 0 && { notice: ModalData.NO_TOC }),
+  };
+};
+
+const closeConfirmModal = () =>{
+  confirmModal.value.open = false
 }
-
+ 
 const onSubmit = async () => {
+  // const {data : createPostData,error: createPostError,execute: createPostExecute} =  await $api.posts.createPost(dto.value);
+  // if(createPostData.value?.status==200){
 
+  //   notify.Success({
+  //     title:createPostData.value?.message || ''
+  //   })
 
-  const {data : createPostData,error: createPostError,execute: createPostExecute} =  await $api.posts.createPost(dto.value);
-  if(createPostData.value?.status==200){
+  //   // navigateTo({path:'/blogs'})
+  // }
 
-
-    notify.Success({
-      title:createPostData.value?.message || ''
-    })
-
-    // navigateTo({path:'/blogs'})
-  }
+  await postStore.createPost(dto.value,closeConfirmModal);
+  
 };
 </script>
 

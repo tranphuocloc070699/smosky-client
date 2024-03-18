@@ -1,9 +1,12 @@
-import type { IUseHandleError } from "~/types/composables"
+import type { IUseHandleError, IUseHandleErrorProps } from "~/types/composables"
 import type { IResponse } from "~/types/response"
 import type {IToast} from '@/types/composables'
 import NotifyData from "~/utils/notify-data"
 
-export const useHandleError = (useToast : any) =>{
+
+  
+
+export const useHandleError = (useToast : any) : IUseHandleError =>{
     const notify = useNotification(useToast)
 
     const handleErrorListToString = (errors:string[]) =>{
@@ -24,7 +27,7 @@ export const useHandleError = (useToast : any) =>{
         return error
     }
     return{
-        execute:(props : IUseHandleError) =>{
+        execute:(props : IUseHandleErrorProps) =>{
            try {
             let consoleErrorMessage = '';
             let notifyErrorMessage : IToast = {title:''};

@@ -5,14 +5,14 @@
     <!-- Toc -->
     <!--     <CardToc /> -->
     <!-- Header -->
-    <BlogInfo :data="postState" />
+    <BlogInfo :data="post" />
     <!-- Body -->
-    <BlogTableOfContent :is-mobile="false" :data="postState.tocs"/>
+    <BlogTableOfContent :is-mobile="false" :data="post.tocs"/>
 
     <div class="h-[800px] w-full"></div>
 
-    <div v-if="postState.content" class="max-w-7xl w-full mx-auto py-5">
-      <div v-html="`${postState.content}`"></div>
+    <div v-if="post.content" class="max-w-7xl w-full mx-auto py-5">
+      <div v-html="`${post.content}`"></div>
     </div>
 
   </div>
@@ -29,20 +29,13 @@ definePageMeta({
   layout: "detail",
 });
 const name = route.params.name;
-const postState = usePost();
 
-const {$api} = useNuxtApp();
 
-$api.posts
-  .fetchPost(name as string)
-  .then((data) => {
-    if (!data.data.value) return;
+const postStore = usePostStore()
+const {post} = storeToRefs(postStore);
 
-    postState.value = data.data.value.data as IPost;
-  })
-  .catch((error) => {
-    console.log({ error });
-  });
+await useAsyncData('fetchPost', () => postStore.fetchPost(name as string))
+
 
 const navigationData: INavigation[] = [
   {
@@ -58,7 +51,7 @@ const navigationData: INavigation[] = [
 ];
      
 watch(
-  postState.value,
+  () => postStore.post,
   (value) => {
     if (document) {
       Prism.highlightAll();

@@ -203,7 +203,7 @@ interface SelectRelationCallback {
   row?: ICreateBoilerplateEntityTemplate;
 }
 
-import { originalTypes } from "~/utils/data";
+import { originalTypes } from "~/utils/springPostgres.data";
 import { useCreateBoilerplateData } from "~/composables/useState";
 import type {
   ICreateBoilerplateEntity,
@@ -726,3 +726,4 @@ const springEntitiesData = ref<RowTemp[]>([
 </script>
 
 <style scoped></style>
+~/utils/springPostgres.data

@@ -39,7 +39,7 @@ class BoilerplatesModule extends FetchFactory {
       )
     }
     async downloadBoilerplateFromPreviewUrl(dto : IDownloadBoilerplateFromPreview) {
-      return useAsyncData(() => this.call<Blob>(
+      return this.call<Blob>(
         {
           method:'POST',
           url:`${this.RESOURCE}/preview/download`,
@@ -48,7 +48,7 @@ class BoilerplatesModule extends FetchFactory {
             responseType:'blob'
           }
         }
-      ))
+      )
     }
   }
   

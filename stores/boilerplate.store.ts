@@ -6,20 +6,26 @@ import type { IBoilerplate, IProjectStructure, ISpringDependencyGroup, ISpringDe
 import {
   boilerplateInit,
   fetchAllBoilerplateInit,
+  boilerplateReviewReponseInit
 } from "~/utils/stores/initValue";
 import NotifyData from "~/utils/notify-data";
 import { useHandleError } from "~/composables/useHandleError";
+import { saveBoilerplateFromBlob } from "~/utils/stores/boilerplates.util";
+import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 
 export const useBoilerplateStore = defineStore("boilerplate", () => {
   const { $api } = useNuxtApp();
   const notify = useNotification(useToast);
+
+
+
   const handleError = useHandleError(useToast);
   const boilerplateList = ref<IFetchAllBoilerplate>(fetchAllBoilerplateInit);
 
   const boilerplate = ref<IBoilerplate>(boilerplateInit);
   const springDependenciesSelected = ref<ISpringDependencyItem[]>([])
 
-  const boilerplateReviewResponse = ref<IBoilerplatePreviewResponse>();
+  const boilerplateReviewResponse = ref<IBoilerplatePreviewResponse>(boilerplateReviewReponseInit);
 
 
 
@@ -88,17 +94,9 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
         const blob = new Blob([response as any], {
           type: "application/zip",
         });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `test.zip`;
-        a.setAttribute("download", "file.zip");
-        a.style.display = "none";
-        a.target = "_blank";
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
+        saveBoilerplateFromBlob(blob);
       }
+
     } catch (error) {
       handleError.execute({ error, name: "[stores] downloadBoilerplate" });
     }
@@ -106,20 +104,20 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
 
   const previewBoilerplate = async (dto: any) => {
     try {
-      const { data, errors } = await $api.boilerplates.previewBoilerplate(dto);
+      const { data,errors } = await $api.boilerplates.previewBoilerplate(dto)
       if (errors) {
         throw errors;
       }
-      if (data) {
-        console.log('have data',data)
-        boilerplateReviewResponse.value = data;
+      if(data){
+        boilerplateReviewResponse.value.projectStructure = data.projectStructure;
+        boilerplateReviewResponse.value.downloadUrl = data.downloadUrl;
       }
     } catch (error) {
       handleError.execute({ error, name: "[stores] previewBoilerplate" });
     }
   };
 
-  const downloadBoilerplateFromPreviewUrl = async (dto: any) => {
+  const downloadBoilerplateFromPreviewUrl = async (dto: IDownloadBoilerplateFromPreview) => {
     try {
       const response =
         await $api.boilerplates.downloadBoilerplateFromPreviewUrl(dto);
@@ -127,16 +125,7 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
         const blob = new Blob([response as any], {
           type: "application/zip",
         });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `test.zip`;
-        a.setAttribute("download", "file.zip");
-        a.style.display = "none";
-        a.target = "_blank";
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
+        saveBoilerplateFromBlob(blob);
       }
     } catch (error) {
       handleError.execute({ error, name: "[stores] downloadBoilerplateFromPreviewUrl" });

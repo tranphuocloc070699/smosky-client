@@ -70,11 +70,6 @@ export interface IDownloadBoilerplateFromPreview{
 }
 
 
-/* 
-   private String title;
-  private String link;
-  private String type;
-*/
 export interface IUpSavePost{
     title:string;
     slug:string;

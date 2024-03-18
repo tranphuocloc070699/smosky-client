@@ -31,7 +31,7 @@
           </div>
         </template>
       </AppTitle>
-      {{ boilerplate.dependenciesSelected }}
+    
   <AppTitle
         :data="{ title: 'Configuration', iconName: 'heroicons-wrench' }"
       >
@@ -67,7 +67,7 @@
         >
       </div>
     </div>
-    <div v-if="boilerplateReviewResponse?.projectStructure">
+    <div v-if="boilerplateReviewResponse?.projectStructure?.id">
       <ModalShowBoilerplatePreview
         @on-btn-download-click="onBtnDownloadFromPreviewClick"
         :is-open="showPreviewBoilerplate"
@@ -87,7 +87,7 @@ import {
 } from "~/composables/useState";
 import type { INavigation } from "~/types/components";
 import type { IDownloadBoilerplateFromPreview } from "~/types/request";
-import type { IBoilerplatePreviewResponse } from "~/types/response";
+
 
 definePageMeta({
   layout: "detail",
@@ -108,6 +108,16 @@ const {
 } = useBoilerplateStore();
 
 await useAsyncData("boilerplateList", () => fetchBoilerplate(name as string));
+
+
+watch(() => boilerplateReviewResponse, value => {
+  console.log({value})
+})
+
+
+watch(() => boilerplate, value => {
+  console.log({value})
+})
 
 const executeBoilerplatePreview = async () => {
   const entitiesValidation = validationEntitiesBeforeSubmit();
@@ -177,81 +187,15 @@ const onBtnDownloadFromPreviewClick = async () => {
     downloadUrl.value.downloadUrl = boilerplateReviewResponse?.downloadUrl;
     loading.value = true;
     await downloadBoilerplateFromPreviewUrl(
-      boilerplateReviewResponse.downloadUrl
-    );
-    loading.value = false;
-    /* 
-    const blob = new Blob(
-      [downloadBoilerplateFromPreviewUrlData.value as any],
       {
-        type: "application/zip",
+        downloadUrl:boilerplateReviewResponse.downloadUrl
       }
     );
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${createBoilerplateData.value.metadata.name.value}.zip`;
-    a.setAttribute("download", "file.zip");
-    a.style.display = "none";
-    a.target = "_blank";
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url); */
+    loading.value = false;
 
     toggleShowPreviewBoilerplate(false);
   }
 };
-
-/* $api.boilerplates
-  .fetchBoilerplate(name as string)
-  .then((data) => {
-    if (!data.data.value) return;
-    boilerplateItemState.value = data.data.value.data;
-
-    const dependenciesSelected = data.data.value.data.dependenciesSelected;
-    if (dependenciesSelected) {
-      data.data.value.data.dependencies.forEach((dependencyGroup) => {
-        dependencyGroup.dependencies.forEach((dependency) => {
-          if (
-            dependenciesSelected.findIndex((item) => item === dependency.id) !==
-            -1
-          ) {
-            if (!isDependencyExistInArray(dependency.id)) {
-              springDependenciesSelectedState.value.push({
-                ...dependency,
-                required: true,
-              });
-            }
-          }
-        });
-      });
-    }
-  })
-  .catch((error) => {
-    console.error({ FetchDataError:error });
-  });
- */
-
-/* const {
-  execute: createBoilerplateExecute,
-  data: responseData,
-  error,
-} = $api.boilerplates.downloadBoilerplate(requestData);
-
-const {
-  execute: createBoilerplatePreviewExecute,
-  data: boilerplatePreviewResponseData,
-} = $api.boilerplates.createBoilerplatePreview(requestData);
-
-const {
-  execute: downloadBoilerplateFromUrlExecute,1
-  data: boilerplateFromDownloadUrlResponseData,
-} = $api.boilerplates.downloadBoilerplateFromPreviewUrl(
-  downloadUrl.value
-); */
-
-
-
 
 const validationMetadataBeforeSubmit = () => {
   let validation = {

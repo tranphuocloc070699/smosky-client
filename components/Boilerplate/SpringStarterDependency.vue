@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import {springStarterDependencyData} from "~/utils/data"
+import {springStarterDependencyData} from "~/utils/springPostgres.data"
 
 import type { ISpringDependencyItem } from "~/types/model";
 
@@ -39,4 +39,4 @@ const onAddSpringDependency = (item : ISpringDependencyItem) =>{
 
 <style scoped>
 
-</style>
+</style>~/utils/springPostgres.data

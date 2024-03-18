@@ -21,3 +21,9 @@ export interface IValidationErrorItem {
     notice?:string
   }
 
+export  interface IVoting {
+  star: number;
+  isHover: boolean;
+  isActive: boolean;
+}
+

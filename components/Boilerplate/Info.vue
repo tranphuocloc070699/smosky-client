@@ -57,8 +57,10 @@
 <script setup lang="ts">
 
 import {useMobileDetector}from '@/composables/useState'
-const {boilerplate} = useBoilerplateStore()
+const boilerplateStore = useBoilerplateStore()
 const isMobile = useMobileDetector();
+
+const {boilerplate} = storeToRefs(boilerplateStore);
 /* 
   Input:
     - type:boilerplate || explore 

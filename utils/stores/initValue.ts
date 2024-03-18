@@ -1,5 +1,5 @@
-import type { IBoilerplate } from "~/types/model"
-import type { IFetchAllBoilerplate } from "~/types/response"
+import type { IBoilerplate, IPost } from "~/types/model"
+import type { IBoilerplatePreviewResponse, IFetchAllBoilerplate } from "~/types/response"
 
 export const fetchAllBoilerplateInit : IFetchAllBoilerplate = {
     boilerplates:[],
@@ -33,4 +33,32 @@ export const boilerplateInit : IBoilerplate =  {
   dependencies:[],
   dependenciesSelected:[],
   features:[],
+}
+
+
+export const boilerplateReviewReponseInit : IBoilerplatePreviewResponse = {
+  downloadUrl:'',
+  projectStructure:{
+    id:'',
+    name:'',
+    location:'',
+    type:'directory',
+    content:null,
+    nodeList:[],
+    isExpanded:false,
+    isSelected:false,
+  }
+}
+
+
+export const postInitValue : IPost ={
+    id: -1,
+    thumbnail: "",
+    title: "",
+    slug: "",
+    preContent: "",
+    content: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    tocs: [],
 }

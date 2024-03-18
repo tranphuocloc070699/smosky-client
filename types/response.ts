@@ -1,9 +1,5 @@
 import type { IBoilerplate, IProjectStructure, ITag } from "./model";
 
-/* export interface IBoilerplateDetailResponse{
-    data: IBoilerplateItem;
-    projectStructure:IProjectStructure;
-} */
 
 
 export interface IBoilerplatePreviewResponse {

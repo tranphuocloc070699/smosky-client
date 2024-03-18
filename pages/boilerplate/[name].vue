@@ -79,6 +79,7 @@ import useApi from "~/composables/useApi";
 import type { ICreateReview } from "~/types/request";
 import type { IReview } from "~/types/model";
 import NotifyData from "~/utils/notify-data";
+import { useReviewStore } from "~/stores/review.store";
 const route = useRoute();
 definePageMeta({
   layout: "detail",
@@ -90,6 +91,9 @@ const notify = useNotification(useToast)
 const {boilerplate,fetchBoilerplate} = useBoilerplateStore()
 
 await useAsyncData('boilerplateList', () => fetchBoilerplate(name as string))
+const reviewStore = useReviewStore();
+const boilerplateStore = useBoilerplateStore()
+
 // const { $api } = useNuxtApp()
 /* boilerplateApi.boilerplate
   .fetchDetail(name as string)
@@ -116,6 +120,15 @@ await useAsyncData('boilerplateList', () => fetchBoilerplate(name as string))
 
 const onCreateReviewSubmit = async (dto: IReview) => {
   loading.value = true;
+   await reviewStore.createReview({
+  boilerplateId:dto.id,
+  name:dto.name,
+  email:dto.email,
+  content:dto.content,
+  star:dto.star
+});
+  loading.value = false;
+
 /* const {
   data,
   error,

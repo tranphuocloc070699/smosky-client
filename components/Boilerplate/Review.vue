@@ -16,8 +16,8 @@
 
 import type { ICreateReview } from "~/types/request";
 
-const {boilerplate} = useBoilerplateStore()
-
+const boilerplateStore = useBoilerplateStore()
+const {boilerplate} = storeToRefs(boilerplateStore);
 
 const emit = defineEmits(['onSubmit'])
 
