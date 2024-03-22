@@ -1,4 +1,4 @@
-import type { IBoilerplate, IPost } from "~/types/model"
+import type { IBoilerplate, IPost,IUser } from "~/types/model"
 import type { IBoilerplatePreviewResponse, IFetchAllBoilerplate } from "~/types/response"
 
 export const fetchAllBoilerplateInit : IFetchAllBoilerplate = {
@@ -61,4 +61,17 @@ export const postInitValue : IPost ={
     createdAt: new Date(),
     updatedAt: new Date(),
     tocs: [],
+}
+
+export const userInitValue : IUser = {
+  id: '',
+  email: '',
+  name: '',
+  provider: '',
+  role: 'USER',
+  isUsing2FA:  false,
+  secret: '',
+  createdAt: '',
+  updatedAt: '',
+  username: ''
 }

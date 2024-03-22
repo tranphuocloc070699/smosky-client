@@ -120,42 +120,25 @@ export interface IPost{
   
 }
 
-/* 
-public class Toc {
-   private Integer id;
-
-  @Column(nullable = false)
-  private String thumbnail;
-
-  @Column(nullable = false)
-  private String title;
-
-  @Column(nullable = false)
-  private String slug;
-
-  @Column(nullable = false)
-  private String content;
-
-  @Column(name="pre_content")
-  private String preContent;
-
-  @OneToMany(mappedBy = "post")
-  private List<Toc> tocs;
-
-  @Column(name="created_at")
-  private Date createdAt;
-
-  @Column(name="updated_at")
-  private Date updatedAt;
-}
-
-*/
 
 export interface IPostToc{
   id:number;
   title:string;
   link:string;
   type:string;
+}
+
+export interface IUser {
+  id: string;
+  email: string;
+  name: string;
+  provider: string;
+  role: 'ADMIN' | 'USER';
+  isUsing2FA:  boolean;
+  secret: string;
+  createdAt: string;
+  updatedAt: string;
+  username: string;
 }
 
 

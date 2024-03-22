@@ -11,8 +11,8 @@
             <img src="@/assets/images/logo.svg" />
           </NuxtLink>
         </div>
-        <!-- <HeaderAppSearch class="col-span-2 h-8" />
-        <HeaderAppUserControls class="col-span-2" /> -->
+        <HeaderAppSearch class="col-span-2 h-8" />
+        <HeaderAppUserControls class="col-span-2" />
       </div>
     </div>
     <USlideover v-model="isOpen" side="left" class="w-[260px]">
@@ -34,12 +34,19 @@
 </template>
 
 <script setup lang="ts">
-const isOpen = ref(false)
 const props = defineProps({
   showMenu:{
     type:Boolean,
     default:false
   },
 })
+
+
+
+const isOpen = ref(false)
+
+
+
+
 </script>
 <style scoped></style>

@@ -42,9 +42,7 @@ const props = defineProps<{
   projectStructure:IProjectStructure;
 }>();
 
-watch(() =>props,(prop) =>{
-  console.log({prop})
-})
+
 
 
 const emit = defineEmits(["update:isOpen","onBtnDownloadClick"]);

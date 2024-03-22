@@ -5,6 +5,11 @@ import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 import Routes from "../routes";
 class BoilerplatesModule extends FetchFactory {
     private RESOURCE = Routes.BOILERPLATE.SPRING;
+    private accessToken : string = ''
+
+    setAccessToken(accessToken : string){
+      this.accessToken = accessToken;
+    }
     async fetchBoilerplateList() {
       return this.call<IResponse<IFetchAllBoilerplate>>(
         {method:'GET',url:`${this.RESOURCE}`}
@@ -12,7 +17,14 @@ class BoilerplatesModule extends FetchFactory {
     }
     async fetchBoilerplate(name:string) {
       return this.call<IResponse<IBoilerplate>>(
-        {method:'GET',url:`${this.RESOURCE}/${name}`}
+        {method:'GET',url:`${this.RESOURCE}/${name}`,fetchOptions:{
+          headers:{
+            'X-Rest-Api':'Version-1',
+            ...(this.accessToken ? {
+              'Authorization':`Bearer ${this.accessToken}`
+            }  : {} )
+          }
+        }}
       )
     }
 

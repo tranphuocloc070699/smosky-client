@@ -11,18 +11,11 @@
 </template>
 
 <script setup lang="ts">
-
-import { useNotification } from '~/composables/useNotification';
-import { useBoilerplateList, useTagList } from '~/composables/useState';
 import { useBoilerplateStore } from '~/stores/boilerplate.store';
-const boilerplateState = useBoilerplateList();
-const tagListState = useTagList();
-const { $api } = useNuxtApp()
-const notify = useNotification(useToast)
 const boilerplateStore = useBoilerplateStore();
 
-
 await useAsyncData('fetchPostList', () => boilerplateStore.fetchBoilerplateList())
+
 
 
 </script>

@@ -28,16 +28,29 @@ export const useHandleError = (useToast : any) : IUseHandleError =>{
     }
     return{
         execute:(props : IUseHandleErrorProps) =>{
+  
            try {
             let consoleErrorMessage = '';
             let notifyErrorMessage : IToast = {title:''};
             if(props?.error?.data){
+               if(props?.error?.response?.statusText){
+                const errorMessage = props?.error?.response?.statusText
+                const errorStatus = props?.error?.response?.status
+                notifyErrorMessage = {
+                    title:`${errorStatus}`,
+                    description:errorMessage
+                }
+                consoleErrorMessage = `${props.name}: [Cannot connect to server] ${JSON.stringify(props.error)}`;
+               }else{
                 const response = props?.error?.data as IResponse<null>
+                
                 notifyErrorMessage = {
                     title:response.message,
                     description:Array.isArray(response.errors) ? handleErrorListToString(response.errors) : response.errors
                 }
                 consoleErrorMessage = `${props.name}: [instance of IResponse] ${JSON.stringify(props.error)}`;
+               }
+             
             }else if(props.error instanceof Error && props.error.message){
                 notifyErrorMessage = {
                     title:props.error.message,

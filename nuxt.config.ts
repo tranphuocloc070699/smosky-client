@@ -17,8 +17,11 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       NUXT_BASE_URL_PROXY_SERVER: process.env.NUXT_BASE_URL_PROXY_SERVER,
+      NUXT_BASE_URL_AUTH_SERVER:process.env.NUXT_BASE_URL_AUTH_SERVER,
+      NUXT_BASE_URL_CLIENT:process.env.NUXT_BASE_URL_CLIENT
     },
-    boilerplateServer:process.env.NUXT_BASE_URL_BOILERPLATE_SERVER
+    boilerplateServer:process.env.NUXT_BASE_URL_BOILERPLATE_SERVER,
+    authServer:process.env.NUXT_BASE_URL_AUTH_SERVER
   },
   /***
   Modules 

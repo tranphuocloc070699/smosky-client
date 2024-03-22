@@ -40,6 +40,7 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
         throw errors;
       }
       if (data) {
+        
         boilerplateList.value.boilerplates = data.boilerplates;
         boilerplateList.value.tags = data.tags;
       }
@@ -50,10 +51,13 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
   const fetchBoilerplate = async (name: string) => {
     try {
       const { data, errors } = await $api.boilerplates.fetchBoilerplate(name);
-      if (errors) {
-        throw errors;
-      }
+      // const response = await $api.boilerplates.fetchBoilerplate(name);
+      // console.log({response})
+      // if (errors) {
+      //   throw errors;
+      // }
       if (data) {
+        console.log({data})
         boilerplate.value = data;
 
         if (data.dependenciesSelected) {

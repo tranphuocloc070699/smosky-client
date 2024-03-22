@@ -2,6 +2,7 @@
   <div>
     <!-- Navigation -->
     <AppNavigation :data="navigationData" />
+    {{ boilerplate }}
     <!-- Header -->
     <BoilerplateInfo type="boilerplate" />
     <!-- Body -->
@@ -87,35 +88,19 @@ definePageMeta({
 const name = route.params.name;
 
 const loading = ref(false)
-const notify = useNotification(useToast)
 const {boilerplate,fetchBoilerplate} = useBoilerplateStore()
 
-await useAsyncData('boilerplateList', () => fetchBoilerplate(name as string))
+//  useAsyncData('boilerplateList', () => {
+//   return fetchBoilerplate(name as string)
+// })
 const reviewStore = useReviewStore();
 const boilerplateStore = useBoilerplateStore()
 
-// const { $api } = useNuxtApp()
-/* boilerplateApi.boilerplate
-  .fetchDetail(name as string)
-  .then((data) => {
-    if (!data.data.value) return;
-    boilerplateItemState.value = {...data.data.value.data,starAvg:Math.round(data.data.value.data.starAvg)};
-  
-  })
-  .catch((error) => {
-    console.log({ error });
-  }); */
 
-
-  /* $api.boilerplates.fetchBoilerplate(name as string).then((response) => {
- 
-    if (!response.data.value) return;
-    boilerplateItemState.value = {...response.data.value.data,starAvg:Math.round(response.data.value.data.starAvg)};
-  
-  })
-  .catch((error) => {
-    console.log({ error });
-  }); */
+onMounted(async () =>{
+   const response = await fetchBoilerplate(name as string)
+   console.log({response})
+})
 
 
 const onCreateReviewSubmit = async (dto: IReview) => {
@@ -128,41 +113,6 @@ const onCreateReviewSubmit = async (dto: IReview) => {
   star:dto.star
 });
   loading.value = false;
-
-/* const {
-  data,
-  error,
-} = await $api.reviews.createReview({
-  boilerplateId:dto.id,
-  name:dto.name,
-  email:dto.email,
-  content:dto.content,
-  star:dto.star
-});
-
-  
-  if(data.value?.data && boilerplateItemState.value){
-    boilerplateItemState.value.totalReview = data.value?.data.totalReview;
-    boilerplateItemState.value.starAvg = Math.round(data.value?.data.starAvg);
-    boilerplateItemState.value.oneStar = data.value?.data.oneStar;
-    boilerplateItemState.value.twoStar = data.value?.data.twoStar;
-    boilerplateItemState.value.threeStar = data.value?.data.threeStar;
-    boilerplateItemState.value.fourStar = data.value?.data.fourStar;
-    boilerplateItemState.value.fiveStar = data.value?.data.fiveStar;
-    boilerplateItemState.value?.reviews.unshift({
-      id:data.value?.data.id,
-      name:data.value?.data.name,
-      email:data.value?.data.email,
-      star:data.value?.data.star,
-      content:data.value?.data.content,
-      createdAt:data.value?.data.createdAt,
-      updatedAt:data.value?.data.updatedAt
-    })
-    notify.Success({title:NotifyData.REVIEW.SUCCESS})
-  }else{
-    notify.Danger({title:NotifyData.INTERNAL_SERVER_ERROR})
-    console.error('[Create Review]',error)
-  } */
   loading.value = false;
 };
 

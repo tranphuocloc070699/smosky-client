@@ -1,7 +1,7 @@
 import type { IToast } from "~/types/composables";
 
 
-const TIMEOUT = 1000;
+const TIMEOUT = 4000;
 
 const toastInfo = (prop: IToast) => {
   return {

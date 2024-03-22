@@ -18,7 +18,7 @@
         </NuxtLink>
         </div>
         <!-- User -->
-      <!--   <div class="border-b border-slate-100 pb-4">
+        <div v-show="Role?.includes('USER')" class="border-b border-slate-100 pb-4">
             <h3 class=" flex items-center m-4 rounded-md font-medium ">
             
                 User
@@ -32,13 +32,13 @@
             <p class="text-base px-4">Profile</p>
 
         </NuxtLink>
-        <a href="" class="flex items-center p-2 mx-2 mt-2   rounded-md hover:bg-gray-100 font-light">
+        <a :href="logoutUrl" class="flex items-center p-2 mx-2 mt-2   rounded-md hover:bg-gray-100 font-light">
             <UIcon name="i-heroicons-x-circle" class="w-5 h-5  text-red-600"/>
             <p class="text-base px-4 text-red-600">Log Out</p>
         </a>
-        </div> -->
+        </div>
         <!-- Admin -->
-        <div class="border-b border-slate-100 pb-4">
+        <div v-show="Role?.includes('ADMIN')" class="border-b border-slate-100 pb-4">
             <h3 class=" flex items-center m-4 rounded-md font-medium ">
             
                 Admin
@@ -70,6 +70,17 @@
 
 <script setup lang="ts">
 const route = useRoute()
+const config = useRuntimeConfig();
+const authStore = useAuthStore()
+
+const authUrl = config.public.NUXT_BASE_URL_AUTH_SERVER;
+const logoutUrl = computed(() => `${authUrl}/logout`)
+
+const Role = computed(() =>{
+    if(!authStore.user.id) return []
+    if(authStore.user.role==='ADMIN') return ['ADMIN','USER']
+    if(authStore.user.role==='USER') return ['USER']
+})
 
 defineProps<{
   isFixed?:boolean

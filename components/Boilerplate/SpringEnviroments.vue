@@ -3,13 +3,13 @@
     class="flex items-start overflow-x-auto  gap-10 py-4 flex-nowrap h-[439px] scrollbar"
   >
     <div
-      v-for="item in springDependenciesSelectedState"
+      v-for="item in boilerplateStore.springDependenciesSelected"
       :key="item.name"
       v-show="item.properties && item.properties.length > 0"
       class="border border-slate-200 shadow-sm rounded-md min-w-[424px] rounded-t-md"
     >
       <h4
-        class="text-center py-2 font-semibold border-b border-slate-[#467190] bg-gray-100  rounded-t-md text-gray-900"
+        class="text-center py-2 font-semibold border-b border-slate-[#467190] bg-slate-200  rounded-t-md text-gray-900"
       >
         {{ item.name }}
       </h4>
@@ -56,6 +56,10 @@
 <script setup lang="ts">
 import { useSpringDependenciesSelected } from "~/composables/useState";
 const springDependenciesSelectedState = useSpringDependenciesSelected();
+
+const boilerplateStore = useBoilerplateStore()
+
+
 </script>
 
 <style scoped></style>

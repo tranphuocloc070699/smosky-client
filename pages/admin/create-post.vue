@@ -19,6 +19,7 @@
           v-model="dto.title"
           size="md"
           @input="onTitleChange"
+          @paste="onTitlePaste"
         />
       </div>
       <div class="py-4">
@@ -119,7 +120,7 @@ const tag = [
   { id: 2, label: "Backend" },
   { id: 3, label: "Devops" },
   { id: 4, label: "Hacking" },
-];
+]
 const selected = ref([tag[3]]);
 const confirmModal = ref<IConfirmModal>({
   open: false,
@@ -129,9 +130,16 @@ const thumbnailTemporaryUrl = ref<string>("");
 
 const { $api } = useNuxtApp();
 const postStore = usePostStore();
-const onTitleChange = () => {
-  dto.value.slug = convertedSentence(dto.value.title);
+const 
+onTitleChange = () => {
+  dto.value.slug = convertedSentence(dto.value.title.trim());
 };
+
+const onTitlePaste = (event : ClipboardEvent) =>{
+  // if(event.clipboardData?.getData('text')){
+  //   dto.value.slug =convertedSentence(event.clipboardData?.getData('text').trim());
+  // }
+}
 
 const dto = ref<IUpSavePost>({
   title: "",
