@@ -98,26 +98,15 @@ const requestData = ref({});
 const name = route.params.name;
 const showPreviewBoilerplate = ref(false);
 const loading = ref(false);
-const {
-  fetchBoilerplate,
-  downloadBoilerplate,
-  downloadBoilerplateFromPreviewUrl,
-  previewBoilerplate,
-  boilerplate,
-  boilerplateReviewResponse,
-} = useBoilerplateStore();
 
-await useAsyncData("boilerplateList", () => fetchBoilerplate(name as string));
+const boilerplateStore = useBoilerplateStore();
+
+const {  boilerplate,springDependenciesSelected,
+  boilerplateReviewResponse} = storeToRefs(boilerplateStore);
+
+await useAsyncData("boilerplateList", () => boilerplateStore.fetchBoilerplate(name as string));
 
 
-watch(() => boilerplateReviewResponse, value => {
-  console.log({value})
-})
-
-
-watch(() => boilerplate, value => {
-  console.log({value})
-})
 
 const executeBoilerplatePreview = async () => {
   const entitiesValidation = validationEntitiesBeforeSubmit();
@@ -133,7 +122,18 @@ const executeBoilerplatePreview = async () => {
     return;
   }
 
-  const data = {
+  const data = generateData();
+
+  requestData.value = data;
+  loading.value = true;
+
+  await boilerplateStore.previewBoilerplate(data);
+  loading.value = false;
+  toggleShowPreviewBoilerplate(true);
+};
+
+const generateData = () =>{
+ return  {
     type: createBoilerplateData.value.type,
     bootVersion: createBoilerplateData.value.bootVersion,
     metadata: {
@@ -144,7 +144,7 @@ const executeBoilerplatePreview = async () => {
       packaging: createBoilerplateData.value.metadata.packaging,
       jvmVersion: createBoilerplateData.value.metadata.jvmVersion,
     },
-    dependencies: springDependenciesSelectedState.value.map((item) => ({
+    dependencies: springDependenciesSelected.value.map((item) => ({
       id: item.id,
       properties: item.properties?.map((item) => ({
         id: item.id,
@@ -163,32 +163,25 @@ const executeBoilerplatePreview = async () => {
       })),
     })),
   };
-
-  requestData.value = data;
-  loading.value = true;
-
-  await previewBoilerplate(data);
-  loading.value = false;
-  toggleShowPreviewBoilerplate(true);
-};
+}
 
 const toggleShowPreviewBoilerplate = (value: boolean) => {
   showPreviewBoilerplate.value = value;
 };
 
 const createBoilerplateData = useCreateBoilerplateData();
-const springDependenciesSelectedState = useSpringDependenciesSelected();
+
 const downloadUrl = ref<IDownloadBoilerplateFromPreview>({
   downloadUrl: "",
 });
 
 const onBtnDownloadFromPreviewClick = async () => {
-  if (boilerplateReviewResponse?.downloadUrl) {
-    downloadUrl.value.downloadUrl = boilerplateReviewResponse?.downloadUrl;
+  if (boilerplateReviewResponse.value.downloadUrl) {
+    downloadUrl.value.downloadUrl = boilerplateReviewResponse.value.downloadUrl;
     loading.value = true;
-    await downloadBoilerplateFromPreviewUrl(
+    await boilerplateStore.downloadBoilerplateFromPreviewUrl(
       {
-        downloadUrl:boilerplateReviewResponse.downloadUrl
+        downloadUrl:boilerplateReviewResponse.value.downloadUrl
       }
     );
     loading.value = false;
@@ -256,40 +249,12 @@ const onSubmit = async () => {
     return;
   }
 
-  const data = {
-    type: createBoilerplateData.value.type,
-    bootVersion: createBoilerplateData.value.bootVersion,
-    metadata: {
-      groupId: createBoilerplateData.value.metadata.groupId.value,
-      artifactId: createBoilerplateData.value.metadata.artifactId.value,
-      name: createBoilerplateData.value.metadata.name.value,
-      description: createBoilerplateData.value.metadata.description,
-      packaging: createBoilerplateData.value.metadata.packaging,
-      jvmVersion: createBoilerplateData.value.metadata.jvmVersion,
-    },
-    crud: createBoilerplateData.value.crud,
-    dependencies: springDependenciesSelectedState.value.map((item) => ({
-      id: item.id,
-      properties: item.properties?.map((item) => ({
-        id: item.id,
-        value: item.value,
-      })),
-    })),
-    entities: createBoilerplateData.value.entities.map((item) => ({
-      name: item.name,
-      templates: item.templates.map((item) => ({
-        name: item.name,
-        type: item.type,
-        primary: item.primary,
-        mappedBy: item.mappedBy,
-        referencedColumnName: item.referencedColumnName,
-      })),
-    })),
-  };
+  const data = generateData();
 
   requestData.value = data;
   loading.value = true;
-  await downloadBoilerplate(data);
+  console.log({data})
+   await boilerplateStore.downloadBoilerplate(data);
   loading.value = false;
   
 };

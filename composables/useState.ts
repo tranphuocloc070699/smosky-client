@@ -18,7 +18,7 @@ export const usePost = () =>
     content: "",
     createdAt: new Date(),
     updatedAt: new Date(),
-    toc: [],
+    tocs: [],
   }));
 
 export const useMobileDetector = () =>

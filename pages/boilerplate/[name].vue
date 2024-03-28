@@ -2,7 +2,6 @@
   <div>
     <!-- Navigation -->
     <AppNavigation :data="navigationData" />
-    {{ boilerplate }}
     <!-- Header -->
     <BoilerplateInfo type="boilerplate" />
     <!-- Body -->
@@ -13,12 +12,13 @@
         Project
       </h3>
     </div> -->
+
     <AppTitle
       :data="{ title: 'Example project', iconName: 'heroicons-document' }"
-      v-if="boilerplate && boilerplate?.projectStructure"
+      v-if="boilerplateStore.boilerplate && boilerplateStore.boilerplate?.projectStructure"
     >
       <InteractiveProjectStructure
-        :data="boilerplate?.projectStructure"
+        :data="boilerplateStore.boilerplate?.projectStructure"
       />
     </AppTitle>
 
@@ -39,8 +39,8 @@
       <ClientOnly>
 
         <BoilerplateFeature
-          v-show="boilerplate?.features"
-          :data="boilerplate.features"
+          v-show="boilerplateStore.boilerplate?.features"
+          :data="boilerplateStore.boilerplate.features"
         />
       </ClientOnly>
 
@@ -88,18 +88,11 @@ definePageMeta({
 const name = route.params.name;
 
 const loading = ref(false)
-const {boilerplate,fetchBoilerplate} = useBoilerplateStore()
-
-//  useAsyncData('boilerplateList', () => {
-//   return fetchBoilerplate(name as string)
-// })
-const reviewStore = useReviewStore();
 const boilerplateStore = useBoilerplateStore()
-
-
-onMounted(async () =>{
-   const response = await fetchBoilerplate(name as string)
-   console.log({response})
+const postStore = usePostStore()
+const reviewStore = useReviewStore();
+ useAsyncData('boilerplate', () => {
+  return boilerplateStore.fetchBoilerplate(name as string)
 })
 
 

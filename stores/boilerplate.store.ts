@@ -1,37 +1,44 @@
+import { useHandleError } from "~/composables/useHandleError";
+import type { IBoilerplate, ISpringDependencyItem } from "~/types/model";
+import type { IDownloadBoilerplateFromPreview } from "~/types/request";
 import type {
   IBoilerplatePreviewResponse,
   IFetchAllBoilerplate,
 } from "~/types/response";
-import type { IBoilerplate, IProjectStructure, ISpringDependencyGroup, ISpringDependencyItem } from "~/types/model";
+import {
+  saveBoilerplateFromBlob,
+  convertJsonToSpringDependencyGroupList,
+} from "~/utils/stores/boilerplates.util";
 import {
   boilerplateInit,
+  boilerplateReviewReponseInit,
   fetchAllBoilerplateInit,
-  boilerplateReviewReponseInit
 } from "~/utils/stores/initValue";
-import NotifyData from "~/utils/notify-data";
-import { useHandleError } from "~/composables/useHandleError";
-import { saveBoilerplateFromBlob } from "~/utils/stores/boilerplates.util";
-import type { IDownloadBoilerplateFromPreview } from "~/types/request";
-
+import jsonData from "../assets/json/spring-dependencies";
 export const useBoilerplateStore = defineStore("boilerplate", () => {
+  const BOILERPLATE_TYPE = {
+    SPRING: "SPRING",
+  };
+
   const { $api } = useNuxtApp();
   const notify = useNotification(useToast);
-
-
 
   const handleError = useHandleError(useToast);
   const boilerplateList = ref<IFetchAllBoilerplate>(fetchAllBoilerplateInit);
 
   const boilerplate = ref<IBoilerplate>(boilerplateInit);
-  const springDependenciesSelected = ref<ISpringDependencyItem[]>([])
+  const springDependenciesSelected = ref<ISpringDependencyItem[]>([]);
 
-  const boilerplateReviewResponse = ref<IBoilerplatePreviewResponse>(boilerplateReviewReponseInit);
+  const boilerplateReviewResponse = ref<IBoilerplatePreviewResponse>(
+    boilerplateReviewReponseInit
+  );
 
-
-
-  const onSpringDependenciesSelectedChange = (data: ISpringDependencyItem[]) =>{
+  const onSpringDependenciesSelectedChange = (
+    data: ISpringDependencyItem[]
+  ) => {
+    console.log({data})
     springDependenciesSelected.value = data;
-  }
+  };
 
   const fetchBoilerplateList = async () => {
     try {
@@ -40,7 +47,6 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
         throw errors;
       }
       if (data) {
-        
         boilerplateList.value.boilerplates = data.boilerplates;
         boilerplateList.value.tags = data.tags;
       }
@@ -51,21 +57,23 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
   const fetchBoilerplate = async (name: string) => {
     try {
       const { data, errors } = await $api.boilerplates.fetchBoilerplate(name);
-      // const response = await $api.boilerplates.fetchBoilerplate(name);
-      // console.log({response})
-      // if (errors) {
-      //   throw errors;
-      // }
+      if (errors) {
+        throw errors;
+      }
       if (data) {
-        console.log({data})
+        if (data.type === BOILERPLATE_TYPE.SPRING) {
+          data.dependencies = convertJsonToSpringDependencyGroupList(jsonData);
+        }
+
         boilerplate.value = data;
 
         if (data.dependenciesSelected) {
           data.dependencies.forEach((dependencyGroup) => {
             dependencyGroup.dependencies.forEach((dependency) => {
               if (
-                data.dependenciesSelected.findIndex((item) => item === dependency.id) !==
-                -1
+                data.dependenciesSelected.findIndex(
+                  (item) => item === dependency.id
+                ) !== -1
               ) {
                 if (!isDependencyExistInArray(dependency.id)) {
                   springDependenciesSelected.value.push({
@@ -91,7 +99,7 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
     );
   };
 
-  const downloadBoilerplate = async (dto:any) => {
+  const downloadBoilerplate = async (dto: any) => {
     try {
       const response = await $api.boilerplates.downloadBoilerplate(dto);
       if (response) {
@@ -100,7 +108,6 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
         });
         saveBoilerplateFromBlob(blob);
       }
-
     } catch (error) {
       handleError.execute({ error, name: "[stores] downloadBoilerplate" });
     }
@@ -108,12 +115,13 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
 
   const previewBoilerplate = async (dto: any) => {
     try {
-      const { data,errors } = await $api.boilerplates.previewBoilerplate(dto)
+      const { data, errors } = await $api.boilerplates.previewBoilerplate(dto);
       if (errors) {
         throw errors;
       }
-      if(data){
-        boilerplateReviewResponse.value.projectStructure = data.projectStructure;
+      if (data) {
+        boilerplateReviewResponse.value.projectStructure =
+          data.projectStructure;
         boilerplateReviewResponse.value.downloadUrl = data.downloadUrl;
       }
     } catch (error) {
@@ -121,7 +129,9 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
     }
   };
 
-  const downloadBoilerplateFromPreviewUrl = async (dto: IDownloadBoilerplateFromPreview) => {
+  const downloadBoilerplateFromPreviewUrl = async (
+    dto: IDownloadBoilerplateFromPreview
+  ) => {
     try {
       const response =
         await $api.boilerplates.downloadBoilerplateFromPreviewUrl(dto);
@@ -132,9 +142,23 @@ export const useBoilerplateStore = defineStore("boilerplate", () => {
         saveBoilerplateFromBlob(blob);
       }
     } catch (error) {
-      handleError.execute({ error, name: "[stores] downloadBoilerplateFromPreviewUrl" });
+      handleError.execute({
+        error,
+        name: "[stores] downloadBoilerplateFromPreviewUrl",
+      });
     }
   };
 
-  return { boilerplateList, boilerplate,boilerplateReviewResponse,springDependenciesSelected ,fetchBoilerplateList,fetchBoilerplate,downloadBoilerplate,downloadBoilerplateFromPreviewUrl,previewBoilerplate, onSpringDependenciesSelectedChange};
+  return {
+    boilerplateList,
+    boilerplate,
+    boilerplateReviewResponse,
+    springDependenciesSelected,
+    fetchBoilerplateList,
+    fetchBoilerplate,
+    downloadBoilerplate,
+    downloadBoilerplateFromPreviewUrl,
+    previewBoilerplate,
+    onSpringDependenciesSelectedChange,
+  };
 });

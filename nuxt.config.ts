@@ -34,7 +34,7 @@ export default defineNuxtConfig({
   googleFonts: {
     display: "swap",
     families: {
-      Roboto: [100, 300, 400, 500, 600, 700, 900],
+      Roboto: [100, 300, 400, 500, 700, 900],
       Inter: [100, 200, 300, 400, 500, 600, 700, 800, 900],
       Mulish: [300, 400, 500, 600, 700, 800],
     },

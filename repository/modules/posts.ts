@@ -12,7 +12,14 @@ class PostsModule extends FetchFactory {
     }
     async fetchPostList() {
       return this.call<IResponse<IPost[]>>(
-        {method:'GET',url:`${this.RESOURCE}`}
+        {method:'GET',url:`${this.RESOURCE}`,fetchOptions:{
+          headers:{
+            'X-Rest-Api':'Version-1',
+            ...(this.accessToken ? {
+              'Authorization':`Bearer ${this.accessToken}`
+            }  : {} )
+          }
+        }}
       )
     }
 

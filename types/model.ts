@@ -18,6 +18,7 @@ export interface IReview{
 export interface IBoilerplate{
   id: number;
   name:string;
+  type:string;
   thumbnail:string;
   previewLink:string;
   description:string;
@@ -57,7 +58,7 @@ export interface ISpringDependencyItem{
   id:string;
   name:string;
   description:string;
-  notice:string | null;
+  // notice:string | null;
   compatibilityRanges:string[],
   links:ISpringDependencyLink[],
   properties:ISpringDependencyProperty[],
@@ -66,8 +67,7 @@ export interface ISpringDependencyItem{
 }
 
 export interface ISpringDependencyLink{
-  id:number;
-  title:string;
+
   name:string;
   url:string;
 }

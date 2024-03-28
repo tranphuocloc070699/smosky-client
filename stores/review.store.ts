@@ -10,6 +10,21 @@ export const useReviewStore = defineStore("review", () => {
   const handleError = useHandleError(useToast);
   const boilerplateStore = useBoilerplateStore();
 
+
+  const fetchReviewList = async () =>{
+    try {
+      const { data, errors } = await $api.reviews.fetchReviewList();
+      if (errors) {
+        throw errors;
+      }
+      if (data) {
+        
+      }
+    } catch (error) {
+      handleError.execute({ error, name: "[stores] createReview" });
+    }
+  }
+
   const createReview = async (dto: ICreateReview) => {
     try {
       const { data, errors } = await $api.reviews.createReview(dto);

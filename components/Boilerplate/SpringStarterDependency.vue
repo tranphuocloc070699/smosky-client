@@ -18,19 +18,20 @@
 </template>
 
 <script setup lang="ts">
-import {springStarterDependencyData} from "~/utils/springPostgres.data"
-
 import type { ISpringDependencyItem } from "~/types/model";
 
-const {boilerplate,springDependenciesSelected,onSpringDependenciesSelectedChange} = useBoilerplateStore()
+const boilerplateStore = useBoilerplateStore()
+
+const {boilerplate,springDependenciesSelected} = storeToRefs(boilerplateStore);
 
 
 const onRemoveSpringDependency = (data : ISpringDependencyItem) =>{
-  onSpringDependenciesSelectedChange(springDependenciesSelected.filter(item => item.id!==data.id))
+  boilerplateStore.onSpringDependenciesSelectedChange(springDependenciesSelected.value.filter(item => item.id!==data.id))
 }
 
 const onAddSpringDependency = (item : ISpringDependencyItem) =>{
-  onSpringDependenciesSelectedChange([item,...springDependenciesSelected])
+  const data = [item,...springDependenciesSelected.value]
+ boilerplateStore.onSpringDependenciesSelectedChange(data)
 }
 
 

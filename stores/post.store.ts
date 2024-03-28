@@ -24,7 +24,7 @@ import {
           throw errors;
         }
         if (data) {
-        
+        console.log({data})
         postList.value = data
         }
       } catch (error) {

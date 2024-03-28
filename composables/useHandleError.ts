@@ -55,7 +55,7 @@ export const useHandleError = (useToast : any) : IUseHandleError =>{
                 notifyErrorMessage = {
                     title:props.error.message,
                 }
-                consoleErrorMessage= `${props.name}: [instance of Error] ${JSON.stringify(props.error)}`;
+                consoleErrorMessage= `${props.name}: [instance of Error] ${JSON.stringify(props.error.message)}`;
             }else{
                 notifyErrorMessage = {
                     title:NotifyData.INTERNAL_SERVER_ERROR

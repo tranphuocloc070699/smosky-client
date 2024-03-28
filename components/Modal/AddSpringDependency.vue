@@ -103,6 +103,8 @@ watch(
 );
 
 const onFilter = (e: any) => {
+  console.log({e:e.target.value})
+  console.log({props:props.data})
   if (!props.data) return;
   if (!e.target.value) {
     localData.value = JSON.parse(JSON.stringify(props.data));

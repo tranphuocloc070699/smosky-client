@@ -3,9 +3,13 @@
     <!-- Navigation -->
     <h2 class="text-center py-8 text-2xl font-semibold">Admin Dashboard</h2>
     <UTabs :items="items" class="w-full p-4">
-      <template #ci-cd="{ item }"> </template>
+      <!-- <template #ci-cd="{ item }"> </template> -->
 
-      <template #posts="{ item }"> </template>
+      <template #posts="{ item }">
+        <div>
+          postList: {{ postList }}
+        </div>
+      </template>
 
       <template #questions="{ item }"> </template>
 
@@ -15,11 +19,18 @@
 </template>
 
 <script setup lang="ts">
+
+const postStore = usePostStore();
+const reviewStore = useReviewStore();
+const {postList} = storeToRefs(postStore);
+const {} = storeToRefs(reviewStore);
+
+
 const items = [
-  {
-    slot: "boilerplates",
-    label: "Boilerplate",
-  },
+  // {
+  //   slot: "boilerplates",
+  //   label: "Boilerplate",
+  // },
   {
     slot: "posts",
     label: "Posts",

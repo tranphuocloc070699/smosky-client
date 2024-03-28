@@ -7,6 +7,7 @@
             class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
           >
             Choose table create relationship
+            table 
           </h3>
           <UButton
             color="gray"
@@ -20,7 +21,7 @@
 
       <URadioGroup
         v-model="selected" 
-        :options="table.map(item => ({label:item.name,value:item.name}))"
+        :options="table.filter(item => item.name!==props.tableSelected).map(item => ({label:item.name,value:item.name}))"
       />
       <UAlert
         icon="i-heroicons-command-line"
@@ -45,8 +46,8 @@
 import type { ICreateBoilerplateEntity } from '~/types/request';
 
 const props = defineProps<{
+  tableSelected:string;
   isOpen: boolean;
-  // table:Array<{value:string,label:string}>;
   table:Array<ICreateBoilerplateEntity>;
   createTableInput:string;
 }>();

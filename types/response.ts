@@ -1,9 +1,10 @@
-import type { IBoilerplate, IProjectStructure, ITag, IUser } from "./model";
+import type { IBoilerplate, IProjectStructure, IReview, ITag, IUser } from "./model";
 
 export interface IBoilerplatePreviewResponse {
   projectStructure: IProjectStructure;
   downloadUrl: string;
 }
+
 
 export interface ICreateReviewResponse {
   id: number;
@@ -35,9 +36,12 @@ export interface IResponse<T> {
   path: string;
 }
 
-
-
 export interface IAuthenticate {
   accessToken: string;
   user:IUser
+}
+
+export interface IFetchAllReview{
+  boilerplateName:string;
+  reviews:IReview[]
 }
